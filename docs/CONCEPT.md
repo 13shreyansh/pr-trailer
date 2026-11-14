@@ -4,7 +4,9 @@
 
 ## Recommendation
 
-Stop asking humans to review AI-written code line by line. Make every agent PR ship with a **trailer**: a short, checkable story of the change, built from evidence and traced to the requirement ID. The human reviews the trailer and signs a card. The AI collects evidence, attacks the change and asks questions. It never approves.
+The person who merges an AI-written PR is not a "reviewer". They are the **approver**: the owner who is accountable that the change does what it is supposed to do, and nothing else. Today the only way to carry that is to read every line. Stop asking for that. Make every agent PR ship with a **trailer**: a short, checkable story of the change, built from evidence and traced to the requirement ID. The trailer opens with the outcome ("Does it do REQ-X? Does it do anything else?"), shows confidence per area with the reason, and lists the few spots (at most 10) worth a human look. The owner approves or denies the outcome with a written reason. The AI collects evidence, attacks the change and asks questions. It never approves.
+
+Hypothesis (from the Tieto booth, not yet measured with a stopwatch): this turns "three days reading code" into "half an hour approving an outcome", and lets the owner sleep without fearing a 3 a.m. call. The modelled review minutes in RESULTS.md are a first, partial test of it.
 
 Every PR lands in one of four lanes:
 
@@ -17,15 +19,16 @@ Every PR lands in one of four lanes:
 
 ## What a trailer contains (per requirement ID)
 
+0. **Outcome first:** two verdicts, "does it" (each acceptance criterion has passing evidence) and "does nothing else" (every changed function body is reached by the stated requirement's tests, or is flagged as outside the outcome). Then confidence per area (frontend, backend, data, security) with the reason, and "review these N spots".
 1. **Evidence per acceptance criterion:** the test that proves it, run on main and on the PR (fail→pass, pass→pass, pass→fail). UI changes get a captioned Playwright video and before/after stills. Backend changes get a sequence diagram generated from the code that actually changed.
 2. **What the AI found:** each finding says whether it was *verified* and how. Only verified findings can block.
 3. **What the AI refused to decide, and why:** questions about intent, security and irreversible actions, each with a named owner. Example from PR-109: "Rows selected on `transfers` changed. Dropped `user_id = ?`. Is that intended?"
 4. **Merge danger:** door type (two-way, two-way with residue, one-way), blast radius (changed functions → callers → API entry points → screens).
-5. **Sign-off card:** what was checked, what was not checked, the residual risk the owner accepts, the questions they must answer, and one checkbox: "The AI review was advice, not approval."
+5. **Approver's decision:** what was checked, what was not checked, the residual risk the owner accepts, the questions they must answer, and one checkbox: "The AI review was advice, not approval." Approve or deny, always with a written reason, so the record says why.
 
 ## Principles
 
-1. **Evidence over confidence.** There are no confidence scores. A claim is either backed by something the owner can re-run or marked as advice.
+1. **Evidence over confidence.** There are no model confidence scores. The per-area confidence is derived only from evidence (verified problems, open questions, lines no test reached), and each level shows its reason. A claim is either backed by something the owner can re-run or marked as advice.
 2. **Only reproduced problems block.** Static rules and LLM opinions route attention. Tests, probes, invariants and counterexamples decide.
 3. **Trace everything to a requirement.** Acceptance tests are named `REQ_<ID>.test_ac<N>_*`, so evidence attaches to criteria automatically. A criterion without a test becomes an open question. It does not count as a silent pass.
 4. **Refuse out loud.** The AI does not judge intent ("should this count fewer rows?"), authn/authz logic, data destruction, or equivalence it cannot demonstrate. Each refusal says why and who must answer.
@@ -41,7 +44,7 @@ Every PR lands in one of four lanes:
 | Risk | Lane by door type and blast radius; security and one-way doors always get a human read |
 | Hallucination | LLM findings need a verbatim quote, cannot block, and are counted when dropped |
 | Transparency | Every check is listed under *Checked* or *Not checked*, with its method |
-| Confidence | Replaced by verification status: verified, grounded-but-unverified, or refused |
+| Confidence | Per area, derived from evidence with a stated reason; each item is verified, grounded-but-unverified, or refused |
 | Quality | Acceptance tests, team invariants, differential testing for "no behaviour change" claims, runtime probes (IDOR, PII in logs) |
 
 ## Trade-offs we accept
@@ -53,7 +56,7 @@ Every PR lands in one of four lanes:
 
 ## Limits
 
-- Synthetic sample: 13 PRs and 49 mutants on a small Python service. Not a field study.
+- Synthetic sample: 13 PRs, 49 dev mutants and 18 held-out mutants on a small Python service. Not a field study.
 - Review minutes are **modelled** with stated assumptions, not stop-watched.
 - We wrote both the planted bugs and the checks. The mutants exist to correct for that, and the catch rate on them is lower.
 - Not covered: concurrency, performance, infrastructure and configuration, and multi-PR interactions.

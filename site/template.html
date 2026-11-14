@@ -88,6 +88,17 @@ video, .stills img { width: 100%; max-width: 100%; border-radius: 8px; border: 1
 .danger { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
 .danger > div { background: var(--soft); border-radius: 8px; padding: 12px 14px; }
 .danger b { display: block; font: 600 18px var(--display); margin: 2px 0 4px; }
+.verdicts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; }
+.verdict { border-radius: 8px; padding: 12px 14px; background: var(--soft); border-left: 4px solid var(--c); }
+.verdict b { display: block; font: 600 16px var(--display); color: var(--c); margin-bottom: 2px; }
+.outcome { font-size: 16px; margin: 0; }
+.spots { margin: 0; padding-left: 22px; display: grid; gap: 8px; }
+.spots li::marker { font: 600 13px var(--mono); color: var(--muted); }
+.conf { display: flex; flex-wrap: wrap; gap: 8px; }
+.units { display: flex; flex-wrap: wrap; gap: 6px; }
+.unit { font: 12px var(--mono); padding: 4px 8px; border-radius: 6px; background: var(--light-soft); color: var(--light); }
+.unit.out { background: var(--full-soft); color: var(--full); }
+textarea { width: 100%; font: 14px var(--body); padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); min-height: 60px; }
 .card { border: 2px solid var(--ink); border-radius: 10px; padding: 18px 20px; display: grid; gap: 12px; }
 .card ul { margin: 0; padding-left: 20px; }
 .card label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
@@ -118,8 +129,8 @@ pre.diff .a { color: var(--light); } pre.diff .r { color: var(--return); } pre.d
   <header>
     <div class="eyebrow">Junction 2026 · Tieto · Earned Trust in AI Code · team The CS Guy</div>
     <div>
-      <h1>Review the trailer, not the diff.</h1>
-      <p class="lede">Every agent-written pull request ships with a trailer: evidence for each acceptance criterion, what the AI found, what it refused to decide and why, how dangerous the merge is, and a sign-off card for the named owner. The AI never approves. Only problems it can reproduce are allowed to block.</p>
+      <h1>Approve the outcome, not the diff.</h1>
+      <p class="lede">The person who approves an AI-written change is accountable that it does what it should, and nothing else. PR Trailer starts from that outcome. It shows the evidence that the code meets it, flags anything changed outside it, and lists the few spots worth your eyes, with a confidence level for each area. It also shows what the AI refused to decide, and how dangerous the merge is. The AI never approves. Only problems it can reproduce are allowed to block.</p>
     </div>
     <div class="kpis" id="kpis"></div>
   </header>
@@ -146,6 +157,9 @@ pre.diff .a { color: var(--light); } pre.diff .r { color: var(--return); } pre.d
     <p class="muted" id="ledger" style="margin:0;max-width:75ch"></p>
     <h3>The optional LLM reviewer (advisory only)</h3>
     <p class="muted" id="llm" style="margin:0;max-width:75ch"></p>
+    <h3>Side by side with AI code reviewers on the same PRs</h3>
+    <p class="muted" id="aicmp-lede" style="margin:0;max-width:75ch"></p>
+    <div class="scroll"><table id="aicmp"></table></div>
     <h3>Dumb baselines it has to beat</h3>
     <p class="muted" style="margin:0;max-width:75ch">"Caught" means the PR was blocked on evidence or sent to a human read. Held-out mutants use operator families we never tuned the checks on. "Full read of everything" assumes a perfect human reviewer, which flatters it.</p>
     <div class="scroll"><table id="baselines"></table></div>
@@ -201,6 +215,30 @@ function diffHtml(u) {
   }).join("\n");
 }
 
+const VC = { yes: "--light", no: "--return", unproven: "--full" };
+const VL = { yes: "Yes", no: "No", unproven: "Not proven" };
+const CL = { high: "light", medium: "full", low: "return" };
+function outcomeHtml(t) {
+  if (!t.outcome) return "";
+  const o = t.outcome, c = t.confidence || {}, sp = t.spots || [], sc = t.scope || { units: [], impact: {} };
+  const imp = Object.keys(sc.impact || {});
+  return `<section><h3>The outcome you are approving</h3>
+    <p class="outcome">${esc(o.statement)}</p>
+    <div class="verdicts">
+      <div class="verdict" style="--c:var(${VC[o.does_it.verdict]})"><b>Does what it should: ${VL[o.does_it.verdict]}</b>${esc(o.does_it.why)}</div>
+      <div class="verdict" style="--c:var(${VC[o.nothing_else.verdict]})"><b>Does nothing else: ${VL[o.nothing_else.verdict]}</b>${esc(o.nothing_else.why)}</div>
+    </div>
+    <div class="units" aria-label="What changed, in or outside the stated outcome">${sc.units.filter((u) => !u.unit.endsWith("(module level)")).map((u) => `<span class="unit ${u.in_scope ? "" : "out"}" title="${esc(u.why)}">${u.in_scope ? "✓" : "outside"} ${esc(u.unit)}</span>`).join("")}</div>
+    ${imp.length ? `<p class="muted" style="margin:0">Also exercised by the tests of ${imp.map(esc).join(", ")}. Those tests still ${t.checked.other_requirements_regressed.length ? "fail for " + t.checked.other_requirements_regressed.join(", ") : "pass"}.</p>` : ""}
+  </section>
+  <section><h3>Confidence by area</h3><div class="conf">${Object.entries(c).map(([a, v]) => `<span class="pill ${CL[v.level]}" title="${esc(v.reasons.join("; "))}">${esc(a)}: ${v.level}</span>`).join("")}</div>
+    ${Object.entries(c).map(([a, v]) => `<p class="muted" style="margin:0"><b>${esc(a)}</b> · ${esc(v.reasons.slice(0, 3).join("; "))}</p>`).join("")}
+  </section>
+  <section><h3>${sp.length ? `Review these ${sp.length} spot${sp.length > 1 ? "s" : ""}` : "Nothing needs your eyes"}</h3>
+    ${sp.length ? `<ol class="spots">${sp.map((x) => `<li><b>${esc(x.what)}</b> ${x.file ? `<span class="mono muted">${esc(x.file)}${x.line ? ":" + x.line : ""}</span>` : ""}<br><span class="${x.kind === "refusal" ? "ask" : "muted"}">${esc(String(x.why).slice(0, 260))}</span></li>`).join("")}</ol>` :
+      `<p class="muted" style="margin:0">Every changed line ran under the stated requirement's tests, and nothing is open. Read the outcome and evidence, then decide.</p>`}
+  </section>`;
+}
 let timer = null, started = 0;
 function render(id) {
   const t = trailers.find((x) => x.pr.id.toLowerCase() === id) || trailers[0];
@@ -235,6 +273,7 @@ function render(id) {
       <p class="quote">“${esc(t.pr.description)}” (the agent's own description)</p>
       <div class="lane" style="--c:var(${laneVar});--cs:var(${laneVar}-soft)"><b>${laneName}.</b> ${esc(t.decision.why)}</div>
     </section>
+    ${outcomeHtml(t)}
     <section><h3>Evidence per acceptance criterion · ${esc(t.requirement.title)}</h3>
       <div class="scroll"><table><thead><tr><th>AC</th><th>Criterion</th><th>Test, main → PR</th><th>Result</th></tr></thead><tbody>${ev}</tbody></table></div></section>
     ${media}${seq}
@@ -244,28 +283,37 @@ function render(id) {
       <div><span class="muted">Door</span><b>${esc(d.door)}</b>${esc(d.reasons.join(" "))}</div>
       <div><span class="muted">Blast radius</span><b>${esc(d.blast_radius)}</b>${d.changed_functions.length ? "Changed: " + d.changed_functions.map((x) => `<code>${esc(x)}</code>`).join(", ") : "No Python functions changed"}${d.surfaces.length ? ". Reached from " + d.surfaces.map(esc).join(", ") : ""}.</div>
     </div></section>
-    <section><h3>Sign-off card</h3><div class="card">
-      <div class="signbar"><div><span class="muted">Owner</span> <b>${esc(s.owner)}</b>${s.co_signers.length ? ` <span class="muted">· co-sign</span> ${s.co_signers.map(esc).join(", ")}` : ""}</div><span class="timer" id="timer">review time 0:00</span></div>
+    <section><h3>Approver's decision</h3><div class="card">
+      <div class="signbar"><div><span class="muted">Accountable approver</span> <b>${esc(s.owner)}</b>${s.co_signers.length ? ` <span class="muted">· co-sign</span> ${s.co_signers.map(esc).join(", ")}` : ""}</div><span class="timer" id="timer">review time 0:00</span></div>
       <div class="cols">
         <div><b>Checked</b><ul>${s.checked.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
         <div><b>Not checked</b><ul>${s.not_checked.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
         <div><b>Residual risk accepted</b><ul>${s.residual_risk.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
       </div>
       ${qs ? `<div><b>Answer before merge</b>${qs}</div>` : ""}
-      <label><input type="checkbox" class="q" id="accept-${t.pr.id}"> <span>I, ${esc(s.owner)}, accept this change and the residual risk above. The AI review was advice, not approval.</span></label>
-      <div class="signbar"><span class="muted" id="signmsg">${t.decision.tier === "return" ? "This PR goes back to the agent. Signing is disabled until it is fixed." : "Tick every box to sign."}</span>
-      <button class="btn primary" id="sign" disabled>Sign as ${esc(s.owner)}</button></div>
+      <label><input type="checkbox" class="q" id="accept-${t.pr.id}"> <span>I, ${esc(s.owner)}, am accountable that this change does what the outcome says and nothing else, and I accept the residual risk above. The AI review was advice, not approval.</span></label>
+      <label for="reason-${t.pr.id}" class="muted" style="display:block">Reason (recorded with the decision)</label>
+      <textarea id="reason-${t.pr.id}" placeholder="${t.decision.tier === "return" ? "Why this goes back to the agent" : "Why you approve or deny"}"></textarea>
+      <div class="signbar"><span class="muted" id="signmsg">${t.decision.tier === "return" ? "This PR goes back to the agent with the verified evidence. Approving is disabled until it is fixed." : "Tick every box and give a reason to approve."}</span>
+      <span style="display:flex;gap:8px"><button class="btn" id="deny">Deny</button><button class="btn primary" id="sign" disabled>Approve</button></span></div>
     </div></section>
     <section><details><summary>The diff (${t.lines_changed} changed lines), for when you want it</summary>
       ${t.diff.map((f) => `<pre class="diff">${diffHtml(f.unified)}</pre>`).join("")}</details></section>`;
   const boxes = [...document.querySelectorAll("#trailer .q")];
   const sign = $("#sign");
-  const update = () => { sign.disabled = t.decision.tier === "return" || !boxes.every((b) => b.checked); };
+  const reason = $("#reason-" + t.pr.id);
+  const update = () => { sign.disabled = t.decision.tier === "return" || !boxes.every((b) => b.checked) || !reason.value.trim(); };
   boxes.forEach((b) => b.addEventListener("change", update));
+  reason.addEventListener("input", update);
+  $("#deny").addEventListener("click", () => {
+    if (!reason.value.trim()) { $("#signmsg").textContent = "Give a reason to deny. It goes back to the agent with the evidence."; reason.focus(); return; }
+    clearInterval(timer);
+    $("#signmsg").textContent = `Denied by ${s.owner}: “${reason.value.trim()}”. Sent back to the agent with the trailer.`;
+  });
   sign.addEventListener("click", () => {
     const secs = Math.round((Date.now() - started) / 1000);
     clearInterval(timer);
-    $("#signmsg").textContent = `Signed by ${s.owner} after ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")} of review (the model assumes ${DATA.bench.samples.rows.find((r) => r.pr === t.pr.id).trailer_min} min).`;
+    $("#signmsg").textContent = `Approved by ${s.owner} (“${reason.value.trim()}”) after ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")} of review (the model assumes ${DATA.bench.samples.rows.find((r) => r.pr === t.pr.id).trailer_min} min).`;
     sign.disabled = true;
     try { const log = JSON.parse(localStorage.getItem("trailer.timings") || "{}"); log[t.pr.id] = secs; localStorage.setItem("trailer.timings", JSON.stringify(log)); } catch (e) {}
   });
@@ -309,6 +357,15 @@ if (DATA.llm) {
   const claims = Object.keys(lab).filter((k) => !k.startsWith("_")).flatMap((k) => lab[k].map((c) => ({ pr: k, ...c })));
   const wrong = claims.filter((c) => !c.correct);
   $("#llm").textContent = `${e.model} made ${e.raw_findings} findings on the 13 PRs. All quoted real code, so the hallucination filter dropped ${e.dropped_as_ungrounded}. It pointed at the bug's file on ${e.buggy_prs_with_grounded_finding_on_bug_file} buggy PRs, including PR-109, which our deterministic checks only raise as a question. But ${wrong.length} of ${claims.length} claims were wrong (${wrong.map((c) => c.pr + ": " + c.why).join("; ")}). A quote check catches invented code, not wrong reasoning, which is why LLM findings route attention and never block.`;
+}
+if (DATA.ai) {
+  const c = DATA.ai.summary;
+  $("#aicmp-lede").textContent = `Every sample PR is also a real pull request on GitHub, reviewed by Devin and Codex (GitHub Copilot was requested too but ${c.copilot.replace(/^requested on all 13; /, "")}). They find most of the same bugs: on bugs this size, catch rate is not where the trailer wins. The difference is what the approver gets. A reviewer comment is an opinion you re-check. The trailer reproduces ${c.trailer_reproduced} of ${c.trailer.of} bugs and sends them back to the agent with no human time, says whether the PR does anything else, and puts every clean PR in a lane. Reviewer comments can feed the trailer as advisory items.`;
+  const v = (x) => x.verdict === "hidden" ? `flagged, text hidden (${x.hidden})` : x.verdict === "caught" ? `✓ ${esc(x.quote)}` : esc(x.verdict + (x.quote ? ": " + x.quote : ""));
+  const t = (s) => s.startsWith("caught") ? "✓ " + esc(s.slice(8)) : esc(s);
+  $("#aicmp").innerHTML = `<thead><tr><th>PR</th><th>Planted bug</th><th>PR Trailer</th><th>Gemini (ours, advisory)</th><th>Devin Review</th><th>Codex</th></tr></thead><tbody>` +
+    DATA.ai.rows.map((r) => `<tr><td style="white-space:nowrap"><a href="#${r.pr.toLowerCase()}">${r.pr}</a></td><td>${esc(r.bug || "none (clean)")}</td><td>${t(r.trailer)}</td><td>${r.gemini === "caught" ? "✓" : esc(r.gemini)}</td><td>${v(r.devin)}</td><td>${v(r.codex)}</td></tr>`).join("") +
+    `<tr><td colspan="2"><b>Planted bugs caught</b></td><td><b>${c.trailer.caught}/${c.trailer.of}</b> (${c.trailer_reproduced} reproduced)</td><td><b>${c.gemini.caught}/${c.gemini.of}</b></td><td><b>${c.devin.caught}/${c.devin.of}</b> + ${c.devin_hidden_on_bugs} hidden</td><td><b>${c.codex.caught}/${c.codex.of}</b> (reviewed ${c.codex_reviewed} of 13)</td></tr></tbody>`;
 }
 const A = DATA.bench.assumptions;
 $("#assume").textContent = `Model: a line-by-line read costs ${A.orientation_min} min to orient plus ${A.min_per_line} min per changed line, including the surrounding code it needs. Light check ${A.light_min} min. Targeted: ${A.targeted_min}. Full: ${A.full_min}. Return to agent: ${A.return_min} min, and the review after the agent's fix is not counted.`;

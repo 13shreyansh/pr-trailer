@@ -85,6 +85,30 @@ def main():
               + "; ".join(f"{k}: {c['why']}" for k, v in labels.items() if not k.startswith('_') for c in v if not c['correct']) + ".",
               "- Lesson: every wrong claim quoted real code, so grounding filters invented code, not wrong reasoning. "
               "That is why LLM findings route attention and never block."]
+    cmp_path = ROOT / "out" / "ai_compare.json"
+    if cmp_path.exists():
+        c = json.loads(cmp_path.read_text())
+        cs = c["summary"]
+        L += ["", "## Side by side with AI code reviewers on the same 13 PRs", "",
+              f"Each sample PR is a real pull request on GitHub (captured {cs['captured_at']}). "
+              f"GitHub Copilot review was {cs['copilot']}.", "",
+              f"- **PR Trailer:** {cs['trailer']['caught']}/{cs['trailer']['of']} planted bugs, "
+              f"{cs['trailer_reproduced']} of them reproduced and returned to the agent with evidence.",
+              f"- **Gemini (our advisory LLM pass):** pointed at {cs['gemini']['caught']}/{cs['gemini']['of']}, as opinion.",
+              f"- **Devin Review:** {cs['devin']['caught']}/{cs['devin']['of']} visible on GitHub, plus a 'security issue' "
+              f"on the other {cs['devin_hidden_on_bugs']} whose text Devin keeps on its own dashboard.",
+              f"- **Codex:** {cs['codex']['caught']}/{cs['codex']['of']}, but it had only reviewed {cs['codex_reviewed']} of the 13 PRs "
+              "when captured, and it caught every planted bug in the ones it did review.", "",
+              "Our reading: on bugs this size, good AI reviewers find most of them too, so catch rate is not where the trailer wins. "
+              "It wins on what the approver gets. A reviewer comment is an opinion to re-check. The trailer reproduces the failure, "
+              "returns the PR to the agent without a human, answers \"does it do anything else?\", and puts every clean PR in a lane, "
+              "so the approver knows how much to read. Reviewer comments can feed the trailer as advisory items, like Gemini today.", "",
+              "| PR | Planted bug | PR Trailer | Gemini | Devin | Codex |", "|---|---|---|---|---|---|"]
+        for x in c["rows"]:
+            dv, cx = x["devin"], x["codex"]
+            fmt = lambda v: ("flagged, text hidden" if v["verdict"] == "hidden" else v["verdict"]) + (f" ({v['hidden']})" if v.get("hidden") else "") + (f": \"{v['quote']}\"" if v.get("quote") else "")
+            L.append(f"| {x['pr']} | {x['bug'] or 'none'} | {x['trailer']} | {x['gemini']} | {fmt(dv)} | {fmt(cx)} |")
+        L += ["", "Notes: " + " ".join(c["notes"])]
     L += ["", "## Assumptions behind the minutes", "", "```json", json.dumps(b["assumptions"], indent=2), "```",
           "", "Minutes are a model, not a stopwatch. The walkthrough page has a timer so reviewers can replace them with measurements."]
     (ROOT / "docs" / "RESULTS.md").write_text("\n".join(L) + "\n")

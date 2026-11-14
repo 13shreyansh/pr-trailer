@@ -23,7 +23,9 @@ def main():
     llm_eval = OUT / "llm_eval.json"
     labels = ROOT / "bench" / "llm_labels.json"
     llm = {"eval": json.loads(llm_eval.read_text()), "labels": json.loads(labels.read_text())} if llm_eval.exists() else None
-    data = json.dumps({"trailers": trailers, "bench": bench, "llm": llm}).replace("</", "<\\/")
+    ai = OUT / "ai_compare.json"
+    ai = json.loads(ai.read_text()) if ai.exists() else None
+    data = json.dumps({"trailers": trailers, "bench": bench, "llm": llm, "ai": ai}).replace("</", "<\\/")
     html = (SITE / "template.html").read_text().replace("/*DATA*/", data)
     (SITE / "index.html").write_text(html)
     print(f"site/index.html: {len(html) // 1024} KB, {len(trailers)} trailers")
