@@ -53,6 +53,50 @@ Survivors:
 - `ledger/iban.py:6 const: 34 -> 35` → light
 - `ledger/audit.py:17 delete: log.info("%s user=%s %s", event, user_id, json.dumps(fields, sort_keys=True)) -> pass` → targeted
 
+## Held-out mutants (operator families frozen before running)
+
+Dev mutants (operator swaps, constant bumps, deleted calls) were used while fixing the checks. Held-out mutants use families we never tuned on: string literal changes, and/or swaps, argument swaps, and a neutralised SQL predicate. Rule: no check may be changed because of a held-out result without moving that family into dev and adding a new held-out family.
+
+- 18 held-out mutants: 12 returned with proof (67%), 6 routed to a human, 0 passed as light. Small set: treat it as a smoke test, not a precise rate.
+
+## Dumb baselines the trailer must beat
+
+'Caught' means the PR was blocked on evidence or sent to a human read. 'Full read of everything' assumes a perfect human reviewer, which flatters it.
+
+**samples**
+
+| Router | Catch rate | Clean PRs sent to a human | Minutes |
+|---|---|---|---|
+| Approve everything | 0% | 0/5 | 26.0 |
+| Tests only (CI green = merge) | 38% | 0/5 | 23.0 |
+| Diff size router (>15 lines = full read) | 25% | 2/5 | 98.2 |
+| Full read of everything | 100% | 5/5 | 158.8 |
+| PR Trailer | 100% | 3/5 | 57.5 |
+
+**mutants**
+
+| Router | Catch rate | Clean PRs sent to a human | Minutes |
+|---|---|---|---|
+| Approve everything | 0% | n/a | 98.0 |
+| Tests only (CI green = merge) | 53% | n/a | 72.0 |
+| Diff size router (>15 lines = full read) | 0% | n/a | 98.0 |
+| Full read of everything | 100% | n/a | 254.8 |
+| PR Trailer | 90% | n/a | 91.8 |
+
+**heldout**
+
+| Router | Catch rate | Clean PRs sent to a human | Minutes |
+|---|---|---|---|
+| Approve everything | 0% | n/a | 36.0 |
+| Tests only (CI green = merge) | 56% | n/a | 26.0 |
+| Diff size router (>15 lines = full read) | 0% | n/a | 36.0 |
+| Full read of everything | 100% | n/a | 93.6 |
+| PR Trailer | 100% | n/a | 43.2 |
+
+## Human spot checks
+
+Policy: full read of 20% of light-lane PRs, chosen at random. Of 7 light-lane PRs, picked MUT-025; misses found: MUT-025. A miss found this way counts as an escape in the trust ledger, so the area loses its light lane.
+
 ## Assumptions behind the minutes
 
 ```json

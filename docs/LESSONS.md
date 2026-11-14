@@ -10,6 +10,13 @@
 6. **Coverage was blind to the browser.** Lines run only by UI tests looked untested, which pushed clean UI PRs into targeted review. *Fix:* the API server now runs under line tracing during the browser tests.
 7. **The temptation to block on opinion.** The new `/api/metrics` endpoint (PR-111) is not a bug, but it is new attack surface. We made it a refusal for the security owner, not a finding.
 
+## Keeping the measurement honest (so hill-climbing doesn't optimise the wrong thing)
+
+- **Dev vs held-out.** We fixed checks only against the 13 sample PRs and the dev mutants. Held-out mutants come from operator families we never tuned on. If a held-out result makes us change a check, that family moves to dev and a new held-out family is added.
+- **Dumb baselines.** Every run also scores "approve everything", "tests only", "diff-size router" and "full read of everything". A change to the trailer counts only if it beats "tests only" on catch rate and "full read" on minutes.
+- **Human spot checks.** A random 20% of light-lane PRs get a full human read. A bug found there is an escape, and the area loses its light lane.
+- **Clean PRs are part of the score.** Every check that fires on a clean PR shows up as a false alarm or a human-read cost, so "flag everything" can never look good.
+
 ## Decision log
 
 | # | Decision | Why | Trade-off |
@@ -24,3 +31,4 @@
 | D8 | Model review minutes with explicit assumptions | No real reviewers available at the hackathon | Must be validated with a timer |
 | D9 | LLM findings need a verbatim quote, or they are dropped and counted | Makes hallucination measurable | A correct finding with a sloppy quote is lost |
 | D10 | Trust ledger per area: 3 clean PRs to earn the light lane; an escape means 5 full reads | "Trust is earned per area, withdrawn after escapes" | Slower start in new areas |
+| D11 | Held-out mutant families, dumb baselines and random spot checks in every bench run | Stops us tuning to our own test set | More runtime, small held-out set |

@@ -47,6 +47,29 @@ def main():
         for r in b["mutants"]["rows"]:
             if not r["blocked"]:
                 L.append(f"- `{r['mutation']}` → {r['tier']}")
+    if "heldout" in b:
+        h = b["heldout"]["summary"]
+        L += ["", "## Held-out mutants (operator families frozen before running)", "",
+              "Dev mutants (operator swaps, constant bumps, deleted calls) were used while fixing the checks. "
+              "Held-out mutants use families we never tuned on: string literal changes, and/or swaps, argument swaps, "
+              "and a neutralised SQL predicate. Rule: no check may be changed because of a held-out result "
+              "without moving that family into dev and adding a new held-out family.", "",
+              f"- {h['mutants']} held-out mutants: {h['blocked_with_verified_evidence']} returned with proof "
+              f"({pct(h['strict_catch_rate'])}), {h['routed_to_human']} routed to a human, {h['passed_as_light']} passed as light. "
+              "Small set: treat it as a smoke test, not a precise rate."]
+    if "baselines" in b:
+        L += ["", "## Dumb baselines the trailer must beat", "",
+              "'Caught' means the PR was blocked on evidence or sent to a human read. 'Full read of everything' assumes "
+              "a perfect human reviewer, which flatters it.", ""]
+        for setname, rowsb in b["baselines"].items():
+            L += [f"**{setname}**", "", "| Router | Catch rate | Clean PRs sent to a human | Minutes |", "|---|---|---|---|"]
+            L += [f"| {x['name']} | {pct(x['catch_rate'])} | {x['flags_on_clean']} | {x['minutes']} |" for x in rowsb]
+            L.append("")
+    if "spot_checks" in b:
+        sc = b["spot_checks"]
+        L += ["## Human spot checks", "", f"Policy: {sc['policy']}. Of {sc['light_prs']} light-lane PRs, picked "
+              f"{', '.join(sc['picked']) or 'none'}; misses found: {', '.join(sc['misses_found']) or 'none'}. "
+              "A miss found this way counts as an escape in the trust ledger, so the area loses its light lane."]
     L += ["", "## Assumptions behind the minutes", "", "```json", json.dumps(b["assumptions"], indent=2), "```",
           "", "Minutes are a model, not a stopwatch. The walkthrough page has a timer so reviewers can replace them with measurements."]
     (ROOT / "docs" / "RESULTS.md").write_text("\n".join(L) + "\n")

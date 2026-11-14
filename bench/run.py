@@ -112,6 +112,74 @@ def trust_ledger(rows, start_after=3, penalty=5):
             "extra_full_reads_from_ledger": sum(1 for l in log if l["effective_tier"] == "full" and l["ai_tier"] != "full")}
 
 
+def run_mutants(out, family, n):
+    mdir = ROOT / "out" / f"_mutants_{family}"
+    mtruth = mutmod.generate(mdir, n=n, family=family)
+    workspace.PRS = mdir
+    mrows = []
+    for pid in sorted(mtruth):
+        t = engine.build(pid, out / f"_mutant_trailers_{family}", with_ui=False)
+        tr = mtruth[pid]
+        verified_block = [f for f in t["findings"] if f["verified"] and f["severity"] == "block"]
+        tier = t["decision"]["tier"]
+        mrows.append({"pr": pid, "area": tr["file"].split("/")[-1][:-3], "buggy": True,
+                      "escaped": tier == "light", "routed_to_bug": tier != "light",
+                      "mutation": f"{tr['file']}:{tr['line']} {tr['mutation']}",
+                      "tier": tier, "blocked": tier == "return", "routed": tier in ("targeted", "full"),
+                      "light": tier == "light", "lines": t["lines_changed"], "baseline_min": round(baseline(t), 1),
+                      "trailer_min": round(TIER_COST[tier](t), 1), "tests_caught": tests_caught(t),
+                      "caught_by": sorted({f["rule"] for f in verified_block})})
+    workspace.PRS = ROOT / "prs"
+    m = len(mrows)
+    return {"summary": {"family": family, "mutants": m,
+                        "blocked_with_verified_evidence": sum(r["blocked"] for r in mrows),
+                        "routed_to_human": sum(r["routed"] for r in mrows),
+                        "passed_as_light": sum(r["light"] for r in mrows),
+                        "strict_catch_rate": round(sum(r["blocked"] for r in mrows) / m, 3),
+                        "catch_rate": round(sum(not r["light"] for r in mrows) / m, 3),
+                        "note": "Survivors include equivalent mutants that change nothing observable; "
+                                "they were not removed by hand."},
+            "rows": mrows, "ledger": trust_ledger(mrows)}
+
+
+def tests_caught(t):
+    return any(f["rule"] in ("T-REGRESSION", "T-CLAIM-UNMET") and f["verified"] for f in t["findings"])
+
+
+def baselines(rows):
+    """Dumb routers the trailer must beat. 'Caught' = the PR went to a human read or was blocked on evidence."""
+    bugs = [r for r in rows if r["buggy"]] or [{}]
+    clean = [r for r in rows if not r["buggy"]]
+
+    def score(name, routes, minutes):
+        caught = sum(1 for r in rows if r["buggy"] and routes(r))
+        alarms = sum(1 for r in clean if routes(r))
+        return {"name": name, "catch_rate": round(caught / len([r for r in rows if r["buggy"]] or [1]), 3),
+                "flags_on_clean": f"{alarms}/{len(clean)}" if clean else "n/a",
+                "minutes": round(sum(minutes(r) for r in rows), 1)}
+
+    full = lambda r: r["baseline_min"]
+    return [
+        score("Approve everything", lambda r: False, lambda r: 2.0),
+        score("Tests only (CI green = merge)", lambda r: r["tests_caught"], lambda r: 1.0 if r["tests_caught"] else 2.0),
+        score("Diff size router (>15 lines = full read)", lambda r: r["lines"] > 15, lambda r: full(r) if r["lines"] > 15 else 2.0),
+        score("Full read of everything", lambda r: True, full),
+        score("PR Trailer", lambda r: r["tier"] != "light", lambda r: r["trailer_min"]),
+    ]
+
+
+def spot_checks(rows, share=0.2, seed=5):
+    """Humans spot-check a random share of light-lane PRs with a full read; misses found this way feed the ledger."""
+    import random
+    light = [r["pr"] for r in rows if r["tier"] == "light"]
+    rng = random.Random(seed)
+    k = max(1, round(share * len(light))) if light else 0
+    picked = sorted(rng.sample(light, k)) if k else []
+    found = [p for p in picked if any(r["pr"] == p and r["buggy"] for r in rows)]
+    return {"policy": f"full read of {int(share * 100)}% of light-lane PRs, chosen at random",
+            "light_prs": len(light), "picked": picked, "misses_found": found}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(ROOT / "out"))
@@ -129,41 +197,28 @@ def main():
         trailers.append(t)
         print(f"{pid}: {t['decision']['label']}", flush=True)
     rows = score_samples(trailers, truth)
+    for r, t in zip(rows, trailers):
+        r["tests_caught"] = tests_caught(t)
     result = {"samples": {"summary": summarise(rows), "rows": rows, "ledger": trust_ledger(rows)},
               "assumptions": {"min_per_line": MIN_PER_LINE, "orientation_min": ORIENT,
                               "light_min": 2.0, "targeted_min": "3 + 1 per open question + 0.6 per flagged line",
                               "full_min": "baseline + 1.5", "return_min": 1.0}}
 
     if a.mutants:
-        mdir = ROOT / "out" / "_mutants"
-        mtruth = mutmod.generate(mdir, n=a.mutants)
-        workspace.PRS = mdir
-        mrows = []
-        for pid in sorted(mtruth):
-            t = engine.build(pid, out / "_mutant_trailers", with_ui=False)
-            tr = mtruth[pid]
-            verified_block = [f for f in t["findings"] if f["verified"] and f["severity"] == "block"]
-            mrows.append({"pr": pid, "area": tr["file"].split("/")[-1][:-3], "escaped": t["decision"]["tier"] == "light",
-                          "mutation": f"{tr['file']}:{tr['line']} {tr['mutation']}",
-                          "tier": t["decision"]["tier"], "blocked": t["decision"]["tier"] == "return",
-                          "routed": t["decision"]["tier"] in ("targeted", "full"),
-                          "light": t["decision"]["tier"] == "light",
-                          "caught_by": sorted({f["rule"] for f in verified_block})})
-        workspace.PRS = ROOT / "prs"
-        m = len(mrows)
-        result["mutants"] = {
-            "summary": {"mutants": m,
-                        "blocked_with_verified_evidence": sum(r["blocked"] for r in mrows),
-                        "routed_to_human": sum(r["routed"] for r in mrows),
-                        "passed_as_light": sum(r["light"] for r in mrows),
-                        "strict_catch_rate": round(sum(r["blocked"] for r in mrows) / m, 3),
-                        "note": "Survivors include equivalent mutants that change nothing observable; "
-                                "they were not removed by hand."},
-            "rows": mrows, "ledger": trust_ledger(mrows)}
+        result["mutants"] = run_mutants(out, "dev", a.mutants)
+        result["heldout"] = run_mutants(out, "heldout", a.mutants)
+    result["baselines"] = {"samples": baselines(rows)}
+    if a.mutants:
+        result["baselines"]["mutants"] = baselines(result["mutants"]["rows"])
+        result["baselines"]["heldout"] = baselines(result["heldout"]["rows"])
+    result["spot_checks"] = spot_checks(rows + result.get("mutants", {}).get("rows", []))
     (out / "bench.json").write_text(json.dumps(result, indent=2))
     print(json.dumps(result["samples"]["summary"], indent=2))
     if a.mutants:
         print(json.dumps(result["mutants"]["summary"], indent=2))
+        print(json.dumps(result["heldout"]["summary"], indent=2))
+    print(json.dumps(result["baselines"], indent=1))
+    print(json.dumps(result["spot_checks"]))
 
 
 if __name__ == "__main__":

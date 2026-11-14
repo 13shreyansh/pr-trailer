@@ -144,6 +144,9 @@ pre.diff .a { color: var(--light); } pre.diff .r { color: var(--return); } pre.d
     <p class="muted" id="assume"></p>
     <h3>Trust ledger on the mutants</h3>
     <p class="muted" id="ledger" style="margin:0;max-width:75ch"></p>
+    <h3>Dumb baselines it has to beat</h3>
+    <p class="muted" style="margin:0;max-width:75ch">"Caught" means the PR was blocked on evidence or sent to a human read. Held-out mutants use operator families we never tuned the checks on. "Full read of everything" assumes a perfect human reviewer, which flatters it.</p>
+    <div class="scroll"><table id="baselines"></table></div>
   </section>
 
   <section class="block">
@@ -294,6 +297,11 @@ $("#lanebar").insertAdjacentHTML("afterend", `<div class="legend" style="margin-
 $("#bench").innerHTML = `<thead><tr><th>PR</th><th>Planted bug</th><th>Lane</th><th>Caught by</th><th class="num">Line-by-line min</th><th class="num">Trailer min</th></tr></thead><tbody>` +
   DATA.bench.samples.rows.map((r) => `<tr><td><a href="#${r.pr.toLowerCase()}">${r.pr}</a></td><td>${esc(r.bug || "none (clean)")}</td><td>${pill(r.tier)}</td><td class="mono">${esc(r.caught_by.join(", ") || "–")}</td><td class="num">${r.baseline_min}</td><td class="num">${r.trailer_min}</td></tr>`).join("") +
   `<tr><td colspan="4"><b>Total</b></td><td class="num"><b>${S.minutes_baseline}</b></td><td class="num"><b>${S.minutes_with_trailer}</b></td></tr></tbody>`;
+if (DATA.bench.baselines) {
+  const B = DATA.bench.baselines, sets = Object.keys(B), label = { samples: "13 sample PRs", mutants: "Dev mutants", heldout: "Held-out mutants" };
+  $("#baselines").innerHTML = `<thead><tr><th>Router</th>${sets.map((k) => `<th class="num">${label[k] || k}<br>catch · min</th>`).join("")}</tr></thead><tbody>` +
+    B[sets[0]].map((row, i) => `<tr${row.name === "PR Trailer" ? ' style="font-weight:600"' : ""}><td>${esc(row.name)}</td>${sets.map((k) => `<td class="num">${pct(B[k][i].catch_rate)} · ${B[k][i].minutes}</td>`).join("")}</tr>`).join("") + "</tbody>";
+}
 const A = DATA.bench.assumptions;
 $("#assume").textContent = `Model: a line-by-line read costs ${A.orientation_min} min to orient plus ${A.min_per_line} min per changed line, including the surrounding code it needs. Light check ${A.light_min} min. Targeted: ${A.targeted_min}. Full: ${A.full_min}. Return to agent: ${A.return_min} min, and the review after the agent's fix is not counted.`;
 </script>

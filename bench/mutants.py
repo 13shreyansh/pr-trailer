@@ -55,16 +55,52 @@ def sites(rel: str):
     return out
 
 
-def generate(dest: Path, n=60, seed=11):
+def heldout_sites(rel: str):
+    """Operator families never used while the checks were tuned. Frozen: do not tune checks on these."""
+    src = (BANK / rel).read_text()
+    lines = src.splitlines()
+    tree = ast.parse(src)
+    docstrings = {id(n.body[0].value) for n in ast.walk(tree)
+                  if isinstance(n, (ast.Module, ast.FunctionDef, ast.ClassDef)) and n.body
+                  and isinstance(n.body[0], ast.Expr) and isinstance(n.body[0].value, ast.Constant)}
+    out = []
+    for n in ast.walk(tree):
+        if isinstance(n, ast.BoolOp) and len(n.values) == 2 and n.lineno == n.end_lineno:
+            a, b = n.values
+            seg = lines[n.lineno - 1][a.end_col_offset:b.col_offset]
+            tok = seg.strip()
+            if tok in ("and", "or"):
+                c0 = a.end_col_offset + seg.index(tok)
+                out.append(("bool", n.lineno, c0, c0 + len(tok), tok, "or" if tok == "and" else "and"))
+        elif isinstance(n, ast.Constant) and isinstance(n.value, str) and id(n) not in docstrings \
+                and n.lineno == n.end_lineno and n.value:
+            seg = lines[n.lineno - 1][n.col_offset:n.end_col_offset]
+            if " AND " in n.value:  # neutralise the second WHERE predicate
+                head, rest = seg.split(" AND ", 1)
+                cut = min([i for i in (rest.find(" AND "), rest.find(seg[-1])) if i >= 0])
+                out.append(("sql-pred", n.lineno, n.col_offset, n.end_col_offset, seg, head + " AND 1 = 1" + rest[cut:]))
+            elif n.value.isidentifier() and len(n.value) < 20:
+                out.append(("str", n.lineno, n.col_offset, n.end_col_offset, seg, seg[0] + n.value + "_x" + seg[-1]))
+        elif isinstance(n, ast.Call) and len(n.args) == 2 and all(isinstance(x, ast.Name) for x in n.args) \
+                and n.lineno == n.end_lineno:
+            a, b = n.args
+            line = lines[n.lineno - 1]
+            out.append(("arg-swap", n.lineno, a.col_offset, b.end_col_offset, line[a.col_offset:b.end_col_offset],
+                        f"{b.id}, {a.id}"))
+    return out
+
+
+def generate(dest: Path, n=60, seed=11, family="dev"):
     rng = random.Random(seed)
-    all_sites = [(rel, s) for rel in FILE_REQ for s in sites(rel)]
+    finder = sites if family == "dev" else heldout_sites
+    all_sites = [(rel, s) for rel in FILE_REQ for s in finder(rel)]
     rng.shuffle(all_sites)
     chosen = all_sites[:n]
     if dest.exists():
         shutil.rmtree(dest)
     truth = {}
     for i, (rel, (kind, line, c0, c1, old, new)) in enumerate(chosen, 1):
-        pid = f"MUT-{i:03d}"
+        pid = f"{'MUT' if family == 'dev' else 'HLD'}-{i:03d}"
         lines = (BANK / rel).read_text().splitlines(keepends=True)
         text = lines[line - 1]
         lines[line - 1] = text[:c0] + new + text[c1:] if kind != "delete" else text[:c0] + "pass\n"
