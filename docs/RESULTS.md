@@ -111,7 +111,7 @@ Each sample PR is a real pull request on GitHub (captured 2026-11-14T14:05Z). Gi
 - **PR Trailer:** 8/8 planted bugs, 7 of them reproduced and returned to the agent with evidence.
 - **Gemini (our advisory LLM pass):** pointed at 8/8, as opinion.
 - **Devin Review:** 4/8 visible on GitHub, plus a 'security issue' on the other 4 whose text Devin keeps on its own dashboard.
-- **Codex:** 3/8, but it had only reviewed 5 of the 13 PRs when captured, and it caught every planted bug in the ones it did review.
+- **Codex:** 3/8, but its review only completed on 5 of the 13 PRs (it failed or was still running on the rest), and it caught every planted bug in the ones it did review.
 
 Our reading: on bugs this size, good AI reviewers find most of them too, so catch rate is not where the trailer wins. It wins on what the approver gets. A reviewer comment is an opinion to re-check. The trailer reproduces the failure, returns the PR to the agent without a human, answers "does it do anything else?", and puts every clean PR in a lane, so the approver knows how much to read. Reviewer comments can feed the trailer as advisory items, like Gemini today.
 
@@ -120,18 +120,18 @@ Our reading: on bugs this size, good AI reviewers find most of them too, so catc
 | PR-101 | none | clean: targeted review | no issues | no issues | no issues (thumbs up) |
 | PR-102 | Daily total ignores pending transfers, so the daily limit can be bypassed by sending many transfers before settlement. | caught: reproduced, returned to agent | caught | flagged, text hidden (1) | caught: "Count pending transfers toward the daily limit" |
 | PR-103 | History endpoint never checks ownership: any user can read any account's transfers (IDOR). | caught: reproduced, returned to agent | caught | flagged, text hidden (1) | caught: "Check account ownership before returning history" |
-| PR-104 | Amount parsing goes through float: '19.99' becomes 1998 cents. | caught: reproduced, returned to agent | caught | caught: "Transfer amounts silently lose cents" | no review |
-| PR-105 | The new warning log writes the full recipient IBAN (PII) to application logs. | caught: reproduced, returned to agent | caught | flagged, text hidden (2) | no review |
-| PR-106 | Statement export still reads memo; dropping the column breaks CSV export and destroys customer memos irreversibly. | caught: reproduced, returned to agent | caught | caught: "Lost memos and broken statement exports" | no review |
-| PR-107 | none | clean: light check | no issues | no issues | no review |
-| PR-108 | Refactor removed the fee refresh on transfer-type change: switching to Instant still shows the SEPA fee. | caught: reproduced, returned to agent | caught | caught: "Stale fees after transfer type changes" | no review |
-| PR-109 | Idempotency lookup is no longer scoped to the user: a key collision returns another customer's transfer id and skips the payment. | caught: question on the faulty file, sent to owner | caught | flagged, text hidden (1) | no review |
+| PR-104 | Amount parsing goes through float: '19.99' becomes 1998 cents. | caught: reproduced, returned to agent | caught | caught: "Transfer amounts silently lose cents" | review failed |
+| PR-105 | The new warning log writes the full recipient IBAN (PII) to application logs. | caught: reproduced, returned to agent | caught | flagged, text hidden (2) | review failed |
+| PR-106 | Statement export still reads memo; dropping the column breaks CSV export and destroys customer memos irreversibly. | caught: reproduced, returned to agent | caught | caught: "Lost memos and broken statement exports" | review failed |
+| PR-107 | none | clean: light check | no issues | no issues | review failed |
+| PR-108 | Refactor removed the fee refresh on transfer-type change: switching to Instant still shows the SEPA fee. | caught: reproduced, returned to agent | caught | caught: "Stale fees after transfer type changes" | review failed |
+| PR-109 | Idempotency lookup is no longer scoped to the user: a key collision returns another customer's transfer id and skips the payment. | caught: question on the faulty file, sent to owner | caught | flagged, text hidden (1) | review failed |
 | PR-110 | round() on Decimal is banker's rounding: fees on half-cent amounts drop by one cent (e.g. EUR 752.50 -> 150 instead of 151). | caught: reproduced, returned to agent | caught | caught: "Undercharged instant transfer fees" | caught: "Use half-up rounding for instant fees" |
 | PR-111 | none | clean: targeted review | 1 comment | comments: "Retries inflate created transfer counts" | comments: "Count only newly inserted transfers" |
-| PR-112 | none | clean: full read (policy) | no issues | no issues | no review |
-| PR-113 | none | clean: light check | 1 comment | no issues | no review |
+| PR-112 | none | clean: full read (policy) | no issues | no issues | still running |
+| PR-113 | none | clean: light check | 1 comment | no issues | review failed |
 
-Notes: GitHub Copilot review was requested on all 13 PRs but returned 'insufficient remaining quota' on every one, so it has no result here. Devin Review posted some findings only to its own dashboard ('security issue, not posted on this PR by your GitHub settings'). We count those as 'flagged, text hidden' and do not score them as catches, because we could not read what they said. Codex reviewed 4 PRs with comments, thumbed-up PR-101, and had not reacted to the other 8 when captured. Labels are ours: 'caught' means a comment on the planted bug's file that describes the planted bug.
+Notes: GitHub Copilot review was requested on all 13 PRs but returned 'insufficient remaining quota' on every one, so it has no result here. Devin Review posted some findings only to its own dashboard ('security issue, not posted on this PR by your GitHub settings'). We count those as 'flagged, text hidden' and do not score them as catches, because we could not read what they said. Codex completed 5 reviews (comments on 4, a thumbs-up on PR-101). On 7 PRs it reported 'We couldn't complete this review', and PR-112 was still running when captured. We did not re-trigger it. Labels are ours: 'caught' means a comment on the planted bug's file that describes the planted bug.
 
 ## Assumptions behind the minutes
 

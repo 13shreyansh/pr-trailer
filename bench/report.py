@@ -97,8 +97,8 @@ def main():
               f"- **Gemini (our advisory LLM pass):** pointed at {cs['gemini']['caught']}/{cs['gemini']['of']}, as opinion.",
               f"- **Devin Review:** {cs['devin']['caught']}/{cs['devin']['of']} visible on GitHub, plus a 'security issue' "
               f"on the other {cs['devin_hidden_on_bugs']} whose text Devin keeps on its own dashboard.",
-              f"- **Codex:** {cs['codex']['caught']}/{cs['codex']['of']}, but it had only reviewed {cs['codex_reviewed']} of the 13 PRs "
-              "when captured, and it caught every planted bug in the ones it did review.", "",
+              f"- **Codex:** {cs['codex']['caught']}/{cs['codex']['of']}, but its review only completed on {cs['codex_reviewed']} of the 13 PRs "
+              "(it failed or was still running on the rest), and it caught every planted bug in the ones it did review.", "",
               "Our reading: on bugs this size, good AI reviewers find most of them too, so catch rate is not where the trailer wins. "
               "It wins on what the approver gets. A reviewer comment is an opinion to re-check. The trailer reproduces the failure, "
               "returns the PR to the agent without a human, answers \"does it do anything else?\", and puts every clean PR in a lane, "

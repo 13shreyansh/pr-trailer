@@ -365,7 +365,7 @@ if (DATA.ai) {
   const t = (s) => s.startsWith("caught") ? "✓ " + esc(s.slice(8)) : esc(s);
   $("#aicmp").innerHTML = `<thead><tr><th>PR</th><th>Planted bug</th><th>PR Trailer</th><th>Gemini (ours, advisory)</th><th>Devin Review</th><th>Codex</th></tr></thead><tbody>` +
     DATA.ai.rows.map((r) => `<tr><td style="white-space:nowrap"><a href="#${r.pr.toLowerCase()}">${r.pr}</a></td><td>${esc(r.bug || "none (clean)")}</td><td>${t(r.trailer)}</td><td>${r.gemini === "caught" ? "✓" : esc(r.gemini)}</td><td>${v(r.devin)}</td><td>${v(r.codex)}</td></tr>`).join("") +
-    `<tr><td colspan="2"><b>Planted bugs caught</b></td><td><b>${c.trailer.caught}/${c.trailer.of}</b> (${c.trailer_reproduced} reproduced)</td><td><b>${c.gemini.caught}/${c.gemini.of}</b></td><td><b>${c.devin.caught}/${c.devin.of}</b> + ${c.devin_hidden_on_bugs} hidden</td><td><b>${c.codex.caught}/${c.codex.of}</b> (reviewed ${c.codex_reviewed} of 13)</td></tr></tbody>`;
+    `<tr><td colspan="2"><b>Planted bugs caught</b></td><td><b>${c.trailer.caught}/${c.trailer.of}</b> (${c.trailer_reproduced} reproduced)</td><td><b>${c.gemini.caught}/${c.gemini.of}</b></td><td><b>${c.devin.caught}/${c.devin.of}</b> + ${c.devin_hidden_on_bugs} hidden</td><td><b>${c.codex.caught}/${c.codex.of}</b> (completed ${c.codex_reviewed} of 13)</td></tr></tbody>`;
 }
 const A = DATA.bench.assumptions;
 $("#assume").textContent = `Model: a line-by-line read costs ${A.orientation_min} min to orient plus ${A.min_per_line} min per changed line, including the surrounding code it needs. Light check ${A.light_min} min. Targeted: ${A.targeted_min}. Full: ${A.full_min}. Return to agent: ${A.return_min} min, and the review after the agent's fix is not counted.`;

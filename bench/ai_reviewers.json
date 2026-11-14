@@ -4,22 +4,136 @@
   "notes": [
     "GitHub Copilot review was requested on all 13 PRs but returned 'insufficient remaining quota' on every one, so it has no result here.",
     "Devin Review posted some findings only to its own dashboard ('security issue, not posted on this PR by your GitHub settings'). We count those as 'flagged, text hidden' and do not score them as catches, because we could not read what they said.",
-    "Codex reviewed 4 PRs with comments, thumbed-up PR-101, and had not reacted to the other 8 when captured.",
+    "Codex completed 5 reviews (comments on 4, a thumbs-up on PR-101). On 7 PRs it reported 'We couldn't complete this review', and PR-112 was still running when captured. We did not re-trigger it.",
     "Labels are ours: 'caught' means a comment on the planted bug's file that describes the planted bug."
   ],
   "prs": {
-    "PR-101": {"devin": {"verdict": "no issues"}, "codex": {"verdict": "no issues (thumbs up)"}},
-    "PR-102": {"devin": {"verdict": "hidden", "hidden": 1}, "codex": {"verdict": "caught", "comments": 1, "quote": "Count pending transfers toward the daily limit"}},
-    "PR-103": {"devin": {"verdict": "hidden", "hidden": 1}, "codex": {"verdict": "caught", "comments": 1, "quote": "Check account ownership before returning history"}},
-    "PR-104": {"devin": {"verdict": "caught", "comments": 1, "quote": "Transfer amounts silently lose cents"}, "codex": {"verdict": "no review"}},
-    "PR-105": {"devin": {"verdict": "hidden", "hidden": 2}, "codex": {"verdict": "no review"}},
-    "PR-106": {"devin": {"verdict": "caught", "comments": 1, "quote": "Lost memos and broken statement exports"}, "codex": {"verdict": "no review"}},
-    "PR-107": {"devin": {"verdict": "no issues"}, "codex": {"verdict": "no review"}},
-    "PR-108": {"devin": {"verdict": "caught", "comments": 2, "quote": "Stale fees after transfer type changes", "other": "Disabled storage blocks all transfers (real, not planted)"}, "codex": {"verdict": "no review"}},
-    "PR-109": {"devin": {"verdict": "hidden", "hidden": 1}, "codex": {"verdict": "no review"}},
-    "PR-110": {"devin": {"verdict": "caught", "comments": 1, "quote": "Undercharged instant transfer fees"}, "codex": {"verdict": "caught", "comments": 1, "quote": "Use half-up rounding for instant fees"}},
-    "PR-111": {"devin": {"verdict": "comments", "comments": 2, "quote": "Retries inflate created transfer counts"}, "codex": {"verdict": "comments", "comments": 2, "quote": "Count only newly inserted transfers"}},
-    "PR-112": {"devin": {"verdict": "no issues"}, "codex": {"verdict": "no review"}},
-    "PR-113": {"devin": {"verdict": "no issues"}, "codex": {"verdict": "no review"}}
+    "PR-101": {
+      "devin": {
+        "verdict": "no issues"
+      },
+      "codex": {
+        "verdict": "no issues (thumbs up)"
+      }
+    },
+    "PR-102": {
+      "devin": {
+        "verdict": "hidden",
+        "hidden": 1
+      },
+      "codex": {
+        "verdict": "caught",
+        "comments": 1,
+        "quote": "Count pending transfers toward the daily limit"
+      }
+    },
+    "PR-103": {
+      "devin": {
+        "verdict": "hidden",
+        "hidden": 1
+      },
+      "codex": {
+        "verdict": "caught",
+        "comments": 1,
+        "quote": "Check account ownership before returning history"
+      }
+    },
+    "PR-104": {
+      "devin": {
+        "verdict": "caught",
+        "comments": 1,
+        "quote": "Transfer amounts silently lose cents"
+      },
+      "codex": {
+        "verdict": "review failed"
+      }
+    },
+    "PR-105": {
+      "devin": {
+        "verdict": "hidden",
+        "hidden": 2
+      },
+      "codex": {
+        "verdict": "review failed"
+      }
+    },
+    "PR-106": {
+      "devin": {
+        "verdict": "caught",
+        "comments": 1,
+        "quote": "Lost memos and broken statement exports"
+      },
+      "codex": {
+        "verdict": "review failed"
+      }
+    },
+    "PR-107": {
+      "devin": {
+        "verdict": "no issues"
+      },
+      "codex": {
+        "verdict": "review failed"
+      }
+    },
+    "PR-108": {
+      "devin": {
+        "verdict": "caught",
+        "comments": 2,
+        "quote": "Stale fees after transfer type changes",
+        "other": "Disabled storage blocks all transfers (real, not planted)"
+      },
+      "codex": {
+        "verdict": "review failed"
+      }
+    },
+    "PR-109": {
+      "devin": {
+        "verdict": "hidden",
+        "hidden": 1
+      },
+      "codex": {
+        "verdict": "review failed"
+      }
+    },
+    "PR-110": {
+      "devin": {
+        "verdict": "caught",
+        "comments": 1,
+        "quote": "Undercharged instant transfer fees"
+      },
+      "codex": {
+        "verdict": "caught",
+        "comments": 1,
+        "quote": "Use half-up rounding for instant fees"
+      }
+    },
+    "PR-111": {
+      "devin": {
+        "verdict": "comments",
+        "comments": 2,
+        "quote": "Retries inflate created transfer counts"
+      },
+      "codex": {
+        "verdict": "comments",
+        "comments": 2,
+        "quote": "Count only newly inserted transfers"
+      }
+    },
+    "PR-112": {
+      "devin": {
+        "verdict": "no issues"
+      },
+      "codex": {
+        "verdict": "still running"
+      }
+    },
+    "PR-113": {
+      "devin": {
+        "verdict": "no issues"
+      },
+      "codex": {
+        "verdict": "review failed"
+      }
+    }
   }
 }

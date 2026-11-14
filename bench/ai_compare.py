@@ -60,7 +60,7 @@ def build():
         "devin": tally("devin", lambda x: x["devin"]["verdict"] == "caught"),
         "devin_hidden_on_bugs": sum(1 for x in bugs if x["devin"]["verdict"] == "hidden"),
         "codex": tally("codex", lambda x: x["codex"]["verdict"] == "caught"),
-        "codex_reviewed": sum(1 for x in rows if x["codex"]["verdict"] != "no review"),
+        "codex_reviewed": sum(1 for x in rows if x["codex"]["verdict"] not in ("review failed", "still running")),
         "copilot": "requested on all 13; refused every one for insufficient quota",
         "captured_at": rev["captured_at"],
     }
