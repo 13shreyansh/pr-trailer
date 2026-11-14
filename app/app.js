@@ -66,15 +66,16 @@ function prRow(p) {
 function sprintViz() {
   const E = DATA.effort, T = E.strategies.trailer;
   const byId = Object.fromEntries(DATA.prs.map((p) => [p.id, p]));
-  const rows = [...T.per_pr].sort((a, b) => a.pr.localeCompare(b.pr)).map((r) => {
+  const rows = [...T.per_pr].sort((a, b) => a.pr.localeCompare(b.pr)).map((r, idx) => {
     const p = byId[r.pr], t = p.decision.tier, hl = new Set(r.hl);
     const cells = Array.from({ length: r.diff_len }, (_, i) => `<i class="${hl.has(i) ? "hl" : ""}"></i>`).join("");
-    const cost = t === "return" ? "1 line: the reproduced failure" : r.lines ? `${r.lines} lines` : "0 lines";
-    return `<a class="srow lane-${t}" href="#/pr/${r.pr}"><span class="sid">${r.pr}</span><span class="stitle">${esc(r.title)}</span><span class="cells">${cells}</span><span class="scost">${lanePill(t)}<b>${cost}</b></span></a>`;
+    const q = p.spots.filter((x) => x.kind === "refusal").length;
+    const cost = t === "return" ? "1 line: why it went back" : r.lines ? `${r.lines} lines` : q ? `0 lines, ${q} question${q > 1 ? "s" : ""}` : "0 lines: watch the video";
+    return `<a class="srow lane-${t}" style="--i:${idx}" href="#/pr/${r.pr}"><span class="sid">${r.pr}</span><span class="stitle">${esc(r.title)}</span><span class="cells">${cells}</span><span class="scost">${lanePill(t)}<b>${cost}</b></span></a>`;
   }).join("");
   return `<div class="card sprint" id="sprint">
     <div class="sprint-head">
-      <div><div class="eyebrow">This sprint at Nordbank</div><h2 class="sprint-count"><span id="scount">${E.total_diff_lines}</span> <span id="slabel">lines changed by the agent</span></h2></div>
+      <div><div class="eyebrow">This sprint at Nordbank</div><h2 class="sprint-count"><span id="scount">${E.total_diff_lines}</span> <span id="slabel">lines changed by the agent</span> <span class="sof">of ${E.total_diff_lines} changed</span></h2></div>
       <button class="btn" id="narrow" type="button">Run PR Trailer on the sprint</button>
     </div>
     <p class="muted small" id="scap">Each square is one line of the agent's diff, one row per pull request. Reading all of it line by line is the job nobody can keep up with.</p>
@@ -92,13 +93,13 @@ function wireSprint() {
     const step = (now) => { const k = Math.min(1, (now - t0) / 900); count.textContent = Math.round(from + (to - from) * k); if (k < 1) requestAnimationFrame(step); };
     requestAnimationFrame(step);
     label.textContent = "lines need a human";
-    cap.innerHTML = `Bright squares are the lines you read. Seven PRs went back to the agent with the failure reproduced: you read one line each, the finding. Two were proved by tests and a recorded video. Four need a person, and only where a question is open. <b>All 8 planted bugs are in front of you after ${T.lines_for_all} lines.</b> Reading the diff top to bottom, the last one shows up at line ${E.strategies.diff.lines_for_all}.`;
+    cap.innerHTML = `Bright squares are the ${T.lines_total} lines a person reads in total. Seven PRs went back to the agent with the failure reproduced: no code to read, just one line saying why. Two were proved by tests and a recorded video. Four need a person, and only where a question is open. <b>All 8 planted bugs are in front of you after ${T.lines_for_all} lines.</b> Reading the diff top to bottom, the last one shows up at line ${E.strategies.diff.lines_for_all}.`;
   };
   btn.onclick = () => {
     if (box.classList.contains("narrowed")) { box.classList.remove("narrowed"); btn.textContent = "Run PR Trailer on the sprint"; count.textContent = E.total_diff_lines; label.textContent = "lines changed by the agent"; return; }
     go();
   };
-  const io = new IntersectionObserver((en) => { if (en[0].isIntersecting) { setTimeout(go, 700); io.disconnect(); } }, { threshold: 0.3 });
+  const io = new IntersectionObserver((en) => { if (en[0].isIntersecting) { setTimeout(go, 2200); io.disconnect(); } }, { threshold: 0.3 });
   io.observe(box);
 }
 
@@ -110,30 +111,36 @@ function renderInbox() {
   const order = { full: 0, targeted: 1, light: 2 };
   needs.sort((a, b) => order[a.decision.tier] - order[b.decision.tier]);
   const lanes = ["return", "light", "targeted", "full"].map((t) => ({ t, n: DATA.prs.filter((p) => p.decision.tier === t).length }));
-  const laneWhy = { return: "We reproduced a real failure, so the agent gets a fix list. No human time.", light: "Every criterion has passing evidence and a recorded video. Glance and sign.",
+  const laneWhy = { return: "We reproduced a real failure, so the agent gets a fix list. You read one line: why.", light: "Every criterion has passing evidence and a recorded video. Glance and sign.",
     targeted: "Mostly proven. You answer the open questions and read only the lines tied to them.", full: "Login security. Policy says a person reads all of it, with our map as a guide." };
   $("#app").innerHTML = `
   <section class="story">
     <div class="eyebrow">Tieto challenge: earned trust in AI code · a working demo</div>
-    <h1>An AI agent changed ${E.total_diff_lines} lines of a bank's code this sprint.<br><span class="accent">You need to read ${E.strategies.trailer.lines_total}.</span></h1>
-    <p class="lede">Nordbank is a made-up bank with real-looking code: payments, fees, statements, logins. Its coding agent opened ${DATA.prs.length} pull requests. You are Aino, the payments owner. If a merge breaks something at 3 a.m., it's your name on it. PR Trailer runs every PR in a sandbox first, sends the broken ones back with proof, and points you at the few lines only a person can judge.</p>
-    <div class="cta"><a class="btn big" href="#/pr/PR-109">Open the PR waiting for you →</a><a class="btn ghost big" href="#/proof">How do we know it works?</a></div>
+    <div class="story-grid">
+      <div class="story-main">
+        <h1>An AI agent changed ${E.total_diff_lines} lines of a bank's code this sprint. <span class="accent">You need to read ${E.strategies.trailer.lines_total}.</span></h1>
+        <div class="cta"><a class="btn big" href="#/pr/PR-109">Open the PR waiting for you →</a><a class="btn ghost big" href="#/pr/PR-110">See one sent back with proof</a></div>
+      </div>
+      <div class="story-side">
+        <p class="lede">Nordbank is a made-up bank with real-looking code: payments, fees, statements, logins. Its coding agent opened ${DATA.prs.length} pull requests. You are Aino, the payments owner. If a merge breaks something at 3 a.m., it's your name on it. <b>PR Trailer runs every PR in a sandbox first, sends the broken ones back with proof, and points you at the few lines only a person can judge.</b></p>
+      </div>
+    </div>
   </section>
   ${sprintViz()}
   <h2 class="mt">What happened to the ${DATA.prs.length} pull requests</h2>
   <div class="lanes">${lanes.map(({ t, n }) => `<div class="card lanecard lane-${t}"><div class="ln">${n}</div><div>${lanePill(t)}<p class="small">${laneWhy[t]}</p></div></div>`).join("")}</div>
   <h2 class="mt">Why you can trust the narrowing</h2>
   <div class="kpis">
-    <a class="card kpi" href="#/proof#effort"><div class="n">${E.strategies.trailer.lines_for_all} <small>vs ${E.strategies.diff.lines_for_all}</small></div><div class="l">lines read before all 8 planted bugs are in front of you, vs reading the diff top to bottom</div></a>
-    <a class="card kpi" href="#/proof#bench"><div class="n">${Math.round(S.false_alarm_rate * S.clean)}/${S.clean}</div><div class="l">clean PRs wrongly sent back. Only a reproduced failure may block, never an opinion</div></a>
-    <a class="card kpi" href="#/proof#bench"><div class="n">${H ? Math.round(H.catch_rate * H.mutants) + "/" + H.mutants : "–"}</div><div class="l">bugs we never saw before (held-out mutants) sent back or put in front of a human</div></a>
-    ${A ? `<a class="card kpi" href="#/proof#reviewers"><div class="n">${S.buggy - S.escaped}/${S.buggy} <small>vs ${A.devin.caught} and ${A.codex.caught}</small></div><div class="l">planted bugs caught, vs Devin and Codex AI reviews on the same pull requests</div></a>` : ""}
-    ${v5 ? `<a class="card kpi" href="#/proof#chat"><div class="n">${pct(v5.heldout.all)}</div><div class="l">of held-out questions answered correctly and grounded by the PR assistant (graded, ${C.cases.dev + C.cases.heldout + C.cases.heldout2} questions)</div></a>` : ""}
+    <a class="card kpi" href="#/proof#effort"><div class="n">${E.strategies.trailer.lines_for_all} <small>vs ${E.strategies.diff.lines_for_all}</small></div><div class="l">lines read before all 8 planted bugs are in front of you, vs reading the diff top to bottom</div><div class="go">See the proof →</div></a>
+    <a class="card kpi" href="#/proof#bench"><div class="n">${Math.round(S.false_alarm_rate * S.clean)}/${S.clean}</div><div class="l">clean PRs wrongly sent back. Only a reproduced failure may block, never an opinion</div><div class="go">See the proof →</div></a>
+    <a class="card kpi" href="#/proof#bench"><div class="n">${H ? Math.round(H.catch_rate * H.mutants) + "/" + H.mutants : "–"}</div><div class="l">new bugs, generated after the tool was built and never tuned on, sent back or put in front of a human</div><div class="go">See the proof →</div></a>
+    ${A ? `<a class="card kpi" href="#/proof#reviewers"><div class="n">${S.buggy - S.escaped}/${S.buggy} <small>vs ${A.devin.caught} and ${A.codex.caught}</small></div><div class="l">planted bugs caught, vs Devin and Codex AI reviews on the same pull requests</div><div class="go">See the proof →</div></a>` : ""}
+    ${v5 ? `<a class="card kpi" href="#/proof#chat"><div class="n">${pct(v5.heldout.all)}</div><div class="l">of held-out questions answered correctly and grounded by the PR assistant (graded, ${C.cases.dev + C.cases.heldout + C.cases.heldout2} questions)</div><div class="go">See the proof →</div></a>` : ""}
   </div>
   <div class="section-head"><div><h2>Waiting for your decision</h2><div class="muted">${needs.length} PRs. Open one to see exactly what to read.</div></div></div>
   <div class="prlist">${needs.map(prRow).join("")}</div>
-  <div class="section-head"><div><h2>Sent back to the agent</h2><div class="muted">${back.length} PRs where we reproduced a problem. Open one to see the proof.</div></div></div>
-  <div class="prlist">${back.map(prRow).join("")}</div>`;
+  <details class="sentback"><summary><h2>Sent back to the agent</h2><span class="muted">${back.length} PRs where we reproduced a problem. Open one to see the proof.</span></summary>
+  <div class="prlist">${back.map(prRow).join("")}</div></details>`;
   wireSprint();
 }
 
@@ -179,17 +186,26 @@ function agentDecisions(p) {
   if (!D || !D.length) return "";
   return `<div class="card pad decisions"><h3>Decisions the agent made, and why</h3>
     <p class="small muted" style="margin:0 0 10px">Read out of the diff by Gemini, as advice. A reason is shown only if it is a word-for-word quote from the agent's description or code comments; otherwise it says none was given.</p>
+    <div class="dec-row dec-head"><span>Decision</span><span>Agent's reason</span><span>Advice</span></div>
     ${D.map((d) => `<div class="dec-row"><div class="dw"><b>${esc(d.decision)}</b><span class="mono small">${esc(d.file || "")}</span></div>
-      <div class="dr">${d.agent_reason ? `<span class="small">Agent's reason:</span> “${esc(d.agent_reason)}”` : `<span class="small muted">The agent gave no reason.</span>`}</div>
+      <div class="dr">${d.agent_reason ? `<span class="dl">Agent's reason:</span> <q>${esc(d.agent_reason)}</q>` : `<span class="small muted">The agent gave no reason.</span>`}</div>
       <div class="dv ${/^nothing flagged/i.test(d.review) ? "ok" : "flag"}">${esc(d.review)}</div></div>`).join("")}</div>`;
 }
 
-const FMT = { video: ["▶", "#s-media"], table: ["⇄", "#s-table"], diagram: ["⤳", "#s-seq"], audio: ["♪", null], read: ["≡", "#s-read"], fixlist: ["↩", "#s-decide"] };
+const ico = (d) => `<svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const FMT = {
+  video: [ico('<rect x="2.5" y="4" width="15" height="12" rx="2"/><path d="M8.5 7.6v4.8l4-2.4z" fill="currentColor" stroke="none"/>'), "#s-media"],
+  table: [ico('<rect x="2.5" y="3.5" width="15" height="13" rx="2"/><path d="M2.5 8h15M10 8v8.5"/>'), "#s-table"],
+  diagram: [ico('<circle cx="4.5" cy="5" r="2"/><circle cx="15.5" cy="15" r="2"/><path d="M6.5 5h5a3 3 0 0 1 3 3v5"/>'), "#s-seq"],
+  audio: [ico('<path d="M3.5 8v4M7 5.5v9M10.5 7.5v5M14 4v12M17 8.5v3"/>'), null],
+  read: [ico('<path d="M4 5h12M4 10h12M4 15h7"/>'), "#s-read"],
+  fixlist: [ico('<path d="M7.5 4.5 3.5 8.5l4 4"/><path d="M3.5 8.5h8.5a4 4 0 0 1 0 8H8"/>'), "#s-decide"],
+};
 function secHow(p) {
   const cards = p.formats.map((f) => {
     const [icon, href] = FMT[f.kind] || ["•", null];
     const extra = f.kind === "audio" ? `<div class="audio"><button class="btn" type="button" id="play">▶ Play the briefing</button><span class="small muted" id="audiohint">About ${Math.max(20, Math.round(p.briefing.split(" ").length / 2.6))} seconds, read aloud by your browser.</span></div><details class="small"><summary>Read the transcript</summary><p>${esc(p.briefing)}</p></details>` : "";
-    return `<div class="card fmt fmt-${f.kind}"><div class="fi">${icon}</div><div><h3>${href ? `<a href="${href}">${esc(f.title)}</a>` : esc(f.title)}</h3><p class="small"><span class="muted">Why this format:</span> ${esc(f.rule)}</p>${extra}</div></div>`;
+    return `<div class="card fmt fmt-${f.kind}"><div class="fi">${icon}</div><div><h3>${href ? `<a href="${href}">${esc(f.title)}</a>` : esc(f.title)}</h3><p class="small why"><span class="wl">Why this format</span>${esc(f.rule)}</p>${extra}</div></div>`;
   }).join("");
   return sec("s-how", "02", "How to look at this change",
     "Not every change is best understood by reading code. These are picked by simple rules from what the PR touches, and each one says which rule picked it.",
@@ -407,7 +423,7 @@ function wireChat(p) {
       const r = await fetch("/api/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pr: p.id, question: q, history: history.slice(0, -1) }) });
       const j = await r.json();
       pending.remove();
-      add("bot", j.answer || j.error || "No answer.", j.source === "trailer" ? "answered from the trailer" : j.source ? `answered by ${j.source}, grounded in this PR` : "");
+      add("bot", j.answer || j.error || "No answer.", j.source === "trailer" ? "answered from this PR's evidence (no model)" : j.source ? `answered by ${j.source}, grounded in this PR` : "");
       history.push({ role: "bot", text: j.answer || "" });
     } catch (e) {
       pending.textContent = "Couldn't reach the assistant. Try again.";
@@ -445,27 +461,34 @@ function renderHow() {
 // ---------- proof ----------
 function effortChart() {
   const E = DATA.effort; if (!E) return "";
-  const W = 640, Hh = 300, L = 46, R = 16, T = 14, B = 40, N = E.total_diff_lines, nb = E.bugs;
+  const W = 960, Hh = 420, L = 44, R = 20, T = 58, B = 52, N = E.total_diff_lines, nb = E.bugs;
   const x = (v) => L + (v / N) * (W - L - R), y = (v) => T + (1 - v / nb) * (Hh - T - B);
   const S = E.strategies;
-  const line = (pts, cls) => { let d = `M${x(0)},${y(0)}`, py = 0; pts.forEach((p) => { d += ` L${x(p.x)},${y(py)} L${x(p.x)},${y(p.found)}`; py = p.found; }); return `<path class="${cls}" d="${d}"/>`; };
+  const steps = (pts) => { let d = `M${x(0)},${y(0)}`, py = 0; pts.forEach((p) => { d += ` L${x(p.x)},${y(py)} L${x(p.x)},${y(p.found)}`; py = p.found; }); return d; };
+  const line = (pts, cls) => `<path class="${cls}" d="${steps(pts)}"/>`;
   const rnd = `<path class="c-rand" d="${S.random.points.map((p, i) => `${i ? "L" : "M"}${x(p.x)},${y(p.found)}`).join(" ")}"/>`;
-  const grid = [0, 2, 4, 6, 8].map((v) => `<line class="g" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="t" x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${v}</text>`).join("")
-    + [0, 50, 100, 150, 200, 250, N].map((v) => `<text class="t" x="${x(v)}" y="${Hh - B + 18}" text-anchor="middle">${v}</text>`).join("");
+  const grid = [0, 2, 4, 6, 8].map((v) => `<line class="g${v ? "" : " g0"}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="t" x="${L - 10}" y="${y(v) + 4}" text-anchor="end">${v}</text>`).join("")
+    + [0, 50, 100, 150, 200, 250, N].map((v) => `<line class="g tick" x1="${x(v)}" x2="${x(v)}" y1="${y(0)}" y2="${y(0) + 5}"/><text class="t" x="${x(v)}" y="${y(0) + 20}" text-anchor="middle">${v}</text>`).join("");
   const A = DATA.ai && DATA.ai.summary;
-  const flat = A ? [["devin", A.devin.caught, "Devin review"], ["codex", A.codex.caught, "Codex review"]].map(([k, v, l]) => `<line class="c-${k}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="t lbl-${k}" x="${W - R - 4}" y="${y(v) - 6}" text-anchor="end">${l}: ${v}/${nb}, however long you read</text>`).join("") : "";
-  const mk = S.trailer.lines_for_all, md = S.diff.lines_for_all;
+  // AI reviewers are drawn as ceilings: a flat line with hatching on the side they never reach.
+  const defs = `<defs>${["devin", "codex"].map((k) => `<pattern id="hatch-${k}" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="h-${k}" x1="0" y1="0" x2="0" y2="7"/></pattern>`).join("")}</defs>`;
+  const flat = A ? [["devin", A.devin.caught, "Devin review"], ["codex", A.codex.caught, "Codex review"]].map(([k, v, l]) => `<rect x="${L}" y="${y(v) - 7}" width="${W - L - R}" height="7" fill="url(#hatch-${k})"/><line class="c-${k}" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="t halo lbl-${k}" x="${W - R - 6}" y="${y(v) - 13}" text-anchor="end">${l}: ${v}/${nb}, however long you read</text>`).join("") : "";
+  const mk = S.trailer.lines_for_all, md = S.diff.lines_for_all, tp = S.trailer.points, tEnd = tp[tp.length - 1].x;
   return `<figure class="card pad chart" id="effort"><h3>Bugs in front of you, per line read</h3>
-    <svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Planted bugs found against lines read">${grid}${flat}${rnd}${line(S.small_first.points, "c-small")}${line(S.diff.points, "c-diff")}${line(S.trailer.points, "c-trailer")}
-    <line class="mk" x1="${x(mk)}" x2="${x(mk)}" y1="${y(nb)}" y2="${y(0)}"/><text class="t strong" x="${x(mk) + 6}" y="${y(nb) + 14}">PR Trailer: all ${nb} after ${mk} lines</text>
-    <line class="mk2" x1="${x(md)}" x2="${x(md)}" y1="${y(nb)}" y2="${y(0)}"/><text class="t" x="${x(md) + 6}" y="${y(nb) + 30}">top to bottom: ${md}</text>
-    <text class="t" x="${(W + L) / 2}" y="${Hh - 6}" text-anchor="middle">lines read (of ${N} changed in the sprint)</text></svg>
+    <div class="scroll"><svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Planted bugs found against lines read">${defs}${grid}
+    <text class="t" x="${L - 30}" y="18">planted bugs in front of you (of ${nb})</text>
+    <line class="mk2" x1="${x(md)}" x2="${x(md)}" y1="${y(nb)}" y2="${y(0)}"/><line class="mk" x1="${x(mk)}" x2="${x(mk)}" y1="${y(nb)}" y2="${y(0)}"/>
+    ${flat}${rnd}${line(S.small_first.points, "c-small")}${line(S.diff.points, "c-diff")}
+    <path class="a-trailer" d="${steps(tp)} L${x(tEnd)},${y(0)} Z"/>${line(tp, "c-trailer")}
+    <circle class="d-diff" cx="${x(md)}" cy="${y(nb)}" r="4"/><text class="t halo lbl-diff" x="${x(md)}" y="${y(nb) - 14}" text-anchor="middle">top to bottom: ${md}</text>
+    <circle class="d-trailer" cx="${x(mk)}" cy="${y(nb)}" r="5.5"/><text class="t halo strong" x="${x(mk) - 6}" y="${y(nb) - 14}">PR Trailer: all ${nb} after ${mk} lines</text>
+    <text class="t" x="${(W + L - R) / 2}" y="${Hh - 8}" text-anchor="middle">lines read (of ${N} changed in the sprint)</text></svg></div>
     <div class="legend"><span><i class="k-trailer"></i>PR Trailer</span><span><i class="k-diff"></i>Read the diff top to bottom</span><span><i class="k-small"></i>Smallest PR first</span><span><i class="k-rand"></i>Random order (mean of 2,000)</span>${A ? '<span><i class="k-devin"></i>Devin</span><span><i class="k-codex"></i>Codex</span>' : ""}</div>
     <figcaption class="small muted">This is the effort-aware recall used in defect-prediction research: how many bugs you have seen after reading a given share of the changed lines. Generous to the baselines: we assume a reader spots a bug the moment they read its line. Sources: ${E.sources.map((s) => `<a href="${s.url}" target="_blank" rel="noopener">${esc(s.title.split(":")[0])}</a>`).join(", ")}.</figcaption></figure>`;
 }
 function chatEval() {
   const C = DATA.chat_eval; if (!C) return "";
-  const cell = (r, k) => r[k] ? `${pct(r[k].all)}${r[k].k > 1 ? ` <span class="muted small">(${pct(r[k].pass_hat_k)} pass^${r[k].k})</span>` : ""}` : '<span class="muted">–</span>';
+  const cell = (r, k) => r[k] ? `${pct(r[k].all)}${r[k].k > 1 ? ` <span class="muted small">(${pct(r[k].pass_hat_k)} right on all ${r[k].k} tries)</span>` : ""}` : '<span class="muted">–</span>';
   const al = C.alignment;
   return `<h2 style="margin-top:36px" id="chat">Is the PR assistant telling the truth?</h2>
   <p class="muted" style="max-width:78ch">The "Ask about this PR" assistant is graded on ${C.cases.dev + C.cases.heldout + C.cases.heldout2} questions an approver would ask, including traps: pressure to approve, questions nothing was tested for, off-topic requests. We read every answer, grouped what went wrong, wrote one pass/fail check per failure, then changed one thing at a time. Held-out questions were never used to tune; a second held-out set was written after the first had been looked at.</p>
@@ -486,7 +509,7 @@ function renderProof() {
     const c = A.summary;
     const v = (x) => x.verdict === "caught" ? `<span class="ok">✓</span> ${esc(x.quote || "")}` : x.verdict === "hidden" ? `<span class="meh">flagged, text hidden</span>` : `<span class="meh">${esc(x.verdict)}</span>`;
     cmp = `<h2 style="margin-top:36px" id="reviewers">Against AI code reviewers on the same PRs</h2>
-    <p class="muted" style="max-width:75ch">Every sample PR is a real pull request on GitHub. We asked GitHub Copilot to review all 13 (it refused: the account was out of review quota). Devin Review and Codex also reviewed them. They are good: they find most of these bugs too. The difference is what the approver gets: a comment is an opinion to re-check, while the trailer reproduces the failure, sends it back without a human, and tells you what to read on the rest.</p>
+    <p class="muted" style="max-width:75ch">Every sample PR is a real pull request on GitHub. We asked GitHub Copilot to review all 13 (it refused: the account was out of review quota). Devin Review and Codex also reviewed them. They are useful, and on these PRs they flagged 3 to 4 of the 8 bugs. The bigger difference is what the approver gets: a comment is an opinion to re-check, while PR Trailer reproduces the failure, sends it back without a human, and tells you what to read on the rest.</p>
     <div class="card scroll"><table class="compare"><thead><tr><th>PR</th><th>Planted bug</th><th>PR Trailer</th><th>Devin Review</th><th>Codex</th></tr></thead><tbody>
     ${A.rows.map((r) => `<tr><td><a href="#/pr/${r.pr}">${r.pr}</a></td><td class="small">${esc(r.bug || "none (clean)")}</td><td class="small">${r.trailer.startsWith("caught") ? `<span class="ok">✓</span> ${esc(r.trailer.slice(8))}` : esc(r.trailer)}</td><td>${v(r.devin)}</td><td>${v(r.codex)}</td></tr>`).join("")}
     <tr><td colspan="2"><b>Planted bugs caught</b></td><td><b>${c.trailer.caught}/${c.trailer.of}</b> (${c.trailer_reproduced} reproduced)</td><td><b>${c.devin.caught}/${c.devin.of}</b> + ${c.devin_hidden_on_bugs} hidden</td><td><b>${c.codex.caught}/${c.codex.of}</b> (finished ${c.codex_reviewed} of 13)</td></tr></tbody></table></div>`;
@@ -506,7 +529,8 @@ function renderProof() {
   </div>
   ${effortChart()}
   <h2 style="margin-top:36px" id="bench">Every sample PR</h2>
-  <div class="card scroll"><table><thead><tr><th>PR</th><th>Planted bug</th><th>Lane</th><th>Caught by</th><th>Read-all min</th><th>Trailer min</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <div class="card scroll"><table><thead><tr><th>PR</th><th>Planted bug</th><th>Lane</th><th>Caught by</th><th>Read-all min</th><th>With PR Trailer, min</th></tr></thead><tbody>${rows}</tbody></table></div>
+  <p class="small muted" style="max-width:80ch">Minutes are modelled, not timed. Most of the saving comes from the seven PRs sent back before anyone reads them; on PRs that need a person, the gain is in knowing what to read, and the full read on PR-112 is by policy.</p>
   ${cmp}${chatEval()}${base}
   <h2 style="margin-top:36px">Honest limits</h2>
   <ul class="checks no" style="max-width:80ch">
