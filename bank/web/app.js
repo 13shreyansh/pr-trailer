@@ -21,7 +21,12 @@ async function send() {
   $("result").textContent = r.ok ? `Transfer #${body.transfer_id} is pending.` : `Error: ${body.error}`;
 }
 
+// REQ-UI-602: remember the last used transfer type.
+const KIND_KEY = "kassa.lastKind";
+const saved = localStorage.getItem(KIND_KEY);
+if (saved) $("kind").value = saved;
+
 $("amount").addEventListener("input", refreshFee);
-$("kind").addEventListener("change", refreshFee);
+$("kind").addEventListener("change", (e) => localStorage.setItem(KIND_KEY, e.target.value));
 $("send").addEventListener("click", send);
 refreshFee();
