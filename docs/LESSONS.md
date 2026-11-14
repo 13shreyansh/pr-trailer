@@ -34,3 +34,4 @@
 | D9 | LLM findings need a verbatim quote, or they are dropped and counted | Makes hallucination measurable | A correct finding with a sloppy quote is lost |
 | D10 | Trust ledger per area: 3 clean PRs to earn the light lane; an escape means 5 full reads | "Trust is earned per area, withdrawn after escapes" | Slower start in new areas |
 | D11 | Held-out mutant families, dumb baselines and random spot checks in every bench run | Stops us tuning to our own test set | More runtime, small held-out set |
+| D12 | After the Tieto booth: outcome-first header, "does nothing else" scope check, confidence per area, "review these N spots", approve/deny with a reason | Their approver is accountable that the code "does what it's supposed to do, nothing else" | Scope flags add questions; the targeted-review minutes model now charges per listed spot |

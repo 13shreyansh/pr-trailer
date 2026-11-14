@@ -388,10 +388,12 @@ def check_no_behaviour_change(pr, base, head, diffs):
     rng = random.Random(7)
     for d in diffs:
         if d["path"].endswith(".py"):
-            for n, text in _toplevel_changes(base, head, d):
+            top = _toplevel_changes(base, head, d)
+            if top:
+                n = top[0][0]
                 out.append(item("refusal", "B-TOPLEVEL", "Module-level value changed in a 'no behaviour change' PR",
-                                f"Line {n}: `{text.strip()[:100]}`. Constants change behaviour everywhere they are read; "
-                                "the AI cannot tell whether the new value is intended.",
+                                f"{len(top)} line(s) from L{n}, e.g. `{top[0][1].strip()[:100]}`. Constants change behaviour "
+                                "everywhere they are read; the AI cannot tell whether the new value is intended.",
                                 file=d["path"], line=n, ask="Is this new value intended, and which requirement sets it?"))
     strings = _harvest_strings(head)
     for fn in changed_functions(base, head, diffs):

@@ -19,7 +19,7 @@ MIN_PER_LINE = 0.6      # reading a changed line *with* the surrounding code it 
 ORIENT = 4.0            # opening the PR, understanding the requirement
 TIER_COST = {
     "light": lambda t: 2.0,                                    # read trailer, watch video, sign
-    "targeted": lambda t: min(3.0 + 1.0 * len(t["refusals"]) + MIN_PER_LINE * flagged_lines(t), baseline(t) + 1.0),
+    "targeted": lambda t: min(3.0 + 1.5 * len(t.get("spots", [])) + MIN_PER_LINE * flagged_lines(t) * 0.5, baseline(t) + 1.0),
     "full": lambda t: baseline(t) + 1.5,                       # full read plus reading the trailer
     "return": lambda t: 1.0,                                   # glance at verified finding, bounce to agent
 }
@@ -201,7 +201,7 @@ def main():
         r["tests_caught"] = tests_caught(t)
     result = {"samples": {"summary": summarise(rows), "rows": rows, "ledger": trust_ledger(rows)},
               "assumptions": {"min_per_line": MIN_PER_LINE, "orientation_min": ORIENT,
-                              "light_min": 2.0, "targeted_min": "3 + 1 per open question + 0.6 per flagged line",
+                              "light_min": 2.0, "targeted_min": "3 + 1.5 per listed spot + 0.3 per line in flagged files, capped at baseline + 1",
                               "full_min": "baseline + 1.5", "return_min": 1.0}}
 
     if a.mutants:

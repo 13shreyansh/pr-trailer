@@ -4,7 +4,7 @@ import json
 import shutil
 from pathlib import Path
 
-from . import checks, diffing, testrun, ui, workspace
+from . import checks, diffing, scope as scopemod, testrun, ui, workspace
 from .checks import _functions, _parse, _route_handlers, changed_functions
 
 AREA_OWNER = {"payments": "@aino.payments", "security": "@mikko.security", "data": "@sara.data",
@@ -184,13 +184,14 @@ def build(pr_id: str, out_root: Path, with_ui=True, llm=None) -> dict:
     cov = testrun.covered_lines(head_run)
 
     touches_ui = any(d["path"].startswith("web/") for d in diffs) or req["area"] == "frontend"
-    ui_rows, video = [], None
+    ui_rows, video, ui_cov = [], None, set()
     if with_ui and touches_ui:
         caps = {"intro": f"{pr['id']} · {req['id']} · {pr['title']}"}
         ui_base = ui.run_ui(base, out / "_base_ui")
         ui_head = ui.run_ui(head, out / "evidence", caps)
         for path, line in ui.run_ui.last_coverage:
             cov.setdefault(path, {}).setdefault(line, set()).add("<ui-test>")
+            ui_cov.add((path, line))
         ub = {r["id"]: r["status"] for r in ui_base}
         for r in ui_head:
             key = testrun.ac_key(r["id"])
@@ -228,6 +229,9 @@ def build(pr_id: str, out_root: Path, with_ui=True, llm=None) -> dict:
     if any(i["rule"] == "M-FLOAT" and i["verified"] for i in items):
         items = [i for i in items if not (i["rule"] == "I-INVARIANT" and "parse_is_exact" in i["title"])]
 
+    scope_info, scope_items = scopemod.scope_check(pr, req, diffs, head, head_run, ui_cov)
+    items += scope_items
+
     radius = blast_radius(head, changed)
     danger = merge_danger(pr, items, diffs, radius)
     uncovered = [n for n in notes if n["rule"] == "C-UNCOVERED"]
@@ -239,6 +243,8 @@ def build(pr_id: str, out_root: Path, with_ui=True, llm=None) -> dict:
         evidence.append({"ac": ac["ac"], "text": ac["text"], "claimed": ac["ac"] in pr.get("claims_acs", []),
                          "tests": [{"id": t["id"], "base": t["base"], "head": t["head"], "ui": t.get("ui", False)} for t in tests],
                          "status": ("no test" if not tests else ("pass" if all(t["head"] == "pass" for t in tests) else "fail"))})
+    outcome = scopemod.outcome(pr, req, evidence, items, rows + ui_rows, scope_info)
+    confidence, spots = scopemod.confidence_and_spots(diffs, items, notes, scope_info)
     other = [r for r in rows + ui_rows if r["req"] != req["id"]]
     checked = {
         "spec_tests": {"total": len(rows), "pass": sum(r["head"] == "pass" for r in rows),
@@ -277,6 +283,7 @@ def build(pr_id: str, out_root: Path, with_ui=True, llm=None) -> dict:
         "diff": [{"path": d["path"], "status": d["status"], "added": len(d["added"]), "removed": len(d["removed"]),
                   "unified": d["unified"]} for d in diffs],
         "lines_changed": diffing.lines_changed(diffs),
+        "outcome": outcome, "scope": scope_info, "confidence": confidence, "spots": spots,
         "evidence": evidence, "video": video,
         "before_after": ["evidence/before.png", "evidence/final.png"] if video else None,
         "sequence": None if touches_ui and not any(d["path"].endswith(".py") for d in diffs) else sequence_diagram(head, changed),
