@@ -28,6 +28,17 @@ def get_fee(db, user_id, params):
     return {"fee_cents": fee, "fee_display": format_amount(fee)}
 
 
+@route("GET", "/api/history")
+def get_history(db, user_id, params):
+    rows = db.execute(
+        "SELECT id, created_day, to_iban, amount_cents, fee_cents, status FROM transfers "
+        "WHERE from_account = ? ORDER BY id DESC LIMIT 50",
+        (params["account_id"],),
+    ).fetchall()
+    keys = ["id", "day", "to_iban", "amount_cents", "fee_cents", "status"]
+    return {"transfers": [dict(zip(keys, r)) for r in rows]}
+
+
 @route("POST", "/api/transfer")
 def post_transfer(db, user_id, params):
     tid = create_transfer(
