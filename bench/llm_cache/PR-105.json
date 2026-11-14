@@ -1,0 +1,11 @@
+{
+  "findings": [
+    {
+      "file": "ledger/transfers.py",
+      "line": 22,
+      "quote": "    log.warning(\"rejected transfer user=%s to=%s reason=%s\", user_id, to_iban, reason)",
+      "claim": "The full IBAN is written to the log, violating requirement REQ-OBS-401 AC3.",
+      "severity": "high"
+    }
+  ]
+}

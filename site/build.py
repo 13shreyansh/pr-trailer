@@ -20,7 +20,10 @@ def main():
             for name in ("walkthrough.mp4", "before.png", "final.png"):
                 shutil.copy(ev / name, dst / name)
     bench = json.loads((OUT / "bench.json").read_text())
-    data = json.dumps({"trailers": trailers, "bench": bench}).replace("</", "<\\/")
+    llm_eval = OUT / "llm_eval.json"
+    labels = ROOT / "bench" / "llm_labels.json"
+    llm = {"eval": json.loads(llm_eval.read_text()), "labels": json.loads(labels.read_text())} if llm_eval.exists() else None
+    data = json.dumps({"trailers": trailers, "bench": bench, "llm": llm}).replace("</", "<\\/")
     html = (SITE / "template.html").read_text().replace("/*DATA*/", data)
     (SITE / "index.html").write_text(html)
     print(f"site/index.html: {len(html) // 1024} KB, {len(trailers)} trailers")

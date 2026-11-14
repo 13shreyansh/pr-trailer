@@ -1,0 +1,11 @@
+{
+  "findings": [
+    {
+      "file": "web/transfer.html",
+      "line": 30,
+      "quote": "<div class=\"fee\">Fee for this transfer: <strong id=\"fee\">–</strong></div>",
+      "claim": "The PR fails to display the total debited amount (amount plus fee) before sending, violating acceptance criterion AC2 of REQ-UI-601.",
+      "severity": "high"
+    }
+  ]
+}

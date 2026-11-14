@@ -1,0 +1,11 @@
+{
+  "findings": [
+    {
+      "file": "ledger/transfers.py",
+      "line": 28,
+      "quote": "    except TransferError:",
+      "claim": "TransferError is not imported or defined, causing a NameError when a transfer fails and preventing the transfers_rejected counter from being incremented.",
+      "severity": "high"
+    }
+  ]
+}

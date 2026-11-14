@@ -1,0 +1,1 @@
+{"findings": [{"file": "migrations/002_drop_memo.sql", "line": 2, "quote": "ALTER TABLE transfers DROP COLUMN memo;", "claim": "Dropping the memo column permanently deletes historical memo data for existing transfers, violating AC1 by discarding data that may still be read on statements and audit logs.", "severity": "high"}]}

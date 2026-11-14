@@ -9,6 +9,8 @@
 5. **Our own bugs flatter our checks.** The strict catch rate is 88% on hand-planted bugs but lower on mechanical mutants (see RESULTS.md). We report both.
 6. **Coverage was blind to the browser.** Lines run only by UI tests looked untested, which pushed clean UI PRs into targeted review. *Fix:* the API server now runs under line tracing during the browser tests.
 7. **The temptation to block on opinion.** The new `/api/metrics` endpoint (PR-111) is not a bug, but it is new attack surface. We made it a refusal for the security owner, not a finding.
+8. **Grounded is not the same as right.** Gemini (gemini-3.8-flash) quoted real code in all 11 findings, so the hallucination filter dropped nothing. 3 claims were still wrong: one invented a NameError the passing tests disprove, one blamed a refactor for a gap that main already has, and one was out of scope. 8 were right, including the cross-user idempotency bug the deterministic checks only route as a question. *Lesson:* a quote check catches invented code, not wrong reasoning, so LLM findings stay advisory. A next step is to auto-dismiss LLM claims that executed evidence contradicts.
+9. **Model retirement mid-hackathon.** `gemini-2.5-flash` returned 404 for a new key. The model is now an environment setting (`GEMINI_MODEL`), and answers are cached for replay so the demo never depends on the API.
 
 ## Keeping the measurement honest (so hill-climbing doesn't optimise the wrong thing)
 

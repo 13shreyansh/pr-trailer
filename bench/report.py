@@ -70,6 +70,21 @@ def main():
         L += ["## Human spot checks", "", f"Policy: {sc['policy']}. Of {sc['light_prs']} light-lane PRs, picked "
               f"{', '.join(sc['picked']) or 'none'}; misses found: {', '.join(sc['misses_found']) or 'none'}. "
               "A miss found this way counts as an escape in the trust ledger, so the area loses its light lane."]
+    llm_path = ROOT / "out" / "llm_eval.json"
+    if llm_path.exists():
+        le = json.loads(llm_path.read_text())["summary"]
+        labels = json.loads((ROOT / "bench" / "llm_labels.json").read_text())
+        claims = [c for k, v in labels.items() if not k.startswith("_") for c in v]
+        right = sum(c["correct"] for c in claims)
+        L += ["", f"## Optional LLM reviewer ({le['model']}, advisory only)", "",
+              f"- {le['raw_findings']} findings on the 13 PRs; {le['dropped_as_ungrounded']} dropped by the quote check "
+              f"(hallucination rate {pct(le['hallucination_rate'])}).",
+              f"- Pointed at the planted bug's file on {le['buggy_prs_with_grounded_finding_on_bug_file']} buggy PRs, "
+              "including PR-109, which the deterministic checks only route as a question.",
+              f"- Hand-labelled: {right} of {len(claims)} claims were correct. Wrong ones: "
+              + "; ".join(f"{k}: {c['why']}" for k, v in labels.items() if not k.startswith('_') for c in v if not c['correct']) + ".",
+              "- Lesson: every wrong claim quoted real code, so grounding filters invented code, not wrong reasoning. "
+              "That is why LLM findings route attention and never block."]
     L += ["", "## Assumptions behind the minutes", "", "```json", json.dumps(b["assumptions"], indent=2), "```",
           "", "Minutes are a model, not a stopwatch. The walkthrough page has a timer so reviewers can replace them with measurements."]
     (ROOT / "docs" / "RESULTS.md").write_text("\n".join(L) + "\n")

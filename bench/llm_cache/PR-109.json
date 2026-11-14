@@ -1,0 +1,11 @@
+{
+  "findings": [
+    {
+      "file": "ledger/transfers.py",
+      "line": 25,
+      "quote": "    row = db.execute(\"SELECT id FROM transfers WHERE idempotency_key = ?\", (key,)).fetchone()",
+      "claim": "The lookup query drops the user_id filter, violating AC2 by scoping idempotency keys globally instead of per user and potentially returning transfers across different users.",
+      "severity": "high"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"findings": [{"file": "ledger/transfers.py", "line": 17, "quote": "        \"WHERE from_account = ? AND created_day = ? AND status = 'booked'\",", "claim": "Pending transfers are excluded from the daily total calculation, violating AC2.", "severity": "high"}]}

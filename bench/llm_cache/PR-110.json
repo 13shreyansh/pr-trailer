@@ -1,0 +1,18 @@
+{
+  "findings": [
+    {
+      "file": "ledger/fees.py",
+      "line": 8,
+      "quote": "    \"instant\": lambda cents: max(round(Decimal(cents) * INSTANT_RATE), INSTANT_MIN_CENTS),",
+      "claim": "Instant transfer fees are not capped at EUR 5.00 (500 cents), violating AC3.",
+      "severity": "high"
+    },
+    {
+      "file": "ledger/fees.py",
+      "line": 8,
+      "quote": "    \"instant\": lambda cents: max(round(Decimal(cents) * INSTANT_RATE), INSTANT_MIN_CENTS),",
+      "claim": "Python's round() uses round-half-to-even instead of round-half-up, violating AC4.",
+      "severity": "medium"
+    }
+  ]
+}

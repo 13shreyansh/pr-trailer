@@ -1,0 +1,1 @@
+{"findings": [{"file": "ledger/api.py", "line": 32, "quote": "def get_history(db, user_id, params):", "claim": "The endpoint does not verify that user_id owns the requested account_id, violating REQ-SEC-301 by allowing users to view other customers' transfer history.", "severity": "high"}]}

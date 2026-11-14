@@ -1,0 +1,11 @@
+{
+  "findings": [
+    {
+      "file": "web/app.js",
+      "line": 30,
+      "quote": "$(\"kind\").addEventListener(\"change\", (e) => localStorage.setItem(KIND_KEY, e.target.value));",
+      "claim": "Replacing the original change event listener removes the call to refreshFee, causing the displayed fee not to update when the transfer type changes.",
+      "severity": "high"
+    }
+  ]
+}

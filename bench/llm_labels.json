@@ -1,0 +1,14 @@
+{
+  "_note": "Hand labels by the team for each grounded Gemini claim (gemini-3.8-flash, 14 Nov 2026). correct = the claim describes a real defect introduced by this PR.",
+  "PR-102": [{"claim": "pending transfers excluded from daily total", "correct": true}],
+  "PR-103": [{"claim": "history endpoint has no ownership check", "correct": true}],
+  "PR-104": [{"claim": "float parsing loses cents", "correct": true}],
+  "PR-105": [{"claim": "full IBAN written to the log", "correct": true}],
+  "PR-106": [{"claim": "dropping memo deletes data still read by statements", "correct": true}],
+  "PR-108": [{"claim": "fee no longer refreshes on transfer type change", "correct": true}],
+  "PR-109": [{"claim": "idempotency lookup no longer scoped to user", "correct": true}],
+  "PR-110": [{"claim": "fee not capped at EUR 5.00", "correct": false, "why": "true of main too; not introduced by this refactor"},
+             {"claim": "round() is half-to-even, violates AC4", "correct": true}],
+  "PR-111": [{"claim": "TransferError not imported, NameError", "correct": false, "why": "wrong: TransferError is defined in the same module; the acceptance tests pass"}],
+  "PR-113": [{"claim": "total debited not shown (REQ-UI-601 AC2)", "correct": false, "why": "out of scope for a copy change; another PR builds AC2"}]
+}

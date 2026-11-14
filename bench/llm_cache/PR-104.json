@@ -1,0 +1,11 @@
+{
+  "findings": [
+    {
+      "file": "ledger/money.py",
+      "line": 11,
+      "quote": "    return int(value * 100)",
+      "claim": "Converting floating-point values to integer cents using int(value * 100) introduces binary floating-point rounding errors (e.g., 1.14 becomes 113 cents), violating the exact parsing requirement.",
+      "severity": "high"
+    }
+  ]
+}

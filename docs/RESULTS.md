@@ -97,6 +97,13 @@ Dev mutants (operator swaps, constant bumps, deleted calls) were used while fixi
 
 Policy: full read of 20% of light-lane PRs, chosen at random. Of 7 light-lane PRs, picked MUT-025; misses found: MUT-025. A miss found this way counts as an escape in the trust ledger, so the area loses its light lane.
 
+## Optional LLM reviewer (gemini-3.8-flash, advisory only)
+
+- 11 findings on the 13 PRs; 0 dropped by the quote check (hallucination rate 0%).
+- Pointed at the planted bug's file on 8/8 buggy PRs, including PR-109, which the deterministic checks only route as a question.
+- Hand-labelled: 8 of 11 claims were correct. Wrong ones: PR-110: true of main too; not introduced by this refactor; PR-111: wrong: TransferError is defined in the same module; the acceptance tests pass; PR-113: out of scope for a copy change; another PR builds AC2.
+- Lesson: every wrong claim quoted real code, so grounding filters invented code, not wrong reasoning. That is why LLM findings route attention and never block.
+
 ## Assumptions behind the minutes
 
 ```json

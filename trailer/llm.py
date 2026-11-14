@@ -45,7 +45,7 @@ def ground(findings: list, head: Path):
 class Gemini:
     def __init__(self, model=None, replay_dir=None):
         self.key = os.environ.get("GEMINI_API_KEY")
-        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+        self.model = model or os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
         self.replay_dir = Path(replay_dir) if replay_dir else None
         self.stats = {"raw": 0, "grounded": 0, "hallucinated": 0}
 
@@ -55,9 +55,10 @@ class Gemini:
                 "generationConfig": {"temperature": 0, "responseMimeType": "application/json"}}
         req = urllib.request.Request(url, data=json.dumps(body).encode(),
                                      headers={"Content-Type": "application/json", "x-goog-api-key": self.key})
-        with urllib.request.urlopen(req, timeout=90) as r:
+        with urllib.request.urlopen(req, timeout=300) as r:
             data = json.load(r)
-        return data["candidates"][0]["content"]["parts"][0]["text"]
+        parts = data["candidates"][0]["content"]["parts"]
+        return "".join(p.get("text", "") for p in parts if not p.get("thought"))
 
     def review(self, pr, req, diffs, head: Path) -> list:
         cache = (self.replay_dir / f"{pr['id']}.json") if self.replay_dir else None
@@ -69,7 +70,10 @@ class Gemini:
             acs = "\n".join(f"- {a['ac']}: {a['text']}" for a in req["acceptance"])
             prompt = PROMPT.format(rid=req["id"], title=req["title"], intent=req["intent"], acs=acs,
                                    desc=pr["description"], diff="\n\n".join(d["unified"] for d in diffs))
-            raw = self._ask(prompt)
+            try:
+                raw = self._ask(prompt)
+            except (TimeoutError, OSError):
+                raw = self._ask(prompt)  # one retry on a slow answer
             if cache:
                 cache.parent.mkdir(parents=True, exist_ok=True)
                 cache.write_text(raw)
