@@ -13,6 +13,7 @@ import tarfile
 import threading
 import time
 import urllib.request
+from urllib.parse import quote
 import uuid
 from .github import api,pages,parse_pr,commit_tree,set_ref,FULL,OWNER,ROOT
 from .sandbox import runner
@@ -51,7 +52,7 @@ def fetch_pr(full,number,case=None):
  paths=case['paths'] if case else [f['filename'] for f in files if not excluded(f['filename'])]
  written=sum(f['additions']+f['deletions'] for f in files if f['filename'] in paths)
  id=case['id'] if case else full.replace('/','--')+'--'+str(number)
- return {'id':id,'title':pr['title'],'ask':case['ask'] if case else pr['title'],'number':number,'repo':full,'github':pr['html_url'],'headSha':pr['head']['sha'],'targetSha':pr['base']['sha'],'branch':pr['head']['ref'],'createdAt':pr['created_at'],'updatedAt':pr['updated_at'],'agent':"Junior's coding agent" if case and case['kind']=='junior' else 'Codex' if case else pr['user']['login'],'outside':full!=FULL,'kind':case['kind'] if case else 'outside','paths':paths,'files':files,'written':written,'status':'unmeasured','risk':[],'readLines':0,'testsRun':0,'kept':None,'tests':None,'passed':None,'measured':True,'note':'Kept the cap. Removed the retry rewrite and currency cache; nothing tested them. Fix the rounding on line 5.' if case and case['kind']=='cap' else 'Keep the tested change. Add a test or a reason for the unchecked blocks, or they stay out.'}
+ return {'id':id,'title':pr['title'],'ask':case['ask'] if case else pr['title'],'number':number,'repo':full,'github':pr['html_url'],'headSha':pr['head']['sha'],'targetSha':pr['base']['sha'],'branch':pr['head']['ref'],'createdAt':pr['created_at'],'updatedAt':pr['updated_at'],'agent':"Junior's coding agent" if case and case['kind']=='junior' else 'Codex' if case else pr['user']['login'],'outside':full!=FULL or case is None,'kind':case['kind'] if case else 'outside','paths':paths,'files':files,'written':written,'status':'unmeasured','risk':[],'readLines':0,'testsRun':0,'kept':None,'tests':None,'passed':None,'measured':True,'note':'Kept the cap. Removed the retry rewrite and currency cache; nothing tested them. Fix the rounding on line 5.' if case and case['kind']=='cap' else 'Keep the tested change. Add a test or a reason for the unchecked blocks, or they stay out.'}
 
 
 def sync(force=False):
@@ -303,9 +304,13 @@ def merge_ready(number,commit,title):
  for attempt in range(16):
   try:return api(f'/repos/{FULL}/pulls/{number}/merge',method='PUT',data={'sha':commit,'merge_method':'merge','commit_title':'Finish: '+title})
   except RuntimeError as exc:
-   if 'GitHub 405:' not in str(exc) or attempt==15:raise
+   if not any(code in str(exc) for code in ('GitHub 405:','GitHub 409:')) or attempt==15:raise
    current=api(f'/repos/{FULL}/pulls/{number}')
-   if current['head']['sha']!=commit:raise ValueError('The PR changed before merging')
+   if current['head']['sha']!=commit:
+    # Pull-request metadata may lag the ref update. The actual branch ref must
+    # still equal our tested commit before a merge retry is permitted.
+    branch=current['head'].get('ref')
+    if not branch or api('/repos/'+FULL+'/git/ref/heads/'+quote(branch,safe='/'))['object']['sha']!=commit:raise ValueError('The PR changed before merging')
    time.sleep(.5)
 
 
@@ -316,7 +321,14 @@ def finish(id):
    pr=api(f'/repos/{FULL}/pulls/{p["number"]}')
    if pr['head']['sha']!=pending['commit']:raise ValueError('The PR changed. Run the checks again.')
    before,commit,proof=pending['before'],pending['commit'],pending['proof']
-   merged={'merged':True,'sha':pr['merge_commit_sha']} if pr.get('merged') else merge_ready(p['number'],commit,p['title'])
+   if pr.get('merged'):merged={'merged':True,'sha':pr['merge_commit_sha']}
+   else:
+    current=api('/repos/'+FULL+'/git/ref/heads/main')['object']['sha']
+    if current!=before:
+     result=json.loads((Path(p['_root'])/'result.json').read_text())
+     before,commit,proof=trimmed_commit(p,result,p['branch'])
+     with LOCK:STATE['prs'][id]['_mergeCandidate']={'before':before,'commit':commit,'proof':{'tests':proof['tests'],'passed':proof['passed']}};save()
+    merged=merge_ready(p['number'],commit,p['title'])
   else:
    p,result,pr=measured(id)
    if p.get('verdict')!='proven' or p.get('readLines') or result['final']['exitCode']!=0:raise ValueError('This PR needs a human check')
@@ -324,7 +336,9 @@ def finish(id):
    with LOCK:STATE['prs'][id]['_mergeCandidate']={'before':before,'commit':commit,'proof':{'tests':proof['tests'],'passed':proof['passed']}};save()
    merged=merge_ready(p['number'],commit,p['title'])
   if not merged.get('merged'):raise ValueError("Couldn't merge. Check on GitHub, then try again.")
-  receipt={'id':id,'number':p['number'],'github':p['github'],'sha':merged['sha'],'before':before,'tests':proof['tests'],'passed':proof['passed'],'at':now()}
+  # Record GitHub's actual main parent, including changes concurrent with the merge.
+  parent=api('/repos/'+FULL+'/git/commits/'+merged['sha'])['parents'][0]['sha']
+  receipt={'id':id,'number':p['number'],'github':p['github'],'sha':merged['sha'],'before':parent,'tests':proof['tests'],'passed':proof['passed'],'at':now()}
   with LOCK:
    STATE['prs'][id]['status']='merged';STATE['prs'][id].pop('_mergeCandidate',None);STATE['merged'].append(receipt);save()
   return client()

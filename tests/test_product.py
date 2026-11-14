@@ -140,3 +140,42 @@ class MergeReadinessRegression(unittest.TestCase):
   from product import service
   with patch.object(service,'api',side_effect=[RuntimeError('GitHub 405: Not mergeable'),{'head':{'sha':'changed'}}]):
    with self.assertRaises(ValueError):service.merge_ready(1,'candidate','Requirement')
+
+class FinishInterleavingRegression(unittest.TestCase):
+ def test_retry_revalidates_on_new_main_and_revert_preserves_other_merge(self):
+  from product import service
+  import copy,tempfile
+  original=copy.deepcopy(service.STATE)
+  try:
+   with tempfile.TemporaryDirectory(dir=ROOT/'var') as tmp:
+    Path(tmp,'result.json').write_text('{}')
+    p={'id':'A','number':1,'title':'A','github':'https://github.com/'+github.FULL+'/pull/1','_root':tmp,'branch':'agent/a','status':'done','_mergeCandidate':{'before':'before-B','commit':'candidate','proof':{'tests':2,'passed':2}}}
+    service.STATE.clear();service.STATE.update(prs={'A':p},merged=[{'id':'B'}])
+    def api(path,**kwargs):
+     if path.endswith('/pulls/1'):return {'head':{'sha':'candidate'},'merged':False}
+     if path.endswith('/git/ref/heads/main'):return {'object':{'sha':'main-B'}}
+     if path.endswith('/git/commits/merged-A'):return {'parents':[{'sha':'main-B'},{'sha':'rebuilt'}]}
+     raise AssertionError(path)
+    with patch.object(service,'api',side_effect=api),patch.object(service,'trimmed_commit',return_value=('main-B','rebuilt',{'tests':3,'passed':3})) as revalidate,patch.object(service,'merge_ready',return_value={'merged':True,'sha':'merged-A'}) as merge,patch.object(service,'save'),patch.object(service,'client',return_value={}):
+     service.finish('A')
+     revalidate.assert_called_once();merge.assert_called_once_with(1,'rebuilt','A')
+     self.assertEqual(service.STATE['merged'][-1]['before'],'main-B')
+  finally:service.STATE.clear();service.STATE.update(original)
+
+class PublicLinkBoundaryRegression(unittest.TestCase):
+ def test_unmanaged_pr_link_is_read_only_even_in_owned_repo(self):
+  from product import service
+  pr={'title':'Unmanaged change','html_url':'https://github.com/'+github.FULL+'/pull/99','head':{'sha':'head','ref':'other'},'base':{'sha':'base'},'created_at':'2026-11-14T00:00:00Z','updated_at':'2026-11-14T00:00:00Z','user':{'login':'13shreyansh'}}
+  with patch.object(service,'api',side_effect=[{'private':False},pr]),patch.object(service,'pages',return_value=[{'filename':'logic.py','additions':1,'deletions':0}]):
+   row=service.fetch_pr(github.FULL,99)
+   self.assertTrue(row['outside'])
+
+class MergeRefPropagationRegression(unittest.TestCase):
+ def test_new_ref_can_precede_pull_request_index_after_push(self):
+  from product import service
+  with patch.object(service,'api',side_effect=[RuntimeError('GitHub 409: Head branch was modified. Review and try the merge again.'),{'head':{'sha':'old','ref':'agent/case'}},{'object':{'sha':'candidate'}},{'merged':True,'sha':'merged'}]),patch.object(service.time,'sleep'):
+   self.assertTrue(service.merge_ready(1,'candidate','Requirement')['merged'])
+ def test_ref_changed_by_another_writer_is_never_retried(self):
+  from product import service
+  with patch.object(service,'api',side_effect=[RuntimeError('GitHub 409: Head branch was modified'),{'head':{'sha':'old','ref':'agent/case'}},{'object':{'sha':'someone-elses-commit'}}]):
+   with self.assertRaises(ValueError):service.merge_ready(1,'candidate','Requirement')
