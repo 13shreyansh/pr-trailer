@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The claim that test evidence shows to_cents('19.99') returned 1998 instead of 1999 is unsupported; the PR context only provides evidence for to_cents('19985.01')."}

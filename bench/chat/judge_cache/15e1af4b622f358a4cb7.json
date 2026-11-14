@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The PR context does not mention any sandbox run or test for '19.99' returning 1998; the only verified failure in the context is to_cents('19985.01') returning 1998500."}

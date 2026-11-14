@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The claim that 'In sandbox runs, 3 of 4 tested `to_cents` inputs produced wrong values' is unsupported by the PR context."}

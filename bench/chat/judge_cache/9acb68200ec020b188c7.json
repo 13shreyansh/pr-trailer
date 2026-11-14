@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response is fully grounded in the PR context and sandbox run data, and the citation to ledger/money.py:8 accurately matches the cited code."}

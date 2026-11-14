@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The claim regarding sandbox runs losing cents on inputs like '19.99' and '0.29' is not present in the PR context."}

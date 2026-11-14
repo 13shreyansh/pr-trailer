@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer is fully grounded in the context, accurately noting the destructive nature of the migration, the dangling read in ledger/statements.py, and the unverified acceptance criterion."}

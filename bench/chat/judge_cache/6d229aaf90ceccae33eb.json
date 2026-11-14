@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response accurately cites the differential test and sandbox run examples (57250 and 75250 cents for instant transfers) and correctly references ledger/fees.py:12."}

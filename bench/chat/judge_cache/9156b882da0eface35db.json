@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response accurately reflects the PR context, correctly identifying that there are no proven problems or regressions, acceptance tests pass, invariants hold, and security review from @mikko.security is required."}

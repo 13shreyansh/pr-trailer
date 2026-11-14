@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The PR context does not mention testing '19.99' or that `to_cents('19.99')` returns 1998 cents (the context only provides evidence for '19985.01')."}

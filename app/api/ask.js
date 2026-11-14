@@ -52,6 +52,7 @@ function compact(pr, opts = {}) {
     notes: pr.notes,
     spots_to_review: pr.spots,
     size: pr.stats,
+    ...(opts.tables && pr.tables && pr.tables.length ? { sandbox_runs_main_vs_pr: pr.tables } : {}),
     diff: pr.diff.map((d) => ({ path: d.path, status: d.status, [opts.numbered ? "lines (number = line in the PR version; - = removed)" : "unified"]: (opts.numbered ? numbered(d.unified || "") : d.unified || "").slice(0, 7000) })),
   };
 }

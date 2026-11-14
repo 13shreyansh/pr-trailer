@@ -101,10 +101,10 @@ CITED LINES (file:line -> actual code):
 """
 
 
-def judge(t, cl):
+def judge(t, cl, version="v1"):
     c = CASES[t["id"]]
     from_api = __import__("subprocess").run(
-        ["node", "-e", "const h=require('./app/api/ask.js');process.stdout.write(JSON.stringify(h.compact(require('./app/api/_context.json')[process.argv[1]])))", c["pr"]],
+        ["node", "-e", "const h=require('./app/api/ask.js');const V=require('./app/api/_prompt.js').V;const v=V[process.argv[2]]||{};process.stdout.write(JSON.stringify(h.compact(require('./app/api/_context.json')[process.argv[1]],{tables:v.tables})))", c["pr"], version],
         cwd=ROOT, capture_output=True, text=True, check=True).stdout
     cites = "\n".join(f"{f}:{n} -> {x if x is not None else '(no such line)'}" for f, n, x in cl) or "(none)"
     prompt = JUDGE.replace("{ctx}", from_api).replace("{q}", c["question"]).replace("{a}", t["answer"]).replace("{cites}", cites)
@@ -131,13 +131,14 @@ def judge(t, cl):
 
 def grade(path, use_judge=True):
     traces = json.loads(Path(path).read_text())
+    version = Path(path).name.split(".")[0]  # the judge sees the same context the answering version saw
     from concurrent.futures import ThreadPoolExecutor
     rows = []
 
     def one(t):
         r, cl = code_checks(t)
         if use_judge:
-            v = judge(t, cl)
+            v = judge(t, cl, version)
             r["grounded"] = v["verdict"] == "PASS"
             r["_critique"] = v["critique"]
         r["_all"] = all(v for k, v in r.items() if not k.startswith("_"))

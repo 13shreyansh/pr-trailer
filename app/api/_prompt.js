@@ -72,4 +72,8 @@ V.v5 = {
     "", ...ctxBlock(ctx), ...tail(history, question)].join("\n"),
 };
 
-module.exports = { V, DEFAULT: "v5" };
+// v6 hypothesis (v5 + data, no prompt change): v5 still hedges on "does 19.99 parse?" because the context only has
+// one failing example. Add the sandbox's main-vs-PR runs on sample inputs (the same table the PR page shows).
+V.v6 = { ...V.v5, tables: true };
+
+module.exports = { V, DEFAULT: "v6" };

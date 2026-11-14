@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately identifies the regressed test and points to the exact code change in web/app.js:30 that replaced refreshFee, matching all evidence in the context."}

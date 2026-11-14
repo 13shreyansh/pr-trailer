@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The claims are supported by the PR context, including the destructive migration, dangling read in ledger/statements.py, and the regressed acceptance test. The citations accurately reference lines designated in the context."}

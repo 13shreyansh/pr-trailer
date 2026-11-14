@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately describes the float parsing issue in ledger/money.py:8, citing the exact invariant failure and evidence provided in the PR context."}

@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response is fully grounded in the PR context, correctly listing the touched surfaces, callers, tables, affected files count, and blast radius from the merge_danger and size sections."}

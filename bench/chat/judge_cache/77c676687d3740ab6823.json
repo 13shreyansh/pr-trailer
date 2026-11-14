@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The claim that `transfer_fee(75250, 'instant')` changed from 151 to 150 cents is not present in the PR context."}

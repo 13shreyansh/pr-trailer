@@ -296,7 +296,7 @@ def main():
             "chat_eval": json.loads((OUT / "chat_eval.json").read_text()) if (OUT / "chat_eval.json").exists() else None}
     (APP / "data.json").write_text(json.dumps(data, separators=(",", ":")))
     ctx = {p["id"]: {k: p[k] for k in ("id", "title", "description", "requirement", "decision", "outcome", "danger",
-                                       "evidence", "checked", "signoff", "findings", "refusals", "notes", "spots", "diff", "stats")}
+                                       "evidence", "checked", "signoff", "findings", "refusals", "notes", "spots", "diff", "stats", "tables")}
            for p in prs}
     for p in ctx.values():
         for s in p["spots"]:

@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately describes the sandbox run result for '19.99', correctly references the code changes at ledger/money.py:8 and ledger/money.py:11, and notes the failing invariant."}

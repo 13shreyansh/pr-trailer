@@ -10,6 +10,7 @@ VERSIONS = [
     ("v3", "Answer first, cite only printed line numbers, no stock caveats", "Stock 'load, concurrency, config' caveats bury the answer"),
     ("v4", "Reason from the evidence instead of refusing", "v3 refuses answerable questions (ratings, examples, fixes)"),
     ("v5", "v3 plus one rule: give supported judgements, labelled, using only numbers in the context", "Keep v3's grounding and fix its over-refusal without v4's invented specifics"),
+    ("v6", "v5 plus data, no prompt change: the sandbox's main-vs-PR runs on sample amounts", "v5 still hedges on 'does 19.99 parse?' because the context had only one failing example"),
 ]
 def load(name):
     p = HERE / "runs" / f"{name}.graded.json"
@@ -25,7 +26,7 @@ for v, change, hyp in VERSIONS:
     rows.append(r)
 cases = json.loads((HERE / "cases.json").read_text())
 res = {
-    "shipped": "v5",
+    "shipped": "v6",
     "cases": {s: sum(c["split"] == s for c in cases) for s in ("dev", "heldout", "heldout2")},
     "categories": sorted({c["category"] for c in cases}),
     "failure_modes": [
@@ -36,7 +37,7 @@ res = {
     ],
     "alignment": json.loads((HERE / "alignment.json").read_text()),
     "ledger": rows,
-    "still_failing": "PR-104 'Does 19.99 parse correctly?': the context only proves the float bug on 19985.01, so v5 either hedges or states the 19.99 result without evidence.",
+    "still_failing": "PR-108 'What should the agent fix?' (1 of 3 tries): says line 30 caused the wrong fee. That is true, but the evidence never links the failing test to that line, so the judge counts it as an unsupported inference. PR-105 'Is anything sensitive leaking?' (2 of 3 tries): still adds an unasked caveat about untested areas.",
 }
 (ROOT / "out" / "chat_eval.json").write_text(json.dumps(res, indent=1))
 for r in rows:

@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The claim that line 30 caused `#fee` to show \"\u20ac0.00\" instead of \"\u20ac0.50\" is an unsupported causal inference, as the context does not attribute the test failure to a specific line or cause (listing file and line as null)."}

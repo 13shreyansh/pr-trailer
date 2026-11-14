@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response is grounded in the PR context and correctly cites ledger/api.py:32 where the ownership check is missing, matching the verified authorization probe."}

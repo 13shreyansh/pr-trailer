@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The claim that sandbox runs show calling to_cents('19.99') returns 1998 cents instead of 1999 is unsupported by the context; the only evidence provided in the context is for to_cents('19985.01')."}
