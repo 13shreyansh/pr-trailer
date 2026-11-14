@@ -1,0 +1,3 @@
+# Patch context lines and upstream license text preserve their exact source bytes.
+*.patch -whitespace
+app/fonts/*OFL.txt -whitespace

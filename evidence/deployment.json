@@ -1,0 +1,6 @@
+{
+  "url": "https://pr-trailer.vercel.app",
+  "deployment": "dpl_H4CMeq8Jir5mKrRs1yBHBDJAhFB3",
+  "state": "READY",
+  "verification": "Static assets match local hashes. Live test API audit is recorded separately. Browser visual acceptance is blocked by the unavailable IAB host."
+}

@@ -1,57 +1,50 @@
-# PR Trailer: earned trust for AI-written pull requests
+# Tieto: every line earns its place
 
-Junction 2026 · Tieto challenge "Earned Trust in AI Code" · team The CS Guy · MIT
+Live: https://pr-trailer.vercel.app
 
-Every agent-written PR ships with a **trailer**: evidence per requirement ID (test runs, a captioned UI video, a sequence diagram), what the AI checked, **what it refused to decide and why**, a merge-danger note (one-way vs two-way door, blast radius), and a sign-off card for a named human. The AI never approves. Only reproduced problems can block.
+A code-review rehearsal for the accountable human. Remove a change block, re-run a fixed test oracle, and keep deleting until no remaining block can be removed on its own without failing a check. The result is block-minimal for those tests. Unchecked blocks may be extra **or untested**.
 
-- **Live app: https://pr-trailer.vercel.app**: the story of one agent sprint at a made-up bank, narrowed from 290 changed lines to the 66 a person must read; then per PR the outcome, how to look at it (video, numbers, diagram or audio, with the rule that picked it), the impact map, the lines to read, sandbox evidence, a graded ask-about-this-PR assistant, and approve or deny with a reason
-- What "it works" means and how it is checked: [docs/EVAL_SPEC.md](docs/EVAL_SPEC.md); the assistant's evals and hill-climbing ledger: [docs/CHAT_EVAL.md](docs/CHAT_EVAL.md)
-- Video shot list and 5-minute pitch: [docs/PITCH.md](docs/PITCH.md)
-- Concept card: [docs/CONCEPT.md](docs/CONCEPT.md)
-- Measured results: [docs/RESULTS.md](docs/RESULTS.md)
-- Lessons log and decisions: [docs/LESSONS.md](docs/LESSONS.md)
+The inbox contains 19 small synthetic bank changes, a fee-cap change with a real half-cent rounding failure, two public Codex PRs from AIDev, and an intentionally vague intern change with three independently reproduced bank regressions. Counts come from recorded execution, not the illustrative design totals. Counts include added and removed implementation lines; oracle tests are held fixed and excluded.
 
-## The web app (app/)
+Normal **Trim all** runs the engine on packaged source snapshots in Python functions. Each response must match the recorded patch hash, test counts, failing removal controls and special regression checks. **Finish** applies the selected proven bank patches to a real Git branch, tests the combined branch, and returns a downloadable Git repository. **Send back trimmed** prepares a minimal patch and an editable follow-up draft. This app sends no messages, comments or merges to real GitHub repositories.
 
-`python3 bench/effort.py && python3 app/build_data.py` turns the trailers and benchmarks into `app/data.json` (the agent-decisions summary is cached in `app/llm/decisions.json`; refresh it with `python3 app/llm_decisions.py`); `node app/dev.js` serves it locally on :4321 with the `/api/ask` function. Vercel deploys `app/` from `main` (root directory `app`, no build). Set `GEMINI_API_KEY` in the Vercel project for LLM answers; without it the chat answers from the trailer itself.
+## Run and verify
 
-## Run it
+Requires Python 3.12 and Node 24. Install Python dependencies from `app/requirements.txt` into `.venv312`.
 
-Needs Python 3.11+, plus Node with Playwright for the UI evidence. There are no Python dependencies.
-
-```bash
-python3 -m trailer PR-109                # one trailer -> out/PR-109/trailer.md + trailer.json
-python3 -m trailer --no-ui               # all 13 sample PRs, backend evidence only
-python3 -m bench.run && python3 -m bench.report   # full measurement: samples + 49 mutants -> docs/RESULTS.md
-python3 site/build.py                     # static walkthrough page -> site/index.html
-GEMINI_API_KEY=... python3 -m trailer --llm gemini --llm-replay out/llm   # optional advisory LLM reviewer
-python3 -m unittest tests.test_trailer
+```sh
+npm ci
+npm test
+.venv312/bin/python -m unittest discover -s tests -v
+node app/dev.js
 ```
 
-## Layout
+The dev server is http://localhost:4321. Python runtime code is `app/runtime/`; fixed source packages are in `app/runtime/sources/`. Test logs and complete compressed archives are under `app/evidence/`. Read `fullLogArchive` in a summary JSON for the full log download. Live reruns include a gzip archive encoded in their JSON response.
 
-| Path | What |
-|---|---|
-| `bank/` | **Kassa**, a synthetic retail-banking service: transfers, fees, daily limits, idempotency, audit log, statement export, transfer form |
-| `bank/requirements.json` | 13 requirements with acceptance criteria |
-| `bank/tests/spec/` | Acceptance tests, one per criterion (`REQ_PAY_210.test_ac2_*`) |
-| `bank/invariants.py` | Team-owned money invariants run on every PR |
-| `bank/CODEOWNERS` | Who signs for what |
-| `prs/PR-1xx/` | 13 agent-written PRs, 8 with planted bugs |
-| `bench/ground_truth.json` | The planted bugs (never read by the trailer) |
-| `trailer/` | The generator: diff, test runs with per-test coverage, rules, probes, differential testing, merge danger, routing, sign-off |
-| `bench/` | Measurement: catch rate, false alarms, lanes, minutes, trust ledger, mutants |
-| `scripts/ui_spec.js` | UI acceptance tests and the captioned video recorder (Playwright) |
+To rebuild all measured evidence:
 
-## Checks and how each one is verified
+```sh
+.venv312/bin/python scripts/measure/fetch_real.py
+.venv312/bin/python scripts/measure/record.py bank
+.venv312/bin/python scripts/measure/record.py 9
+.venv312/bin/python scripts/measure/record.py 24
+.venv312/bin/python scripts/measure/record.py assemble
+.venv312/bin/python scripts/measure/package_runtime.py
+.venv312/bin/python scripts/measure/compact_reports.py
+```
 
-| Rule | Catches | Verified by |
-|---|---|---|
-| T-REGRESSION / T-CLAIM-UNMET | A criterion broken, or claimed but not met | Acceptance tests on main vs PR (Python and Chromium) |
-| I-INVARIANT | Team money invariants broken | Executing the invariants on the PR head |
-| M-FLOAT | Money passing through float | Invariant counterexample (`to_cents('19985.01')`) |
-| P-PII-LOG | Full IBAN written to logs | Log capture during the test run |
-| S-AUTHZ | Handler reads `account_id` without an ownership check | Runtime probe: user B reads user A's account |
-| D-DANGLING | Dropped column still read | Static reference plus the export test |
-| B-DIFFERENTIAL | "No behaviour change" that changes behaviour | 4000 inputs, main vs PR, with a counterexample |
-| D-SCOPE, D-DESTRUCTIVE, B-STATEFUL, B-TOPLEVEL, S-POLICY, S-NEW-SURFACE, T-NO-ORACLE | Things the AI **refuses** to decide | Each becomes a question with a named owner |
+`evidence/source/reduino-*/provenance.json` pins the AIDev row, original PR, base SHA and head SHA. Source tarballs are included for rechecking. Both PRs are in Jackhammer9/Reduino: [serial monitor #9](https://github.com/Jackhammer9/Reduino/pull/9) and [servo support #24](https://github.com/Jackhammer9/Reduino/pull/24). Their published head test suites are the oracles. Physical Arduino hardware was not tested.
+
+## Recording
+
+- `?story=1`: fixed fixture, no check requests, clock frozen. Space advances; 1–5 jump; R restarts. T trims, Enter finishes, O opens the next change needing a person, N opens risky lines, S prepares the trimmed return, B blocks the intern.
+- `?story=auto`: timed playback with the final frame after 110 seconds.
+- Story controls are hidden during playback. Archivo and JetBrains Mono are self-hosted.
+
+## Limits and provenance
+
+Removing a block can fail through imports or collection, not only through behaviour. The UI calls these failing checks. Passing fixed tests cannot establish that the ask is complete, that unchecked code is unnecessary, or that production is safe. The named approver still owns the residual risk. Host-side hardware checks remain explicit human tasks.
+
+The bank is synthetic, with no customer data. Public Reduino sources retain their upstream GPL-3.0-or-later license inside source archives. AIDev attribution: Hao Li and collaborators, [AIDev dataset](https://huggingface.co/datasets/hao-li/AIDev), CC BY 4.0. Font license files are in `app/fonts/`. Original PRs are read-only throughout this project.
+
+Review evidence: [docs/MEASURE-REVIEW.md](docs/MEASURE-REVIEW.md). DOM tests are not substitutes for the required deployed browser screenshots and console checks.

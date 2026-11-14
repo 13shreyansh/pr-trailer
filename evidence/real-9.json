@@ -1,0 +1,59 @@
+{
+  "title": "Add serial-monitor support",
+  "ask": "Add SerialMonitor helper and serial monitor transpilation",
+  "did": "Adds the requested helper and transpiles its calls to Arduino C++.",
+  "agent": "OpenAI Codex",
+  "repo": "Jackhammer9 / Reduino",
+  "source": "AIDev",
+  "github": "https://github.com/Jackhammer9/Reduino/pull/9",
+  "note": "Keep the tested implementation. Add a test or a reason for each unchecked block, or it stays out. Hardware behaviour needs a human check.",
+  "id": "AIDEV-9",
+  "written": 202,
+  "kept": 179,
+  "unchecked": 23,
+  "tests": 67,
+  "passed": 67,
+  "seconds": 15.9783,
+  "blocks": [
+    {
+      "id": "needed-implementation",
+      "name": "Tested implementation",
+      "lines": 179,
+      "needed": true
+    },
+    {
+      "id": "unchecked-changes",
+      "name": "Unchecked changes",
+      "lines": 23,
+      "needed": false
+    }
+  ],
+  "patch": "patches/AIDEV-9.patch",
+  "evidence": "evidence/AIDEV-9.json",
+  "patchSha256": "297edf5deb26cfd5da7200fa6c0019608d9c3626281f1fa302c7fe6b280eb221",
+  "risk": [
+    {
+      "path": "src/Reduino/Utils/__init__.py",
+      "start": 17,
+      "lines": [
+        "        self,",
+        "        baud_rate: int = 9600,",
+        "        *,",
+        "        port: Optional[str] = None,",
+        "        timeout: float = 1.0,",
+        "        newline: str = \"\\n\",",
+        "    ) -> None:",
+        "        \"\"\"Initialise a serial monitor configuration bound to an MCU port."
+      ],
+      "marked": -1,
+      "note": "Host-side tests pass. Check baud-rate and physical serial behaviour on the target board.",
+      "check": "Fixed head regression suite; physical Arduino not checked."
+    }
+  ],
+  "failedControls": 9,
+  "neededTestFailures": 64,
+  "status": "needs-you",
+  "lampFiles": 5,
+  "readLines": 8,
+  "riskPosition": 0.0893854748603352
+}

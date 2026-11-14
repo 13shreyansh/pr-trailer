@@ -1,0 +1,2121 @@
+{
+  "features": [
+    {
+      "feature_idx": 0,
+      "name": "id",
+      "type": {
+        "dtype": "int64",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 1,
+      "name": "number",
+      "type": {
+        "dtype": "int64",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 2,
+      "name": "title",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 3,
+      "name": "body",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 4,
+      "name": "agent",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 5,
+      "name": "user_id",
+      "type": {
+        "dtype": "int64",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 6,
+      "name": "user",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 7,
+      "name": "state",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 8,
+      "name": "created_at",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 9,
+      "name": "closed_at",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 10,
+      "name": "merged_at",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 11,
+      "name": "repo_id",
+      "type": {
+        "dtype": "int64",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 12,
+      "name": "repo_url",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    },
+    {
+      "feature_idx": 13,
+      "name": "html_url",
+      "type": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    }
+  ],
+  "rows": [
+    {
+      "row_idx": 0,
+      "row": {
+        "id": 3256881529,
+        "number": 3690,
+        "title": "Add Node version check to preflight",
+        "body": "## Summary\n- verify Node.js installation in `preflight.py`\n- warn when Node major version is below 22\n- run the new check in the preflight main entrypoint\n\n## Testing\n- `pre-commit run --files alpha_factory_v1/scripts/preflight.py` *(fails: repository cloning interrupted)*\n- `pytest -k preflight -q` *(fails: TestPreflightOpenAIAgentsVersion tests)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_688100d4732c8333b332f37975d18ec3",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-07-23T15:44:16Z",
+        "closed_at": "2025-07-23T15:44:29Z",
+        "merged_at": "2025-07-23T15:44:29Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/3690"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 1,
+      "row": {
+        "id": 3122476985,
+        "number": 24,
+        "title": "Improve README setup instructions",
+        "body": "## Summary\n- expand README with prerequisites and build steps\n- document environment variables\n- add pointers to docs for running nodes/miners and docs site\n\n## Testing\n- `make test` *(fails: fetching modules was forbidden)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_6840eb3c2524832c9fa7f36295ac042c",
+        "agent": "OpenAI_Codex",
+        "user_id": 1387285,
+        "user": "puncsky",
+        "state": "open",
+        "created_at": "2025-06-05T19:57:59Z",
+        "closed_at": null,
+        "merged_at": null,
+        "repo_id": 793852040,
+        "repo_url": "https://api.github.com/repos/cuckoo-network/cuckoo",
+        "html_url": "https://github.com/cuckoo-network/cuckoo/pull/24"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 2,
+      "row": {
+        "id": 3122488612,
+        "number": 62,
+        "title": "Disable chord key play while editing text",
+        "body": "## Summary\n- don't play chord sounds when keys are typed inside input fields\n\n## Testing\n- `pytest -q`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_6841f69d9b8883258b490202a1d8d557",
+        "agent": "OpenAI_Codex",
+        "user_id": 1034155,
+        "user": "charlesvestal",
+        "state": "closed",
+        "created_at": "2025-06-05T20:01:46Z",
+        "closed_at": "2025-06-05T20:03:40Z",
+        "merged_at": "2025-06-05T20:03:40Z",
+        "repo_id": 922867547,
+        "repo_url": "https://api.github.com/repos/charlesvestal/extending-move",
+        "html_url": "https://github.com/charlesvestal/extending-move/pull/62"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 3,
+      "row": {
+        "id": 3087726186,
+        "number": 666,
+        "title": "[alpha_factory] Update offline setup docs",
+        "body": "## Summary\n- clarify offline `check_env.py` usage\n\n## Testing\n- `python check_env.py --auto-install`\n- `pytest -q`\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-05-23T23:39:13Z",
+        "closed_at": "2025-05-23T23:39:23Z",
+        "merged_at": "2025-05-23T23:39:23Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/666"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 4,
+      "row": {
+        "id": 4125636513,
+        "number": 18887,
+        "title": "fix(opencode): ignore invalid custom tui themes",
+        "body": "### Issue for this PR\n\nCloses #5151\n\n### Type of change\n\n- [x] Bug fix\n- [ ] New feature\n- [ ] Refactor / code improvement\n- [ ] Documentation\n\n### What does this PR do?\n\nCustom theme files loaded from `themes/*.json` are currently trusted as if they already match the current theme schema. If an older flat theme file is present, TUI theme resolution crashes while trying to read `theme.theme`.\n\nThis change adds a small parser for custom theme files and only loads themes that include the required nested `theme` object and core color keys. Invalid theme files are skipped, so theme loading falls back to the built-in defaults instead of crashing the TUI.\n\n### How did you verify your code works?\n\n- Added a regression test covering valid theme files, legacy flat theme files, and wrapped theme files missing required keys\n- Ran `bun test test/cli/tui/theme.test.ts` in `packages/opencode`\n- Ran `bun typecheck` in `packages/opencode`\n\n### Screenshots / recordings\n\n_Not a UI layout change._\n\n### Checklist\n\n- [x] I have tested my changes locally\n- [x] I have not included unrelated changes in this PR",
+        "agent": "OpenAI_Codex",
+        "user_id": 36940018,
+        "user": "Ufodar",
+        "state": "open",
+        "created_at": "2026-03-24T06:41:04Z",
+        "closed_at": null,
+        "merged_at": null,
+        "repo_id": 975734319,
+        "repo_url": "https://api.github.com/repos/anomalyco/opencode",
+        "html_url": "https://github.com/anomalyco/opencode/pull/18887"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 5,
+      "row": {
+        "id": 4125647479,
+        "number": 18888,
+        "title": "test(opencode): cover negative read offsets",
+        "body": "### Issue for this PR\n\nCloses #4398\n\n### Type of change\n\n- [x] Bug fix\n- [ ] New feature\n- [ ] Refactor / code improvement\n- [ ] Documentation\n\n### What does this PR do?\n\n`ReadTool.execute()` already rejects negative offsets, but there was no regression test covering that path. This PR adds the missing test so the behavior reported in #4398 stays locked in.\n\n### How did you verify your code works?\n\n- Added a regression test that calls `read.execute()` with a negative offset and asserts the tool throws the expected error\n- Ran `bun test test/tool/read.test.ts` in `packages/opencode`\n- Ran `bun typecheck` in `packages/opencode`\n\n### Screenshots / recordings\n\n_Not a UI change._\n\n### Checklist\n\n- [x] I have tested my changes locally\n- [x] I have not included unrelated changes in this PR",
+        "agent": "OpenAI_Codex",
+        "user_id": 36940018,
+        "user": "Ufodar",
+        "state": "open",
+        "created_at": "2026-03-24T06:44:02Z",
+        "closed_at": null,
+        "merged_at": null,
+        "repo_id": 975734319,
+        "repo_url": "https://api.github.com/repos/anomalyco/opencode",
+        "html_url": "https://github.com/anomalyco/opencode/pull/18888"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 6,
+      "row": {
+        "id": 3386083999,
+        "number": 1350,
+        "title": "RFP: Refactor transport layer into core and NDI modules",
+        "body": "## Summary\n- introduce core transport interface and global accessors\n- add NDI transport implementation and factory\n- move NDI-specific code into dedicated transport library\n- update output settings and plugin entry to use transport interface\n- restructure CMake to build core and NDI libraries\n\n## Testing\n- `cmake --preset ubuntu-x86_64` *(fails: Could not find a package configuration file provided by \"LibObs\")*\n\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68ba4462a17483339bc61aaa62c8b5e0",
+        "agent": "OpenAI_Codex",
+        "user_id": 1393897,
+        "user": "paulpv",
+        "state": "open",
+        "created_at": "2025-09-05T02:42:06Z",
+        "closed_at": null,
+        "merged_at": null,
+        "repo_id": 71643008,
+        "repo_url": "https://api.github.com/repos/DistroAV/DistroAV",
+        "html_url": "https://github.com/DistroAV/DistroAV/pull/1350"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 7,
+      "row": {
+        "id": 3562923837,
+        "number": 9,
+        "title": "Add SerialMonitor helper and serial monitor transpilation",
+        "body": "## Summary\n- add a SerialMonitor utility class for buffering writes and host-side reads\n- extend the parser and emitter to transpile SerialMonitor declarations and write calls into Serial.begin/println\n- cover the new behaviour with dedicated parser, emitter, and utility tests\n\n## Testing\n- pytest\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_69010a7499d88326896e5893ea0a0570",
+        "agent": "OpenAI_Codex",
+        "user_id": 49639514,
+        "user": "Jackhammer9",
+        "state": "closed",
+        "created_at": "2025-10-28T18:46:29Z",
+        "closed_at": "2025-10-28T19:26:46Z",
+        "merged_at": "2025-10-28T19:26:46Z",
+        "repo_id": 1083658542,
+        "repo_url": "https://api.github.com/repos/Jackhammer9/Reduino",
+        "html_url": "https://github.com/Jackhammer9/Reduino/pull/9"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 8,
+      "row": {
+        "id": 3614012357,
+        "number": 1888,
+        "title": "Add Renode CI tests for Serial Improv",
+        "body": "## Summary\n- add a PlatformIO environment that builds the Serial Improv Unity tests for ESP32 hardware without project sources\n- update the Serial Improv packet test to print a Renode-friendly result marker and provide Arduino stubs\n- add a Renode Robot test and GitHub Actions workflow to execute the Unity suite inside Renode in CI\n\n## Testing\n- `pio test -e native-improv`\n- `pio test -e esp32-improv-test --without-testing --without-uploading`\n\n\n------\n[Codex Task](https://chatgpt.com/codex/tasks/task_e_6912ce3de9e88324a2c15d3a67f9edde)\n\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\n## Summary by CodeRabbit\n\n* **Tests**\n  * Added automated ESP32 emulation testing environment.\n  * Integrated CI workflow to build, run, and validate ESP32 tests on relevant changes.\n  * Improved test runtime reporting and result validation for clearer pass/fail detection.\n\n<sub>\u270f\ufe0f Tip: You can customize this high-level summary in your review settings.</sub>\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->",
+        "agent": "OpenAI_Codex",
+        "user_id": 1491145,
+        "user": "DTTerastar",
+        "state": "open",
+        "created_at": "2025-11-11T21:38:03Z",
+        "closed_at": null,
+        "merged_at": null,
+        "repo_id": 397588892,
+        "repo_url": "https://api.github.com/repos/ESPresense/ESPresense",
+        "html_url": "https://github.com/ESPresense/ESPresense/pull/1888"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 9,
+      "row": {
+        "id": 3713692276,
+        "number": 4219,
+        "title": "Add unit tests for string picker and swipeable container samples",
+        "body": "## Summary\n- add UITestBase-based coverage for the StringPicker sample, including lightweight toggle propagation and hour-range setup\n- add SwipeableContainer regression test to ensure horizontal swipes open without dragging parent lists\n\n## Testing\n- mvn -pl core-unittests -am -DunitTests=true -Dmaven.javadoc.skip=true -DfailIfNoTests=false -Dtest=ButtonGroupTest test\n\n\n------\n[Codex Task](https://chatgpt.com/codex/tasks/task_e_69390744294c8331bc6e8330a3e5091a)",
+        "agent": "OpenAI_Codex",
+        "user_id": 67850168,
+        "user": "shai-almog",
+        "state": "closed",
+        "created_at": "2025-12-10T05:45:47Z",
+        "closed_at": "2025-12-10T18:07:24Z",
+        "merged_at": "2025-12-10T18:07:24Z",
+        "repo_id": 32973467,
+        "repo_url": "https://api.github.com/repos/codenameone/CodenameOne",
+        "html_url": "https://github.com/codenameone/CodenameOne/pull/4219"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 10,
+      "row": {
+        "id": 3755212556,
+        "number": 101,
+        "title": "Replace FirebaseAnalytics Xamarin.Build.Download usage with externals tarball",
+        "body": "## Summary\n- download and extract the prebuilt FirebaseAnalytics and GoogleAppMeasurement xcframework tarballs during the externals step, using centralized metadata for URLs/versions\n- reference the staged xcframeworks directly from the binding projects while packaging lightweight targets files without Xamarin.Build.Download\n- document and centralize podspec links/metadata for tarball URLs and refactor the download helpers to remove duplication\n\n## Testing\n- Not run (not requested; iOS tooling not available in this environment)\n\n------\n[Codex Task](https://chatgpt.com/codex/tasks/task_e_6948a4684980832492f46a1afe17a142)",
+        "agent": "OpenAI_Codex",
+        "user_id": 8496021,
+        "user": "AdamEssenmacher",
+        "state": "closed",
+        "created_at": "2025-12-22T21:06:40Z",
+        "closed_at": "2025-12-22T22:17:36Z",
+        "merged_at": "2025-12-22T22:17:36Z",
+        "repo_id": 624031086,
+        "repo_url": "https://api.github.com/repos/AdamEssenmacher/GoogleApisForiOSComponents",
+        "html_url": "https://github.com/AdamEssenmacher/GoogleApisForiOSComponents/pull/101"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 11,
+      "row": {
+        "id": 3762117375,
+        "number": 724,
+        "title": "Remove Copilot simulated subagent conventions",
+        "body": "## Summary\n- stop treating Copilot subagents as simulated additional conventions in the rules processor\n- add coverage to ensure simulated subagent instructions are not injected for Copilot rules\n\n## Testing\n- pnpm cicheck\n\n------\n[Codex Task](https://chatgpt.com/codex/tasks/task_e_694d3a0ecf1c8330a4664bd3507fdc09)",
+        "agent": "OpenAI_Codex",
+        "user_id": 34151621,
+        "user": "dyoshikawa",
+        "state": "closed",
+        "created_at": "2025-12-25T15:15:04Z",
+        "closed_at": "2025-12-27T01:13:12Z",
+        "merged_at": null,
+        "repo_id": 1004340390,
+        "repo_url": "https://api.github.com/repos/dyoshikawa/rulesync",
+        "html_url": "https://github.com/dyoshikawa/rulesync/pull/724"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 12,
+      "row": {
+        "id": 3762117452,
+        "number": 725,
+        "title": "Remove Copilot simulated subagent conventions",
+        "body": "## Summary\n- stop treating Copilot subagents as simulated additional conventions in the rules processor\n- add coverage to ensure simulated subagent instructions are not injected for Copilot rules\n\n## Testing\n- pnpm cicheck\n\n------\n[Codex Task](https://chatgpt.com/codex/tasks/task_e_694d3a0ecf1c8330a4664bd3507fdc09)",
+        "agent": "OpenAI_Codex",
+        "user_id": 34151621,
+        "user": "dyoshikawa",
+        "state": "closed",
+        "created_at": "2025-12-25T15:15:10Z",
+        "closed_at": "2025-12-25T15:16:56Z",
+        "merged_at": null,
+        "repo_id": 1004340390,
+        "repo_url": "https://api.github.com/repos/dyoshikawa/rulesync",
+        "html_url": "https://github.com/dyoshikawa/rulesync/pull/725"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 13,
+      "row": {
+        "id": 3071362457,
+        "number": 4066,
+        "title": "chore(providers): update default openai models for openai:chat alias",
+        "body": "## Summary\n- update OpenAI defaults to GPT 4.1 models in `registry.ts`\n\n## Testing\n- `npm run f` *(fails: Cannot find package '/workspace/promptfoo/node_modules/@trivago/prettier-plugin-sort-imports/' imported from /workspace/promptfoo/noop.js)*\n- `npm run l` *(fails: Cannot find package '/workspace/promptfoo/node_modules/eslint-plugin-react-hooks/index.js')*\n- `npm test` *(fails: jest: not found)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 7235481,
+        "user": "mldangelo",
+        "state": "closed",
+        "created_at": "2025-05-18T03:48:21Z",
+        "closed_at": "2025-05-18T05:47:42Z",
+        "merged_at": "2025-05-18T05:47:42Z",
+        "repo_id": 633927609,
+        "repo_url": "https://api.github.com/repos/promptfoo/promptfoo",
+        "html_url": "https://github.com/promptfoo/promptfoo/pull/4066"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 14,
+      "row": {
+        "id": 3071364804,
+        "number": 74,
+        "title": "Improve event emitter example",
+        "body": "## Summary\n- extend the metadata for the event emitter tool\n- add `UserValves` and `__user__` overrides\n- disable automatic citations and demonstrate banner toggle\n- provide clearer docstring for the demo tool\n\n## Testing\n- `nox -s lint tests`",
+        "agent": "OpenAI_Codex",
+        "user_id": 132182384,
+        "user": "jrkropp",
+        "state": "closed",
+        "created_at": "2025-05-18T03:51:43Z",
+        "closed_at": "2025-05-18T03:51:50Z",
+        "merged_at": "2025-05-18T03:51:50Z",
+        "repo_id": 984851797,
+        "repo_url": "https://api.github.com/repos/jrkropp/open-webui-developer-toolkit",
+        "html_url": "https://github.com/jrkropp/open-webui-developer-toolkit/pull/74"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 15,
+      "row": {
+        "id": 3071367794,
+        "number": 75,
+        "title": "Switch pipeline to websocket emitter",
+        "body": "## Summary\n- emit streaming tokens via `event_emitter` instead of yielding\n- adjust unit tests for new coroutine behavior\n\n## Testing\n- `nox -s lint tests`",
+        "agent": "OpenAI_Codex",
+        "user_id": 132182384,
+        "user": "jrkropp",
+        "state": "closed",
+        "created_at": "2025-05-18T03:57:30Z",
+        "closed_at": "2025-05-18T03:57:36Z",
+        "merged_at": "2025-05-18T03:57:36Z",
+        "repo_id": 984851797,
+        "repo_url": "https://api.github.com/repos/jrkropp/open-webui-developer-toolkit",
+        "html_url": "https://github.com/jrkropp/open-webui-developer-toolkit/pull/75"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 16,
+      "row": {
+        "id": 3976880580,
+        "number": 6737,
+        "title": "chore(router): trim production bytes from warning/error strings",
+        "body": "## Summary\n- gate deprecation/warning logs to development-only paths\n- keep detailed error/warning messages in development and use short messages in production for a few hot paths\n- apply this in `router-core` + `react-router` without API changes\n\n## Changes\n- `packages/router-core/src/router.ts`\n  - dev-gate `notFoundRoute` deprecation warning\n  - shorten unsafe-protocol redirect error in production (keep full detail in dev)\n- `packages/react-router/src/useMatch.tsx`\n  - keep detailed invariant message in dev, use short production message\n- `packages/react-router/src/fileRoute.ts`\n  - dev-gate `FileRoute` and `FileRouteLoader` deprecation warnings\n- `packages/react-router/src/Match.tsx`\n  - dev-gate `Error in route match` warning\n- `packages/react-router/src/Matches.tsx`\n  - dev-gate global uncaught-route warning messages\n\n## Bundle-size impact\nMeasured with:\n`CI=1 NX_DAEMON=false pnpm nx run tanstack-router-e2e-bundle-size:build --outputStyle=stream --skipRemoteCache`\n\n`react-router.minimal`:\n- before: `282639 raw`, `89801 gzip`, `78004 brotli`\n- after: `282186 raw`, `89560 gzip`, `77866 brotli`\n- delta: `-453 raw`, `-241 gzip`, `-138 brotli`\n\n## Validation\n- `CI=1 NX_DAEMON=false pnpm nx run @tanstack/router-core:test:types --outputStyle=stream --skipRemoteCache`\n- `CI=1 NX_DAEMON=false pnpm nx run @tanstack/react-router:test:types --outputStyle=stream --skipRemoteCache`\n- `CI=1 NX_DAEMON=false pnpm nx run @tanstack/router-core:test:unit --outputStyle=stream --skipRemoteCache`\n- `CI=1 NX_DAEMON=false pnpm nx run @tanstack/react-router:test:unit --outputStyle=stream --skipRemoteCache`\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 1325721,
+        "user": "Sheraff",
+        "state": "closed",
+        "created_at": "2026-02-23T08:10:37Z",
+        "closed_at": "2026-02-23T17:02:14Z",
+        "merged_at": null,
+        "repo_id": 165670309,
+        "repo_url": "https://api.github.com/repos/TanStack/router",
+        "html_url": "https://github.com/TanStack/router/pull/6737"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 17,
+      "row": {
+        "id": 3976895418,
+        "number": 762,
+        "title": "feat(meetings): implement Meeting Intelligence API v1",
+        "body": "## Summary\nThis PR implements Meeting Intelligence API v1 from the approved PRD/plan.\n\nIt adds a dedicated ` /api/v1/meetings/* ` domain with:\n- Sessions/templates/artifacts CRUD\n- Offline finalize (`/commit`) artifact generation\n- Live events transport over SSE + WebSocket\n- Sharing to Slack and generic webhooks with queue + retry worker\n\n## What Changed\n- API + schemas:\n  - `tldw_Server_API/app/api/v1/endpoints/meetings.py`\n  - `tldw_Server_API/app/api/v1/schemas/meetings_schemas.py`\n- Meetings persistence + services:\n  - `tldw_Server_API/app/core/DB_Management/Meetings_DB.py`\n  - `tldw_Server_API/app/core/Meetings/*`\n- Background worker:\n  - `tldw_Server_API/app/services/meetings_webhook_dlq_service.py`\n  - Startup/shutdown wiring in `tldw_Server_API/app/main.py`\n- Tests:\n  - `tldw_Server_API/tests/Meetings/*` (new coverage for integrations + DLQ worker)\n- Docs:\n  - `Docs/API-related/Meeting_Intelligence_API.md`\n  - `Docs/Published/Overview/Feature_Status.md`\n  - `Docs/Product/Meeting-Transcripts-PRD.md`\n\n## Verification\nExecuted in project venv (`source .venv/bin/activate`).\n\n- `python -m pytest -q tldw_Server_API/tests/Meetings` -> **30 passed**\n- `python -m pytest -q tldw_Server_API/tests/Audio/test_audio_streaming_truthiness_flags.py` -> **2 passed**\n- `python -m pytest -q tldw_Server_API/tests/Collections/test_outputs_templates_api.py tldw_Server_API/tests/External_Sources/test_connectors_endpoints_api.py` -> **13 passed**\n- Bandit touched scope:\n  - `python -m bandit -r tldw_Server_API/app/api/v1/endpoints/meetings.py tldw_Server_API/app/api/v1/schemas/meetings_schemas.py tldw_Server_API/app/core/Meetings tldw_Server_API/app/core/DB_Management/Meetings_DB.py tldw_Server_API/app/services/meetings_webhook_dlq_service.py tldw_Server_API/app/main.py -f json -o /tmp/bandit_meetings_task7.json`\n  - Result: **0 findings**\n\nNote: some test commands were re-run outside sandbox because the known `torch/ctranslate2` import abort occurs in sandbox mode.\n\n## Scope Notes\n- v1 integrations are intentionally limited to Slack incoming webhooks and generic webhooks.\n- Calendar/CRM integrations and advanced diarization enhancements remain future-phase work.\n\n\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\n## Summary by CodeRabbit\n\n* **Documentation**\n  * Added comprehensive documentation for the Meeting Intelligence API (v1), including endpoint specifications, authentication methods, CRUD operations, real-time transport options, and sharing integrations.\n  * Updated product requirements document with implementation status, API specifications, and feature details.\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->",
+        "agent": "OpenAI_Codex",
+        "user_id": 1444720,
+        "user": "rmusser01",
+        "state": "closed",
+        "created_at": "2026-02-23T08:15:04Z",
+        "closed_at": "2026-02-24T15:18:49Z",
+        "merged_at": "2026-02-24T15:18:49Z",
+        "repo_id": 794199679,
+        "repo_url": "https://api.github.com/repos/rmusser01/tldw_server",
+        "html_url": "https://github.com/rmusser01/tldw_server/pull/762"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 18,
+      "row": {
+        "id": 3206945278,
+        "number": 3045,
+        "title": "fix: restrict docs workflow to repo owner",
+        "body": "## Summary\n- lock docs workflow to repository owner only\n- update README and hosting instructions to match\n\n## Testing\n- `pre-commit run --files .github/workflows/docs.yml README.md docs/HOSTING_INSTRUCTIONS.md`\n- `pytest -q` *(fails: cannot access submodule)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_686ad038fad48333b4af31c06b24f461",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-07-06T20:03:17Z",
+        "closed_at": "2025-07-06T20:03:30Z",
+        "merged_at": "2025-07-06T20:03:30Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/3045"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 19,
+      "row": {
+        "id": 3206957610,
+        "number": 545,
+        "title": "Add floating dock adorner option",
+        "body": "## Summary\r\n- add `UseFloatingDockAdorner` setting\r\n- use new `DockAdornerWindow` when enabled\r\n- include adorner window styles in themes\r\n\r\n## Testing\r\n- `dotnet test` *(fails: Repository has no remote / telem blocked)*\r\n\r\n------\r\nhttps://chatgpt.com/codex/tasks/task_e_686ad6a535248321b8e03aa7bc5ddef5\r\n\r\nFixes https://github.com/wieslawsoltes/Dock/issues/509",
+        "agent": "OpenAI_Codex",
+        "user_id": 2297442,
+        "user": "wieslawsoltes",
+        "state": "closed",
+        "created_at": "2025-07-06T20:10:10Z",
+        "closed_at": "2025-07-07T07:35:04Z",
+        "merged_at": "2025-07-07T07:35:04Z",
+        "repo_id": 134182879,
+        "repo_url": "https://api.github.com/repos/wieslawsoltes/Dock",
+        "html_url": "https://github.com/wieslawsoltes/Dock/pull/545"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 20,
+      "row": {
+        "id": 3206960148,
+        "number": 131,
+        "title": "[feature] Add announcement repository",
+        "body": "## Summary\n- add announcement repository interface for the client app\n- implement AnnouncementRepository using the base cache repository\n\n## Testing\n- `dotnet test --no-build` *(fails: command not found)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_686ad76fc0d08333a205d646e070b6a9",
+        "agent": "OpenAI_Codex",
+        "user_id": 61119222,
+        "user": "paul-fresquet",
+        "state": "closed",
+        "created_at": "2025-07-06T20:11:38Z",
+        "closed_at": "2025-07-06T20:14:05Z",
+        "merged_at": "2025-07-06T20:14:05Z",
+        "repo_id": 896363641,
+        "repo_url": "https://api.github.com/repos/POW-Software/ByteSync",
+        "html_url": "https://github.com/POW-Software/ByteSync/pull/131"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 21,
+      "row": {
+        "id": 3185467081,
+        "number": 2727,
+        "title": "[alpha_factory] docs: demo launch links",
+        "body": "## Summary\n- update `generate_demo_docs.py` to add 'Launch Demo' link when a built demo page exists\n- regenerate demo documentation pages\n\n## Testing\n- `python scripts/check_python_deps.py` *(fails: Missing packages numpy, yaml, pandas)*\n- `python check_env.py --auto-install`\n- `pytest -q` *(fails: 44 errors during collection)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_6860523237888333bb10a961ce99bb39",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-06-28T20:43:52Z",
+        "closed_at": "2025-06-28T20:44:03Z",
+        "merged_at": "2025-06-28T20:44:03Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/2727"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 22,
+      "row": {
+        "id": 3185472286,
+        "number": 2728,
+        "title": "[alpha_factory] improve demo gallery",
+        "body": "## Summary\n- add descriptions to the demo gallery\n- style demo cards with description text\n\n## Testing\n- `python scripts/check_python_deps.py`\n- `python check_env.py --auto-install`\n- `pytest -q` *(fails: ModuleNotFoundError)*\n- `pre-commit run --files scripts/generate_gallery_html.py docs/stylesheets/cards.css docs/gallery.html` *(fails: command not found)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_6860543900d48333b281099ef57f4be0",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-06-28T20:52:43Z",
+        "closed_at": "2025-06-28T20:53:19Z",
+        "merged_at": "2025-06-28T20:53:19Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/2728"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 23,
+      "row": {
+        "id": 3152479515,
+        "number": 7896,
+        "title": "Add package AGENTS",
+        "body": "## Summary\r\n- document structure for the components library\r\n- document layout of the React sample app\r\n- clarify that React samples act as accessible Storybook stories\r\n\r\n------\r\nhttps://chatgpt.com/codex/tasks/task_e_685119a3f00c832c93234b26d97a13a5\r\n\r\nThe A11y and PO reviews will only take place after all other DoD steps have been completed by the Developer:\r\n- [x] Meaningful pull request title for the release notes\r\n- [x] Pull request is linked to an issue and all changes relate to the issue (not needed!)\r\n- [x] Tests to protect this code implemented (if applicable)\r\n- [x] Manual test performed successfully (if applicable)\r\n- [x] Documentation or migration has been updated (if applicable)\r\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 37439758,
+        "user": "laske185",
+        "state": "closed",
+        "created_at": "2025-06-17T08:01:59Z",
+        "closed_at": "2025-06-17T09:30:36Z",
+        "merged_at": "2025-06-17T09:30:36Z",
+        "repo_id": 550054675,
+        "repo_url": "https://api.github.com/repos/public-ui/kolibri",
+        "html_url": "https://github.com/public-ui/kolibri/pull/7896"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 24,
+      "row": {
+        "id": 3152496090,
+        "number": 27,
+        "title": "Handle no-tuning strategy",
+        "body": "## Summary\n- skip tuning when `tuning_strategy` is `\"none\"`\n- document direct fitting for `tuning_strategy = \"none\"`\n\n## Testing\n- `R CMD build .`\n- `R CMD check fastml_0.6.1.tar.gz` *(fails: Packages required but not available)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685120efa7f8832aafd1a56654857e23",
+        "agent": "OpenAI_Codex",
+        "user_id": 6230704,
+        "user": "selcukorkmaz",
+        "state": "closed",
+        "created_at": "2025-06-17T08:08:05Z",
+        "closed_at": "2025-06-17T08:08:18Z",
+        "merged_at": "2025-06-17T08:08:18Z",
+        "repo_id": 883593929,
+        "repo_url": "https://api.github.com/repos/selcukorkmaz/fastml",
+        "html_url": "https://github.com/selcukorkmaz/fastml/pull/27"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 25,
+      "row": {
+        "id": 3910623316,
+        "number": 368,
+        "title": "Use PowerShell on Windows and reduce cold-start impact",
+        "body": "## Summary\n- switch Windows shell execution from cmd.exe to powershell.exe in OpenCode adapters\n- use faster PowerShell startup flags: -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass\n- update Windows command quoting and invocation for PowerShell call operator usage\n- add Windows-only first-task startup metrics for cold starts:\n  - first_task_spawn_ready_ms\n  - first_task_first_output_ms and after_spawn_ms\n- move skills initialization off the app startup critical path and add lazy-init guards in SkillsManager\n- add unit tests for shell utility behavior on Windows and POSIX\n\n## Validation\n- pnpm -F @accomplish_ai/agent-core typecheck\n- pnpm -F @accomplish_ai/agent-core exec vitest run tests/unit/utils/shell.test.ts\n- pnpm -F @accomplish_ai/agent-core exec vitest run tests/unit/opencode/adapter.test.ts\n- pnpm -F @accomplish/desktop typecheck\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 6598830,
+        "user": "mcmatan",
+        "state": "closed",
+        "created_at": "2026-02-07T16:03:20Z",
+        "closed_at": "2026-02-08T09:01:50Z",
+        "merged_at": null,
+        "repo_id": 1134220362,
+        "repo_url": "https://api.github.com/repos/accomplish-ai/accomplish",
+        "html_url": "https://github.com/accomplish-ai/accomplish/pull/368"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 26,
+      "row": {
+        "id": 3147553938,
+        "number": 13092,
+        "title": "Add config option events audit view",
+        "body": "## Summary\n- show config option events in a new audit page\n- link the new page from the Audit tab\n- use `fillConfigOptionEvents` for both events and changes pages\n- drop unused `fillConfigOptionChanges` method\n\n## Testing\n- `mvn -q test` *(fails: PluginResolutionException)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_684eca2448a0832f920a7f953713fd81\n\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\n## Summary by CodeRabbit\n\n- **New Features**\n  - Introduced a new page for viewing and filtering configuration option audit events, including detailed event logs and search functionality by date range.\n  - Added a navigation button to access the new \"Config Option Events\" page from the Audit section.\n\n- **Bug Fixes**\n  - Updated the search functionality on the configuration option changes page to use the correct method for retrieving events.\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->",
+        "agent": "OpenAI_Codex",
+        "user_id": 1226946,
+        "user": "buddhika75",
+        "state": "closed",
+        "created_at": "2025-06-15T13:40:51Z",
+        "closed_at": "2025-06-15T14:24:11Z",
+        "merged_at": "2025-06-15T14:24:11Z",
+        "repo_id": 21764480,
+        "repo_url": "https://api.github.com/repos/hmislk/hmis",
+        "html_url": "https://github.com/hmislk/hmis/pull/13092"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 27,
+      "row": {
+        "id": 3147564540,
+        "number": 2198,
+        "title": "[alpha_factory] fix diff utils indentation",
+        "body": "## Summary\n- fix indentation for `parse_and_validate_diff`\n\n## Testing\n- `python -m py_compile alpha_factory_v1/demos/self_healing_repo/agent_core/diff_utils.py`\n- `python scripts/check_python_deps.py` *(fails: Missing packages)*\n- `python check_env.py --auto-install` *(fails: No network connectivity)*\n- `pytest -q` *(fails: Environment check failed)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_684ecedf6be08333b7f130919337848e",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-06-15T13:49:06Z",
+        "closed_at": "2025-06-15T13:51:37Z",
+        "merged_at": "2025-06-15T13:51:37Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/2198"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 28,
+      "row": {
+        "id": 3800412460,
+        "number": 1305,
+        "title": "Normalize macserver paths before resolving files",
+        "body": "### Motivation\n- macOS client can send paths with leading slashes (e.g. `/Posts/foo`) which caused incorrect resolution or download naming. \n- Stripping leading slashes ensures `join`/`resolve` operate on relative paths like `Posts/foo` without breaking existing traversal checks. \n- Avoid rejecting paths simply because they start with `/` while still preventing directory traversal. \n- Reduce duplication by centralizing normalization logic for all macserver routes.\n\n### Description\n- Added a small helper `app/clients/icloud/macserver/routes/normalizeMacserverPath.js` which strips leading slashes via `path.replace(/^\\/+/, \"\")`.\n- Updated `upload.js`, `delete.js`, `download.js`, and `evict.js` to call `normalizeMacserverPath(path)` and use the resulting `normalizedPath` when building `filePath` with `join/resolve`.\n- Removed the `isAbsolute(path)` rejections and adjusted `download.js` to pass `normalizedPath` (not the raw `path`) into `res.download` to avoid leading-slash issues.\n- Kept the existing `basePath` / `startsWith` checks intact to prevent directory traversal.\n\n### Testing\n- No automated tests were run for this change.\n- Changes were committed and files modified: `upload.js`, `delete.js`, `download.js`, `evict.js`, and new `normalizeMacserverPath.js`.\n\n------\n[Codex Task](https://chatgpt.com/codex/tasks/task_e_6962c9c0036c8329bc89ed12783b3550)",
+        "agent": "OpenAI_Codex",
+        "user_id": 747928,
+        "user": "davidmerfield",
+        "state": "closed",
+        "created_at": "2026-01-10T21:53:56Z",
+        "closed_at": "2026-01-10T21:54:48Z",
+        "merged_at": "2026-01-10T21:54:48Z",
+        "repo_id": 50626524,
+        "repo_url": "https://api.github.com/repos/davidmerfield/blot",
+        "html_url": "https://github.com/davidmerfield/blot/pull/1305"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 29,
+      "row": {
+        "id": 3800417612,
+        "number": 1306,
+        "title": "Add clfdate-stamped error logging to macserver routes and HTTP clients",
+        "body": "### Motivation\n- Standardize timestamped, contextual error logging across the macserver to make debugging of header validation, path validation, watcher operations, and HTTP client interactions easier.\n- Surface failures in route handlers and HTTP client modules with `clfdate()` prefixes so logs are consistent with existing server logging patterns.\n- Ensure authorization failures in the macserver middleware are logged with context for remote diagnostics.\n\n### Description\n- Added `console.error(clfdate(), ...)` messages for missing/invalid headers and path validation failures in route handlers including `download`, `mkdir`, `readdir`, `recursiveList`, `watch`, `disconnect`, `setup`, `evict`, `delete`, and `upload` (files under `app/clients/icloud/macserver/routes`).\n- Wrapped operations that can fail (e.g. `unwatch`, `watch`, `fs.remove`, `brctl.evict`, AppleScript `exec`) with `try/catch` and logged errors using `clfdate()` before returning appropriate HTTP error responses.\n- Added input validation and error logging in macserver HTTP client modules `upload`, `mkdir`, `remove`, `status`, and `notifyServerStarted` (files under `app/clients/icloud/macserver/httpClient`), including logging of failed fetches and non-OK responses.\n- Logged unauthorized requests in the macserver middleware (`app/clients/icloud/macserver/index.js`) with `clfdate()` and request context.\n\n### Testing\n- No automated tests were run for these changes.\n\n------\n[Codex Task](https://chatgpt.com/codex/tasks/task_e_6962cab56e988329b8348b6711618cfe)",
+        "agent": "OpenAI_Codex",
+        "user_id": 747928,
+        "user": "davidmerfield",
+        "state": "closed",
+        "created_at": "2026-01-10T22:00:10Z",
+        "closed_at": "2026-01-10T22:05:47Z",
+        "merged_at": "2026-01-10T22:05:47Z",
+        "repo_id": 50626524,
+        "repo_url": "https://api.github.com/repos/davidmerfield/blot",
+        "html_url": "https://github.com/davidmerfield/blot/pull/1306"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 30,
+      "row": {
+        "id": 3348403348,
+        "number": 113,
+        "title": "Add fallback Vulkan device scan with attempt counter",
+        "body": "## Summary\n- add memory scan fallback to locate Vulkan dispatch tables and initialize device/queue\n- retry every 10 frames without a validated device and log result\n\n## Testing\n- `apt-get update` *(fails: repository 403 Forbidden)*\n- `g++ -c vulkanhook.cpp` *(fails: windows.h: No such file or directory)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68a9e10f19fc832480e99dd07cf4dfa4",
+        "agent": "OpenAI_Codex",
+        "user_id": 10033649,
+        "user": "Sh0ckFR",
+        "state": "closed",
+        "created_at": "2025-08-23T15:44:45Z",
+        "closed_at": "2025-08-23T15:45:01Z",
+        "merged_at": "2025-08-23T15:45:01Z",
+        "repo_id": 233712297,
+        "repo_url": "https://api.github.com/repos/Sh0ckFR/Universal-Dear-ImGui-Hook",
+        "html_url": "https://github.com/Sh0ckFR/Universal-Dear-ImGui-Hook/pull/113"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 31,
+      "row": {
+        "id": 3348410714,
+        "number": 114,
+        "title": "Handle stub dispatch when validating Vulkan devices",
+        "body": "## Summary\n- Validate Vulkan devices against stub dispatch pointers before calling vkGetDeviceQueue\n- Log and reject devices using stub dispatch instead of valid function tables\n\n## Testing\n- `g++ -std=c++17 -c vulkanhook.cpp` *(fails: fatal error: windows.h: No such file or directory)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68a9e2d76e288324a9810dcbd4632341",
+        "agent": "OpenAI_Codex",
+        "user_id": 10033649,
+        "user": "Sh0ckFR",
+        "state": "closed",
+        "created_at": "2025-08-23T15:50:36Z",
+        "closed_at": "2025-08-23T15:50:44Z",
+        "merged_at": "2025-08-23T15:50:44Z",
+        "repo_id": 233712297,
+        "repo_url": "https://api.github.com/repos/Sh0ckFR/Universal-Dear-ImGui-Hook",
+        "html_url": "https://github.com/Sh0ckFR/Universal-Dear-ImGui-Hook/pull/114"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 32,
+      "row": {
+        "id": 4037662269,
+        "number": 1483,
+        "title": "Expand Visio native geometric master catalog",
+        "body": "## Summary\n- extend the native code-generated Visio master catalog with geometric masters for parallelogram, hexagon, trapezoid, and pentagon\n- add page and fluent authoring helpers for the new geometric shapes and route them through the existing master geometry pipeline\n- add focused regression coverage for template learning, package geometry, and helper/fluent usage\n\n## Testing\n- dotnet test OfficeIMO.Tests/OfficeIMO.Tests.csproj --filter \"FullyQualifiedName~VisioGeometricMasterCatalog\" --no-restore -p:RunAnalyzers=false\n- dotnet test OfficeIMO.Tests/OfficeIMO.Tests.csproj --filter Visio --no-build --no-restore -p:RunAnalyzers=false\n\n## Notes\n- a fresh build-based full test run currently hits unrelated repository-wide blockers outside Visio (existing analyzer/build issues), so the broad Visio verification used already-built test binaries",
+        "agent": "OpenAI_Codex",
+        "user_id": 15063294,
+        "user": "PrzemyslawKlys",
+        "state": "closed",
+        "created_at": "2026-03-07T06:55:27Z",
+        "closed_at": "2026-03-07T14:07:20Z",
+        "merged_at": "2026-03-07T14:07:20Z",
+        "repo_id": 440778041,
+        "repo_url": "https://api.github.com/repos/EvotecIT/OfficeIMO",
+        "html_url": "https://github.com/EvotecIT/OfficeIMO/pull/1483"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 33,
+      "row": {
+        "id": 4037671716,
+        "number": 116,
+        "title": "DXcam 2026 update",
+        "body": "- Switched frame transfer from full-surface CopyResource to region-aware CopySubresourceRegion\r\n- Made IDXGIOutput5.DuplicateOutput1 the default capture path, with env-var fallback to legacy DuplicateOutput.\r\n- Added explicit DXGI access-lost/session-disconnect handling with safe recovery\r\n- Reduced capture-thread lock hold time\r\n- Optimized NumPy/OpenCV processing\r\n- Added per-frame DXGI timestamp tracking and optional timestamp return\r\n- Optimized timer pacing\r\n\r\nHuge thanks to @AI-M-BOT  & @Agade09\r\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 6813572,
+        "user": "ra1nty",
+        "state": "closed",
+        "created_at": "2026-03-07T06:59:11Z",
+        "closed_at": "2026-03-07T16:57:40Z",
+        "merged_at": "2026-03-07T16:57:40Z",
+        "repo_id": 490954397,
+        "repo_url": "https://api.github.com/repos/ra1nty/DXcam",
+        "html_url": "https://github.com/ra1nty/DXcam/pull/116"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 34,
+      "row": {
+        "id": 4037677929,
+        "number": 972,
+        "title": "Sekiban.Dcb: cold catch-up\u3092segment\u5358\u4f4d\u3067\u9032\u3081\u308b",
+        "body": "## Summary\n- align hybrid cold catch-up reads to a single cold segment per batch when running under projection context\n- persist multi projection snapshots at cold segment boundaries instead of every 5,000 events during cold catch-up\n- add hybrid read batch metadata and a regression test for segment-bounded cold reads\n\n## Why\n- reduce repeated snapshot persistence during initial cold catch-up\n- allow larger cold batches without forcing hot-only paths to read 100,000 events on the first batch\n- keep existing hot catch-up behavior unchanged outside the cold path\n\n## Verification\n- added `Should_stop_after_single_cold_segment_when_projection_context_is_present` test\n- attempted `dotnet build dcb/src/Sekiban.Dcb.Core/Sekiban.Dcb.Core.csproj -f net10.0`\n- attempted `dotnet test dcb/tests/Sekiban.Dcb.ColdEvents.Tests/Sekiban.Dcb.ColdEvents.Tests.csproj -f net10.0 --no-restore`\n\n## Notes\n- clean `origin/main` currently fails to build/test before this change with broad missing-type/reference errors in `Sekiban.Dcb.Core` and `Sekiban.Dcb.ColdEvents.Tests`, so the verification commands above do not complete successfully on baseline either\n- this PR intentionally limits the optimization to the cold catch-up path; shared-reader and event materialization reductions should be a follow-up if needed",
+        "agent": "OpenAI_Codex",
+        "user_id": 474920,
+        "user": "tomohisa",
+        "state": "closed",
+        "created_at": "2026-03-07T07:01:22Z",
+        "closed_at": "2026-03-07T07:19:05Z",
+        "merged_at": "2026-03-07T07:19:05Z",
+        "repo_id": 645180041,
+        "repo_url": "https://api.github.com/repos/J-Tech-Japan/Sekiban",
+        "html_url": "https://github.com/J-Tech-Japan/Sekiban/pull/972"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 35,
+      "row": {
+        "id": 3505340418,
+        "number": 714,
+        "title": "Respect identity agent disable flag when preparing keys",
+        "body": "## Summary\n- skip native SSH key preloading in TerminalWidget when the connection disables the identity agent\n- prevent file manager and SCP workflows from calling prepare_key_for_connection when identity_agent_disabled is set\n- add regression tests covering the terminal, file manager, and SCP argument builders to ensure keys are not preloaded when the directive is active\n\n## Testing\n- pytest tests/test_terminal_pass_through.py::test_prepare_key_native_mode_skips_when_agent_disabled\n- pytest tests/test_file_manager_auth.py::test_async_sftp_manager_skips_key_prep_when_agent_disabled\n- pytest tests/test_window_scp_args.py::test_build_scp_argv_skips_key_prep_when_agent_disabled\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68e9f9d1c13c83288832c7e8f9ede1e3",
+        "agent": "OpenAI_Codex",
+        "user_id": 423263,
+        "user": "mfat",
+        "state": "closed",
+        "created_at": "2025-10-11T07:10:16Z",
+        "closed_at": "2025-10-11T07:12:12Z",
+        "merged_at": "2025-10-11T07:12:12Z",
+        "repo_id": 1029240529,
+        "repo_url": "https://api.github.com/repos/mfat/sshpilot",
+        "html_url": "https://github.com/mfat/sshpilot/pull/714"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 36,
+      "row": {
+        "id": 3505341935,
+        "number": 1403,
+        "title": "Add typing practice example application",
+        "body": "Thank you for opening a Pull Request!\r\n\r\n---\r\n\r\nBefore submitting your PR, there are a few things you can do to make sure it goes smoothly:\r\n- [ ] Make sure to open a GitHub issue as a bug/feature request before writing your code!  That way we can discuss the change, evaluate designs, and agree on the general idea\r\n- [ ] Ensure the tests and linter pass\r\n- [ ] Code coverage does not decrease (if any source code was changed)\r\n- [ ] Appropriate docs were updated (if necessary)\r\n\r\nFixes #<issue_number_goes_here> \ud83e\udd95\r\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 46944397,
+        "user": "nineninenines",
+        "state": "open",
+        "created_at": "2025-10-11T07:11:02Z",
+        "closed_at": null,
+        "merged_at": null,
+        "repo_id": 44653334,
+        "repo_url": "https://api.github.com/repos/googlemaps/google-maps-services-js",
+        "html_url": "https://github.com/googlemaps/google-maps-services-js/pull/1403"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 37,
+      "row": {
+        "id": 3505345309,
+        "number": 716,
+        "title": "Handle forced askpass passphrase candidates",
+        "body": "## Summary\n- iterate through all available identity file candidates before clearing SSH_ASKPASS_REQUIRE when forcing askpass\n- retain forced askpass usage when a stored passphrase is found via lookup or connection manager sources\n- add a regression test covering passphrase retrieval via resolved identity files\n\n## Testing\n- pytest tests/test_terminal_askpass.py\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68ea027e1a108328a472020b79aecb9e",
+        "agent": "OpenAI_Codex",
+        "user_id": 423263,
+        "user": "mfat",
+        "state": "closed",
+        "created_at": "2025-10-11T07:13:40Z",
+        "closed_at": "2025-10-11T07:14:01Z",
+        "merged_at": "2025-10-11T07:14:00Z",
+        "repo_id": 1029240529,
+        "repo_url": "https://api.github.com/repos/mfat/sshpilot",
+        "html_url": "https://github.com/mfat/sshpilot/pull/716"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 38,
+      "row": {
+        "id": 3505346090,
+        "number": 49,
+        "title": "Make resource and prompt metadata static",
+        "body": "## Summary\n- emit static metadata constants for `@MCPResource` and `@MCPPrompt` expansions so metadata is accessible without reflection\n- update generated server accessors to reference the static metadata collections when exposing resources and prompts\n- simplify `MCPResourceProviding` defaults to derive static resources directly from aggregated metadata\n\n## Testing\n- `swift test`\n\n\n------\nhttps://chatgpt.com/codex/tasks/task_b_68e9e2c85ad48326b9c65ce32a668e47",
+        "agent": "OpenAI_Codex",
+        "user_id": 333270,
+        "user": "odrobnik",
+        "state": "closed",
+        "created_at": "2025-10-11T07:14:35Z",
+        "closed_at": "2025-11-24T09:32:25Z",
+        "merged_at": null,
+        "repo_id": 946140133,
+        "repo_url": "https://api.github.com/repos/Cocoanetics/SwiftMCP",
+        "html_url": "https://github.com/Cocoanetics/SwiftMCP/pull/49"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 39,
+      "row": {
+        "id": 4053853694,
+        "number": 210,
+        "title": "Add subscription registry API, UI, and docs",
+        "body": "## Summary\n- add dedicated subscription registry storage (`subscription_sources`, `subscription_definitions`)\n- add REST endpoints `POST /subscriptions/push` and `GET /subscriptions/latest`\n- expose subscription sources/definitions in GraphQL API\n- add Subscriptions UI tab with definition list and clickable payload SDL preview (syntax highlighted)\n- keep subscription usage in operation analytics by recording `SUBSCRIPTION` operation hits\n- document subscription registration flow and new endpoints in README\n\n## Notes\n- subscription catalog is intentionally separate from federated schema composition\n- only relevant files were committed; unrelated local untracked files were not included\n\n## Validation\n- `./node_modules/.bin/tsc --noEmit` (graphql-schema-registry)\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 445122,
+        "user": "tot-ra",
+        "state": "closed",
+        "created_at": "2026-03-10T19:43:44Z",
+        "closed_at": "2026-03-10T19:52:10Z",
+        "merged_at": "2026-03-10T19:52:10Z",
+        "repo_id": 290993129,
+        "repo_url": "https://api.github.com/repos/tot-ra/graphql-schema-registry",
+        "html_url": "https://github.com/tot-ra/graphql-schema-registry/pull/210"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 40,
+      "row": {
+        "id": 4053857256,
+        "number": 27,
+        "title": "feat: MCP: add minimal response mode",
+        "body": "Helps with token efficiency when used as an MCP server.\r\n\r\nResponse payloads were hitting ~1k characters when metadata was relatively large.\r\n\r\n`tests/conftest.py`: shared with https://github.com/agentic-mcp-tools/memora/pull/28",
+        "agent": "OpenAI_Codex",
+        "user_id": 9123665,
+        "user": "justinTM",
+        "state": "closed",
+        "created_at": "2026-03-10T19:44:29Z",
+        "closed_at": "2026-03-13T15:36:58Z",
+        "merged_at": "2026-03-13T15:36:58Z",
+        "repo_id": 1060036659,
+        "repo_url": "https://api.github.com/repos/agentic-box/memora",
+        "html_url": "https://github.com/agentic-box/memora/pull/27"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 41,
+      "row": {
+        "id": 4053859289,
+        "number": 3871,
+        "title": "[Do Not Merge] Refactor `cyipopt` solve-time options to match classic Pyomo solver behavior",
+        "body": "<!-- ##################################################################### -->\r\n<!-- PLEASE READ BEFORE OPENING THIS PULL REQUEST -->\r\n\r\n<!-- All changes must adhere to PEP8 standards as enforced by Black. -->\r\n<!-- If your changes do NOT adhere, the test suite will fail. -->\r\n<!-- Please read our Contributing guide for instructions on how to apply these standards. -->\r\n<!-- Contributing Guide: https://pyomo.readthedocs.io/en/stable/contribution_guide.html -->\r\n<!-- ##################################################################### -->\r\n\r\n<!-- DO NOT DELETE OR IGNORE THIS TEMPLATE. Failing to adhere to this template and provide the necessary information may lead to your Pull Request being closed without consideration. -->\r\n\r\n## Fixes # .\r\n\r\n## Summary/Motivation:\r\n\r\nThis PR makes the PyNumero `cyipopt` solver interface behave more like the classic Pyomo solver interfaces for solver options.\r\n\r\nBefore this change, `SolverFactory(\"cyipopt\")` only consumed options stored on the solver object via `solver.config.options`, which meant callers needing one-shot overrides had to mutate solver state around a solve. That was inconsistent with the rest of Pyomo, where callers can generally pass ephemeral options directly to `solve(...)`.\r\n\r\nWith this change:\r\n\r\n- `SolverFactory(\"cyipopt\").solve(model, solver_options={...})` is supported\r\n- `SolverFactory(\"cyipopt\").solve(model, options={...})` is also supported for legacy-style compatibility\r\n- per-call options override any defaults stored on the solver object for that solve only\r\n- solver defaults stored on `solver.config.options` are not permanently mutated by solve-time overrides\r\n- passing both `options=` and `solver_options=` raises an error, matching existing Pyomo conventions\r\n\r\n## Changes proposed in this PR:\r\n\r\n1. `pyomo.contrib.pynumero.algorithms.solvers.cyipopt_solver.PyomoCyIpoptSolver`\r\n- Added solve-time option merging in the public solver plugin used by `SolverFactory(\"cyipopt\")`\r\n- Preserved existing solver defaults from `config.options`\r\n- Applied per-call overrides only to the active solve\r\n\r\n2. `pyomo.contrib.doe.doe.DesignOfExperiments`\r\n- Updated the grey-box `cyipopt` solve path to pass options through the solve call instead of relying solely on mutable solver state during the solve\r\n\r\n3. `pyomo.contrib.mindtpy`\r\n- Updated the legacy `cyipopt` paths so ephemeral settings like `max_cpu_time` and `constr_viol_tol` are added to solve-time kwargs instead of mutating `opt.config.options`\r\n- Kept existing behavior for non-`cyipopt` solvers unchanged\r\n\r\n4. Tests\r\n- Added focused regression tests for the public `cyipopt` interface covering:\r\n  - default solver options still apply\r\n  - per-call `solver_options` override defaults for a single solve\r\n  - legacy `options=` support\r\n  - defaults are restored after solve\r\n  - mixed `options=` and `solver_options=` is rejected\r\n- Added MindtPy unit tests for the new cyipopt solve-time option plumbing\r\n\r\n### Public API Behavior\r\n\r\nBefore:\r\n\r\n```python\r\nsolver = pyo.SolverFactory(\"cyipopt\")\r\nsolver.config.options[\"max_iter\"] = 10\r\nsolver.solve(model)\r\n```\r\n\r\nOne-shot overrides generally required mutating solver.config.options before solve and then restoring them afterward.\r\n\r\nAfter:\r\n\r\n```python\r\nsolver = pyo.SolverFactory(\"cyipopt\")\r\nsolver.config.options[\"max_iter\"] = 10\r\n\r\nsolver.solve(model, solver_options={\"max_iter\": 1})\r\n# or\r\nsolver.solve(model, options={\"max_iter\": 1})\r\n```\r\n\r\nIn both cases, the solve uses max_iter=1 for that call only, and the stored default remains 10\r\n\r\n### Compatibility / Risk Notes\r\n\r\n- This is intentionally narrow and limited to solve-time option handling.\r\n- Existing code that sets persistent defaults on solver.config.options continues to work.\r\noptions= remains supported for compatibility, but solver_options= is also accepted and is the preferred solve-time override path where applicable.\r\n- Passing both options= and solver_options= now raises a ValueError for cyipopt, matching behavior already used elsewhere in Pyomo.\r\n\r\n### Outstanding Tasks Before Review\r\n\r\n- Rerun the targeted tests in a Python 3.11 environment. I could not run the pytest targets in the current shell because the available interpreter is Python 3.9, while this checkout now imports Python 3.10+ syntax.\r\n\r\nSuggested test commands once the environment is updated:\r\n\r\n\r\n```\r\npython -m pytest pyomo/contrib/pynumero/algorithms/solvers/tests/test_pyomo_cyipopt_solver_interface.py\r\npython -m pytest pyomo/contrib/mindtpy/tests/test_cyipopt_options.py\r\npython -m pytest pyomo/contrib/pynumero/algorithms/solvers/tests/test_cyipopt_solver.py\r\npython -m pytest pyomo/contrib/doe/tests/test_greybox.py\r\npython -m pytest pyomo/contrib/mindtpy/tests/test_mindtpy_grey_box.py\r\n```\r\n\r\nI am running a few minutes late; my previous meeting is running over.\r\n\r\n## Legal Acknowledgement\r\n\r\nBy contributing to this software project, I have read the [contribution guide](https://pyomo.readthedocs.io/en/stable/contribution_guide.html) and agree to the following terms and conditions for my contribution:\r\n\r\n1. I agree my contributions are submitted under the BSD license.\r\n2. I represent I am authorized to make the contributions and grant the license. If my employer has rights to intellectual property that includes these contributions, I represent that I have received permission to make contributions and grant the required license on behalf of that employer.\r\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 13946870,
+        "user": "adowling2",
+        "state": "open",
+        "created_at": "2026-03-10T19:44:55Z",
+        "closed_at": null,
+        "merged_at": null,
+        "repo_id": 59858718,
+        "repo_url": "https://api.github.com/repos/Pyomo/pyomo",
+        "html_url": "https://github.com/Pyomo/pyomo/pull/3871"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 42,
+      "row": {
+        "id": 4053859388,
+        "number": 586,
+        "title": "Propagate Graph search cancellation and stabilize OAuth cache tests",
+        "body": "## Summary\n- propagate caller cancellation through Graph mailbox search list and MIME download paths\n- add Graph mailbox search regressions for cancellation during listing and MIME retrieval\n- serialize OAuth cache file tests with the existing Graph collection to avoid shared-file races in full runs\n\n## Testing\n- dotnet test Sources/Mailozaurr.sln --no-restore --filter \"FullyQualifiedName~SearchNonDeliveryReportsTests|FullyQualifiedName~SearchDmarcReportsTests\" -v minimal\n- dotnet test Sources/Mailozaurr.sln --no-restore -v minimal",
+        "agent": "OpenAI_Codex",
+        "user_id": 15063294,
+        "user": "PrzemyslawKlys",
+        "state": "closed",
+        "created_at": "2026-03-10T19:44:57Z",
+        "closed_at": "2026-03-10T19:45:08Z",
+        "merged_at": "2026-03-10T19:45:08Z",
+        "repo_id": 257089738,
+        "repo_url": "https://api.github.com/repos/EvotecIT/Mailozaurr",
+        "html_url": "https://github.com/EvotecIT/Mailozaurr/pull/586"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 43,
+      "row": {
+        "id": 4053879430,
+        "number": 42476,
+        "title": "Media: prevent caching of temporary downloads",
+        "body": "## Summary\n\nDescribe the problem and fix in 2\u20135 bullets:\n\n- Problem: temporary `/media/:id` responses relied on TTL + post-send deletion but did not explicitly disable browser/proxy caching.\n- Why it matters: these URLs act like short-lived capability links, so cache retention can preserve access past the intended lifetime.\n- What changed: add `Cache-Control: no-store, private, max-age=0, must-revalidate`, `Pragma: no-cache`, and `Expires: 0` on the media endpoint, and assert the headers in tests.\n- What did NOT change (scope boundary): media path validation, TTL expiry, deletion timing, and file serving behavior.\n\n## Change Type (select all)\n\n- [ ] Bug fix\n- [ ] Feature\n- [ ] Refactor\n- [ ] Docs\n- [x] Security hardening\n- [ ] Chore/infra\n\n## Scope (select all touched areas)\n\n- [ ] Gateway / orchestration\n- [ ] Skills / tool execution\n- [ ] Auth / tokens\n- [x] Memory / storage\n- [ ] Integrations\n- [ ] API / contracts\n- [ ] UI / DX\n- [ ] CI/CD / infra\n\n## Linked Issue/PR\n\n- Closes #\n- Related #\n\n## User-visible / Behavior Changes\n\nTemporary media downloads now send explicit no-store/no-cache headers. No config or workflow changes.\n\n## Security Impact (required)\n\n- New permissions/capabilities? (`Yes/No`) No\n- Secrets/tokens handling changed? (`Yes/No`) No\n- New/changed network calls? (`Yes/No`) No\n- Command/tool execution surface changed? (`Yes/No`) No\n- Data access scope changed? (`Yes/No`) No\n- If any `Yes`, explain risk + mitigation:\n\n## Repro + Verification\n\n### Environment\n\n- OS: macOS\n- Runtime/container: Node 22 + pnpm workspace\n- Model/provider: N/A\n- Integration/channel (if any): local media server\n- Relevant config (redacted): default media server test harness\n\n### Steps\n\n1. Start the media server test harness and fetch a temporary `/media/:id` URL.\n2. Inspect response headers before this patch.\n3. Observe the body served normally and cleanup still occurring after send.\n\n### Expected\n\n- Temporary media responses include explicit anti-cache headers.\n\n### Actual\n\n- Before this patch, only `X-Content-Type-Options: nosniff` was set.\n\n## Evidence\n\nAttach at least one:\n\n- [x] Failing test/log before + passing after\n- [ ] Trace/log snippets\n- [ ] Screenshot/recording\n- [ ] Perf numbers (if relevant)\n\n## Human Verification (required)\n\nWhat you personally verified (not just CI), and how:\n\n- Verified scenarios: fetched an existing temp media file and a missing media id through the test suite, confirming the new headers are present and existing behavior still passes.\n- Edge cases checked: outside-workspace rejection test still passes unchanged.\n- What you did **not** verify: real browser cache behavior outside the automated test harness.\n\n## Review Conversations\n\n- [x] I replied to or resolved every bot review conversation I addressed in this PR.\n- [x] I left unresolved only the conversations that still need reviewer or maintainer judgment.\n\nIf a bot review conversation is addressed by this PR, resolve that conversation yourself. Do not leave bot review conversation cleanup for maintainers.\n\n## Compatibility / Migration\n\n- Backward compatible? (`Yes/No`) Yes\n- Config/env changes? (`Yes/No`) No\n- Migration needed? (`Yes/No`) No\n- If yes, exact upgrade steps:\n\n## Failure Recovery (if this breaks)\n\n- How to disable/revert this change quickly: revert commit `688eb5d96a1a5a37a811e3c49969ee192a5031e7`.\n- Files/config to restore: `src/media/server.ts`, `src/media/server.test.ts`\n- Known bad symptoms reviewers should watch for: none expected beyond tests asserting cache headers.\n\n## Risks and Mitigations\n\nList only real risks for this PR. Add/remove entries as needed. If none, write `None`.\n\n- Risk: some consumer unexpectedly relied on absent cache headers for debugging or replay.\n  - Mitigation: body/status behavior is unchanged; only cache directives were tightened, and tests cover normal/missing media responses.\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 1021764,
+        "user": "yzxlr",
+        "state": "open",
+        "created_at": "2026-03-10T19:48:43Z",
+        "closed_at": null,
+        "merged_at": null,
+        "repo_id": 1103012935,
+        "repo_url": "https://api.github.com/repos/openclaw/openclaw",
+        "html_url": "https://github.com/openclaw/openclaw/pull/42476"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 44,
+      "row": {
+        "id": 4053881755,
+        "number": 28,
+        "title": "feat: graph UI: edit tags and metadata in detail panel",
+        "body": "**Title**\r\n\r\nAdd editable tags and metadata to the graph detail panel\r\n\r\n<img width=\"1389\" height=\"559\" alt=\"screenshot of tag editing UI\" src=\"https://github.com/user-attachments/assets/d992446b-a790-4a84-9555-47b8f823fc71\" />\r\n\r\n**Summary**\r\n\r\nThis PR adds per-entry tag and metadata editing to the live graph UI. The detail panel now shows read-only scalar metadata, separates complex metadata into its own block, and supports inline editing of tags and scalar key/value metadata with save/cancel controls.\r\n\r\nThe change also unifies the update flow behind `PATCH /api/memories/{id}` for both the local graph server and the Cloudflare Pages endpoint, so the UI can persist tags, metadata, and favorite state through one consistent API.\r\n\r\n**What changed**\r\n\r\n- Graph detail panel:\r\n  - added `Edit`, `Save`, and `Cancel` controls\r\n  - added editable tag rows with add/remove/rename support\r\n  - added editable scalar metadata rows with add/remove/edit support\r\n  - kept complex metadata read-only and displayed separately\r\n  - kept content read-only\r\n  - added inline validation and status messaging\r\n\r\n- Graph update API:\r\n  - local server now supports `PATCH /api/memories/{id}`\r\n  - Cloudflare Pages memory endpoint now supports the same PATCH contract\r\n  - PATCH returns the full updated memory payload so the UI can refresh from server state\r\n  - favorite toggling now uses the same update path\r\n\r\n- Validation/testing:\r\n  - added local graph server PATCH tests for:\r\n    - tags + metadata updates\r\n    - favorite compatibility\r\n    - missing memory `404`\r\n    - tag whitelist rejection\r\n\r\n**Implementation notes**\r\n\r\n- Editable metadata is limited to scalar values in this PR:\r\n  - `string`\r\n  - `number`\r\n  - `boolean`\r\n  - `null`\r\n\r\n- Complex metadata such as arrays/objects remains visible but read-only.\r\n- `images` is treated as reserved/system-managed and is excluded from inline editing.\r\n- Tag edits still respect the existing backend whitelist.\r\n\r\n**Browser validation**\r\n\r\nI also exercised the feature end-to-end in the live graph UI with Playwright on an isolated worktree-specific graph URL. That surfaced and fixed two frontend issues:\r\n- entering edit mode could fail after SSE refreshes cleared `memoryCache`\r\n- save could persist stale draft state instead of the current DOM input state\r\n\r\n**Testing**\r\n\r\n- `python3 -m py_compile memora/graph/server.py tests/test_graph_server.py`\r\n- `python3 -m pytest tests/test_graph_server.py -q`\r\n\r\n**Notes / follow-up**\r\n\r\n- Static export remains read-only and unchanged.\r\n- Global tag management (rename/color management across all entries) is still out of scope.\r\n- The current tag whitelist can constrain which edited tags are valid in a given environment.",
+        "agent": "OpenAI_Codex",
+        "user_id": 9123665,
+        "user": "justinTM",
+        "state": "closed",
+        "created_at": "2026-03-10T19:49:08Z",
+        "closed_at": "2026-03-13T15:53:08Z",
+        "merged_at": "2026-03-13T15:53:08Z",
+        "repo_id": 1060036659,
+        "repo_url": "https://api.github.com/repos/agentic-box/memora",
+        "html_url": "https://github.com/agentic-box/memora/pull/28"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 45,
+      "row": {
+        "id": 4053882899,
+        "number": 587,
+        "title": "Fix Graph mailbox search mailbox enumeration",
+        "body": "## Summary\n- materialize mailbox inputs once in Graph mailbox search to avoid double-enumeration bugs\n- return an empty result immediately when no mailbox scopes are provided\n- add Graph search regressions for single-use mailbox enumerables and empty mailbox lists\n\n## Testing\n- dotnet test Sources/Mailozaurr.sln --no-restore --filter \"FullyQualifiedName~GraphSearchMailboxesTests\" -v minimal\n- dotnet test Sources/Mailozaurr.sln --no-restore -v minimal",
+        "agent": "OpenAI_Codex",
+        "user_id": 15063294,
+        "user": "PrzemyslawKlys",
+        "state": "closed",
+        "created_at": "2026-03-10T19:49:21Z",
+        "closed_at": "2026-03-10T19:49:29Z",
+        "merged_at": "2026-03-10T19:49:29Z",
+        "repo_id": 257089738,
+        "repo_url": "https://api.github.com/repos/EvotecIT/Mailozaurr",
+        "html_url": "https://github.com/EvotecIT/Mailozaurr/pull/587"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 46,
+      "row": {
+        "id": 3214860197,
+        "number": 38,
+        "title": "Fix HTML name escaping",
+        "body": "## Summary\n- sanitize user-provided names before inserting them into HTML messages\n- escape first names in subscription notification service\n\n## Testing\n- `python -m py_compile $(git ls-files '*.py')`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_686e1a4b6f048321b4d93858483e1ac6",
+        "agent": "OpenAI_Codex",
+        "user_id": 161734431,
+        "user": "kavore",
+        "state": "closed",
+        "created_at": "2025-07-09T07:33:56Z",
+        "closed_at": "2025-07-09T07:34:06Z",
+        "merged_at": "2025-07-09T07:34:06Z",
+        "repo_id": 983326739,
+        "repo_url": "https://api.github.com/repos/kavore/remnawave-tg-shop",
+        "html_url": "https://github.com/kavore/remnawave-tg-shop/pull/38"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 47,
+      "row": {
+        "id": 3214900515,
+        "number": 6612,
+        "title": "Add slow tag for archived packages",
+        "body": "## Summary\n- mark archived packages with `//go:build slow` so they are skipped on normal test runs\n- mark `cmd/ft2mochi` as slow because it imports archived code\n\n## Testing\n- `go test ./...`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_686e17683f98832093e194c877fe0d39",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-07-09T07:48:24Z",
+        "closed_at": "2025-07-09T11:16:21Z",
+        "merged_at": null,
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/6612"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 48,
+      "row": {
+        "id": 3181626096,
+        "number": 206,
+        "title": "Implement LRU cache for sentence embeddings",
+        "body": "## Summary\n- add `SENTENCE_EMBEDDING_CACHE_SIZE` config option\n- implement `LRUDict` for caching sentence embeddings with eviction\n- enforce cache limit in `_get_sentence_embeddings`\n- test cache eviction when exceeding limit\n\n## Testing\n- `ruff check .`\n- `ruff format --check .`\n- `pytest tests/ -v --cov=. --cov-report=term-missing` *(fails: Required test coverage of 85% not reached)*\n- `mypy .` *(fails: found 99 errors)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685e40147c88832f95f124064357fa49",
+        "agent": "OpenAI_Codex",
+        "user_id": 634836,
+        "user": "Lanerra",
+        "state": "closed",
+        "created_at": "2025-06-27T07:01:31Z",
+        "closed_at": "2025-06-27T07:02:03Z",
+        "merged_at": "2025-06-27T07:02:03Z",
+        "repo_id": 978480214,
+        "repo_url": "https://api.github.com/repos/Lanerra/saga",
+        "html_url": "https://github.com/Lanerra/saga/pull/206"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 49,
+      "row": {
+        "id": 3181628194,
+        "number": 3666,
+        "title": "Update TPCH VM IR outputs",
+        "body": "## Summary\n- refresh TPCH IR listings using current VM disassembly\n\n## Testing\n- `go test -tags slow ./tests/vm -run TestVM_TPCH -count=1`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685e3fe641548320b32bb652fd3c9b03",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-27T07:02:09Z",
+        "closed_at": "2025-06-27T07:03:46Z",
+        "merged_at": null,
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/3666"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 50,
+      "row": {
+        "id": 3181630059,
+        "number": 3667,
+        "title": "Update tpc\u2011h IR outputs",
+        "body": "## Summary\n- regenerate tpch IR golden files via `update_tpch`\n\n## Testing\n- `go test ./tests/vm -tags=slow -run TestVM_TPCH -count=1`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685e3fdead8483209e81b0b349aa026e",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-27T07:02:54Z",
+        "closed_at": "2025-06-27T07:03:54Z",
+        "merged_at": null,
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/3667"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 51,
+      "row": {
+        "id": 3181631113,
+        "number": 3668,
+        "title": "Fix cast disassembly output",
+        "body": "## Summary\n- improve disassembly to properly show Cast instructions\n- regenerate TPCH IR/out files\n\n## Testing\n- `go test ./...`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685e3f926eec832083cf4cbc99471a7f",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-27T07:03:21Z",
+        "closed_at": "2025-06-27T07:03:35Z",
+        "merged_at": "2025-06-27T07:03:34Z",
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/3668"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 52,
+      "row": {
+        "id": 3181643336,
+        "number": 3670,
+        "title": "Improve Go formatting tools",
+        "body": "## Summary\n- update Go code formatter to use `go/format` then goimports if available\n- include helper to ensure a formatter exists\n- regenerate golden Go output for fold_pure_let\n\n## Testing\n- `go test ./compile/go -tags slow -run TestGoCompiler_GoldenOutput -update`\n- `go test ./...`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685e40ccdfa4832090666bb5c59d7ab7",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-27T07:08:46Z",
+        "closed_at": "2025-06-27T07:19:14Z",
+        "merged_at": "2025-06-27T07:19:14Z",
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/3670"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 53,
+      "row": {
+        "id": 3181644613,
+        "number": 3671,
+        "title": "Improve Python code generation formatting",
+        "body": "## Summary\n- add a FormatPy helper using `black` with a fallback\n- add EnsureBlack to install black if missing\n- call FormatPy from the Python compiler\n- adjust fetch_stmt example to satisfy type check and update golden output\n\n## Testing\n- `go test -tags slow -run TestPyCompiler_GoldenOutput -update`\n- `go test ./...`\n\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685e40e0b4fc83208c87d6af81d8be72",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-27T07:09:21Z",
+        "closed_at": "2025-06-27T07:19:21Z",
+        "merged_at": "2025-06-27T07:19:21Z",
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/3671"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 54,
+      "row": {
+        "id": 3181646345,
+        "number": 3672,
+        "title": "Improve clang-format integration for C backend",
+        "body": "## Summary\n- ensure `EnsureClangFormat` is called before running `clang-format`\n\n## Testing\n- `go test ./compile/x/c -run TestCCompiler_GoldenOutput -tags slow`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685e40f42fe083209cb8903be9de121c",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-27T07:10:03Z",
+        "closed_at": "2025-06-27T07:19:29Z",
+        "merged_at": "2025-06-27T07:19:29Z",
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/3672"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 55,
+      "row": {
+        "id": 3181646774,
+        "number": 3673,
+        "title": "Improve C++ output formatting",
+        "body": "## Summary\n- refine `FormatCPP` to fall back to a basic formatter when `clang-format` is unavailable\n- provide a helper tool for ensuring the C++ compiler and formatter are installed\n- update generated C++ golden files with comment header\n\n## Testing\n- `go test ./compile/x/cpp -run TestCPPCompiler_GoldenOutput -tags slow -update`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685e4101c69c832084dcd563c91d6141",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-27T07:10:14Z",
+        "closed_at": "2025-06-27T07:19:50Z",
+        "merged_at": "2025-06-27T07:19:49Z",
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/3673"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 56,
+      "row": {
+        "id": 3181647667,
+        "number": 3675,
+        "title": "Improve COBOL formatting helpers",
+        "body": "## Summary\n- ensure cobfmt is installed before formatting COBOL\n- add fallback formatting with spaces when cobfmt is unavailable\n- trim trailing whitespace in generated COBOL code\n\n## Testing\n- `go test ./compile/x/cobol -tags slow -run TestCobolCompiler_GoldenSource/add_fn -update -v`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685e4122d8c48320b737ef7e21a9d0cf",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-27T07:10:38Z",
+        "closed_at": "2025-06-27T07:20:09Z",
+        "merged_at": "2025-06-27T07:20:09Z",
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/3675"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 57,
+      "row": {
+        "id": 3181649387,
+        "number": 3678,
+        "title": "Improve Erlang code formatting and update golden files",
+        "body": "## Summary\n- improve Erlang `Format` with fallback formatting and new `EnsureFormatter`\n- document formatter helper in the README\n- regenerate Erlang golden outputs with the new formatter\n\n## Testing\n- `go test ./compile/x/erlang -tags slow -update -run TestErlangCompiler_GoldenOutput`\n- `go test ./compile/x/erlang -tags slow -run TestErlangCompiler_GoldenOutput`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685e414bfb988320869a8b345420c026",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-27T07:11:24Z",
+        "closed_at": "2025-06-27T07:20:42Z",
+        "merged_at": "2025-06-27T07:20:42Z",
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/3678"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 58,
+      "row": {
+        "id": 3181651779,
+        "number": 207,
+        "title": "Refactor RevisionManager into modular async steps",
+        "body": "## Summary\n- break `RevisionManager` into `_patch_revision_cycle` and `_perform_full_rewrite`\n- orchestrate new methods inside `revise_chapter`\n- test new helper methods\n\n## Testing\n- `ruff check .`\n- `ruff format --check .`\n- `mypy .` *(fails: 100 errors)*\n- `pytest tests/ -v --cov=. --cov-report=term-missing` *(fails: coverage 44.61% < 85%)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_685e4205a098832fa0b5a92c26335023",
+        "agent": "OpenAI_Codex",
+        "user_id": 634836,
+        "user": "Lanerra",
+        "state": "closed",
+        "created_at": "2025-06-27T07:12:26Z",
+        "closed_at": "2025-06-27T07:12:52Z",
+        "merged_at": "2025-06-27T07:12:52Z",
+        "repo_id": 978480214,
+        "repo_url": "https://api.github.com/repos/Lanerra/saga",
+        "html_url": "https://github.com/Lanerra/saga/pull/207"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 59,
+      "row": {
+        "id": 3091479249,
+        "number": 918,
+        "title": "[alpha_factory] Improve CLI docstrings",
+        "body": "## Summary\n- update docstrings for `simulate`, `show_results`, `agents_status` and `replay` commands\n\n## Testing\n- `python check_env.py --auto-install`\n- `pytest -q`\n- `pre-commit` *(fails: command not found)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-05-26T15:02:27Z",
+        "closed_at": "2025-05-26T15:03:36Z",
+        "merged_at": "2025-05-26T15:03:36Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/918"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 60,
+      "row": {
+        "id": 3091494938,
+        "number": 919,
+        "title": "[alpha_factory] clarify compose overrides",
+        "body": "## Summary\n- document compose overrides in README\n- explain docker-compose variables via comments\n\n## Testing\n- `python check_env.py --auto-install`\n- `pytest -q`\n- \u274c `pre-commit` *(failed: command not found)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-05-26T15:09:23Z",
+        "closed_at": "2025-05-26T15:09:54Z",
+        "merged_at": "2025-05-26T15:09:54Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/919"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 61,
+      "row": {
+        "id": 3091510398,
+        "number": 920,
+        "title": "[alpha_factory] add bus startup logging",
+        "body": "## Summary\n- log when A2ABus starts and stops with port and broker info\n- test that these log messages appear\n\n## Testing\n- `python check_env.py --auto-install`\n- `black alpha_factory_v1/demos/alpha_agi_insight_v1/src/utils/messaging.py tests/test_messaging.py`\n- `ruff check alpha_factory_v1/demos/alpha_agi_insight_v1/src/utils/messaging.py tests/test_messaging.py`\n- `mypy --config-file mypy.ini alpha_factory_v1/demos/alpha_agi_insight_v1/src/utils/messaging.py tests/test_messaging.py`\n- `PYTHONPATH=$(pwd) pytest -q tests/test_messaging.py`",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-05-26T15:15:14Z",
+        "closed_at": "2025-05-26T15:15:51Z",
+        "merged_at": "2025-05-26T15:15:51Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/920"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 62,
+      "row": {
+        "id": 3091517009,
+        "number": 99,
+        "title": "fix(generator): address review comments",
+        "body": "## Summary\n- revert changelog bullet wording\n- restore `allow(dead_code)` flags and remove unused field workaround\n\n## Testing\n- `./scripts/check.sh`\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 1394,
+        "user": "cablehead",
+        "state": "closed",
+        "created_at": "2025-05-26T15:17:53Z",
+        "closed_at": "2025-05-26T16:32:45Z",
+        "merged_at": "2025-05-26T16:32:45Z",
+        "repo_id": 789241907,
+        "repo_url": "https://api.github.com/repos/cablehead/xs",
+        "html_url": "https://github.com/cablehead/xs/pull/99"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 63,
+      "row": {
+        "id": 3091520348,
+        "number": 4169,
+        "title": "docs(site): document missing redteam plugins",
+        "body": "- add Model Context Protocol plugin\r\n- add RAG Poisoning plugin\r\n- add Multi-turn Tool Discovery plugin",
+        "agent": "OpenAI_Codex",
+        "user_id": 7235481,
+        "user": "mldangelo",
+        "state": "closed",
+        "created_at": "2025-05-26T15:19:31Z",
+        "closed_at": "2025-05-26T19:19:12Z",
+        "merged_at": "2025-05-26T19:19:12Z",
+        "repo_id": 633927609,
+        "repo_url": "https://api.github.com/repos/promptfoo/promptfoo",
+        "html_url": "https://github.com/promptfoo/promptfoo/pull/4169"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 64,
+      "row": {
+        "id": 3091527111,
+        "number": 921,
+        "title": "[alpha_factory] Update changelog for 1.0.2 features",
+        "body": "## Summary\n- document CLI, Streamlit/FastAPI interfaces and agent architecture in the changelog\n\n## Testing\n- `python check_env.py --auto-install`\n- `pytest -q` *(fails: test_bus_logs_start_stop)*\n- `pre-commit` *(fails: command not found)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-05-26T15:22:33Z",
+        "closed_at": "2025-05-26T15:23:13Z",
+        "merged_at": "2025-05-26T15:23:13Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/921"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 65,
+      "row": {
+        "id": 3091528139,
+        "number": 1741,
+        "title": "Fix upgrade issue with load balancer network",
+        "body": "Fixes #1736 \r\n\r\n## Summary\r\n- un-comment hcloud_load_balancer data source\r\n- detect if a private network is already attached to the cluster load balancer\r\n- skip creating `hcloud_load_balancer_network.cluster` when the network is already attached\r\n\r\n## Testing\r\n- `terraform -version` *(fails: command not found)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 518555,
+        "user": "mysticaltech",
+        "state": "closed",
+        "created_at": "2025-05-26T15:23:03Z",
+        "closed_at": "2025-06-09T05:26:45Z",
+        "merged_at": "2025-06-09T05:26:45Z",
+        "repo_id": 390985926,
+        "repo_url": "https://api.github.com/repos/mysticaltech/terraform-hcloud-kube-hetzner",
+        "html_url": "https://github.com/mysticaltech/terraform-hcloud-kube-hetzner/pull/1741"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 66,
+      "row": {
+        "id": 3091541757,
+        "number": 72,
+        "title": "Increase sosistab3 handshake time window",
+        "body": "## Summary\n- relax server handshake timing check from 30 seconds to 5 minutes\n\n## Testing\n- `cargo test --workspace --locked` *(fails: could not compile `geph5-client`)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 20490891,
+        "user": "nullchinchilla",
+        "state": "closed",
+        "created_at": "2025-05-26T15:29:31Z",
+        "closed_at": "2025-05-26T16:14:49Z",
+        "merged_at": "2025-05-26T16:14:49Z",
+        "repo_id": 758681331,
+        "repo_url": "https://api.github.com/repos/geph-official/geph5",
+        "html_url": "https://github.com/geph-official/geph5/pull/72"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 67,
+      "row": {
+        "id": 3131910198,
+        "number": 268,
+        "title": "Update SPEC to reflect parser features",
+        "body": "## Summary\n- update keyword list\n- expand statement grammar and add break/continue section\n- document dataset query options\n- sync grammar summary with parser implementation\n\n## Testing\n- `go test ./...`\n\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68478f25f3fc8320a9853c159b5f7db3",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-10T01:56:14Z",
+        "closed_at": "2025-06-10T01:59:41Z",
+        "merged_at": "2025-06-10T01:59:41Z",
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/268"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 68,
+      "row": {
+        "id": 3131910241,
+        "number": 5,
+        "title": "Remove external scripts and update README",
+        "body": "## Summary\n- remove MacOSBadGPT.txt, MetaBadGPT, OpenELMBadGPT.txt\n- highlight PentestGPT.txt as the main demonstration file in README\n\n## Testing\n- `git status --short`\n\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68478ec429fc832c8abfe5d2a98e2dec",
+        "agent": "OpenAI_Codex",
+        "user_id": 120500656,
+        "user": "oooindefatigable",
+        "state": "closed",
+        "created_at": "2025-06-10T01:56:16Z",
+        "closed_at": "2025-06-10T01:56:56Z",
+        "merged_at": "2025-06-10T01:56:56Z",
+        "repo_id": 709463428,
+        "repo_url": "https://api.github.com/repos/oooindefatigable/BadUSB-GPT",
+        "html_url": "https://github.com/oooindefatigable/BadUSB-GPT/pull/5"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 69,
+      "row": {
+        "id": 3131915496,
+        "number": 1953,
+        "title": "[alpha_factory] update ledger path logic",
+        "body": "## Summary\n- always resolve ledger path using `_ledger_path`\n- test ledger path from env var\n\n## Testing\n- `pre-commit run --files alpha_factory_v1/demos/cross_industry_alpha_factory/cross_alpha_discovery_stub.py tests/test_cross_alpha_discovery.py` *(fails: proto-verify)*\n- `python scripts/check_python_deps.py` *(fails: numpy, pandas missing)*\n- `python check_env.py --auto-install` *(fails: timed out)*\n- `pytest -q tests/test_cross_alpha_discovery.py`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68478c98f3288333806c93ab9b0ca0f5",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-06-10T02:00:43Z",
+        "closed_at": "2025-06-10T02:01:11Z",
+        "merged_at": "2025-06-10T02:01:11Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/1953"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 70,
+      "row": {
+        "id": 3131918977,
+        "number": 269,
+        "title": "Fix example naming and runtime issues",
+        "body": "## Summary\n- make README example list match actual files\n- rename example files to use hyphenated names\n- fix compilation issues in several examples\n- adjust generate-model to use echo provider\n\n## Testing\n- `make test`\n- `while read f; do go run ./cmd/mochi run \"$f\"; done < /tmp/examples_list.txt`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68478f6fd8b88320b1e3ee9368d02b83",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-10T02:03:35Z",
+        "closed_at": "2025-06-10T02:04:17Z",
+        "merged_at": "2025-06-10T02:04:17Z",
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/269"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 71,
+      "row": {
+        "id": 3551531249,
+        "number": 1165,
+        "title": "Add workflow to guard against banned dependencies",
+        "body": "## Summary\n- add a banned dependency list seeded with lodash\n- introduce a workflow that fails when a banned dependency is detected via npm ls\n\n## Testing\n- bunx tsc --noEmit *(fails: Cannot find module '../dist' in tests/smoke1.test.tsx and tests/smoke2.test.tsx)*\n- bun run format *(fails: Script not found \"format\")*\n\n------\nhttps://chatgpt.com/codex/tasks/task_b_68fc1988a3f8832e891436ce133c457a",
+        "agent": "OpenAI_Codex",
+        "user_id": 1910070,
+        "user": "seveibar",
+        "state": "closed",
+        "created_at": "2025-10-25T02:18:20Z",
+        "closed_at": "2026-02-07T02:20:23Z",
+        "merged_at": null,
+        "repo_id": 772261363,
+        "repo_url": "https://api.github.com/repos/tscircuit/tscircuit",
+        "html_url": "https://github.com/tscircuit/tscircuit/pull/1165"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 72,
+      "row": {
+        "id": 3578070559,
+        "number": 24,
+        "title": "Add servo support to transpiler and code generation",
+        "body": "## Summary\n- add Servo AST nodes to represent declarations and write operations\n- extend the parser to recognize Servo usage, expose read helpers, and avoid conflicts with other `.write` calls\n- update the emitter to track servo calibration/state, emit Servo.h usage, and generate the appropriate C++\n- cover the new behaviour with parser and emitter tests for servo scenarios\n\n## Testing\n- pytest\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_6906158a2fac832693e0112dbd17fb76",
+        "agent": "OpenAI_Codex",
+        "user_id": 49639514,
+        "user": "Jackhammer9",
+        "state": "closed",
+        "created_at": "2025-11-01T14:32:24Z",
+        "closed_at": "2025-11-01T14:58:54Z",
+        "merged_at": "2025-11-01T14:58:54Z",
+        "repo_id": 1083658542,
+        "repo_url": "https://api.github.com/repos/Jackhammer9/Reduino",
+        "html_url": "https://github.com/Jackhammer9/Reduino/pull/24"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 73,
+      "row": {
+        "id": 3578072624,
+        "number": 2,
+        "title": "Fix logging handler duplication and drop sudo dependencies",
+        "body": "## Summary\n- prevent repeated handler attachment when creating Logger instances and ensure file logging toggles cleanly\n- run AP-mode scans without sudo while improving diagnostics for missing permissions or binaries\n- replace sudo-based log tailing with managed log aggregation for the web console\n\n## Testing\n- python -m compileall logger.py wifi_manager.py utils.py\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_69060062effc832485794789584eba53",
+        "agent": "OpenAI_Codex",
+        "user_id": 8579922,
+        "user": "PierreGode",
+        "state": "closed",
+        "created_at": "2025-11-01T14:35:06Z",
+        "closed_at": "2025-11-01T19:47:12Z",
+        "merged_at": null,
+        "repo_id": 1087498373,
+        "repo_url": "https://api.github.com/repos/PierreGode/Ragnar",
+        "html_url": "https://github.com/PierreGode/Ragnar/pull/2"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 74,
+      "row": {
+        "id": 3437184314,
+        "number": 6159,
+        "title": "Add ROSI Loki PoC stack",
+        "body": "## Summary\n- add a docker compose stack with Loki, Promtail, and Grafana for local ROSI log exploration\n- supply Loki, Promtail, and Grafana provisioning configs tuned for syslog ingestion\n- document startup, test logging, and troubleshooting steps for the PoC\n\n## Testing\n- not run (not requested)\n\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68ceb1a82824833283202786b2f4b864",
+        "agent": "OpenAI_Codex",
+        "user_id": 1482123,
+        "user": "rgerhards",
+        "state": "closed",
+        "created_at": "2025-09-20T14:21:43Z",
+        "closed_at": "2026-01-01T11:41:00Z",
+        "merged_at": null,
+        "repo_id": 10458362,
+        "repo_url": "https://api.github.com/repos/rsyslog/rsyslog",
+        "html_url": "https://github.com/rsyslog/rsyslog/pull/6159"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 75,
+      "row": {
+        "id": 3437187687,
+        "number": 661,
+        "title": "feat: enable dev-only persistence reset for Cloudflare adapter",
+        "body": "## Summary\n- add an optional `resetPersistence` flag to the Cloudflare Durable Object adapter and clear LiveStore-managed tables before opening the databases\n- plumb the flag through `createStoreDo` and document how to gate the reset flow behind development-only routes or parameters\n\n## Testing\n- pnpm biome check packages/@livestore/adapter-cloudflare/src/make-adapter.ts packages/@livestore/adapter-cloudflare/src/make-client-durable-object.ts docs/src/content/docs/reference/platform-adapters/cloudflare-durable-object-adapter.md\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68ceb578f2448329a5cc58d130cce819",
+        "agent": "OpenAI_Codex",
+        "user_id": 1567498,
+        "user": "schickling",
+        "state": "closed",
+        "created_at": "2025-09-20T14:26:33Z",
+        "closed_at": "2025-09-20T20:33:58Z",
+        "merged_at": null,
+        "repo_id": 694709543,
+        "repo_url": "https://api.github.com/repos/livestorejs/livestore",
+        "html_url": "https://github.com/livestorejs/livestore/pull/661"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 76,
+      "row": {
+        "id": 3661429394,
+        "number": 4086,
+        "title": "Add fast CI status check mode",
+        "body": "## Summary\n- add --once flag to check_ci_status.py for fast zero-grace CI verification\n- document the new flag in README and CI enforcement guide to keep badges visible\n\n## Testing\n- pytest -m smoke tests/test_af_requests.py tests/test_cache_version.py tests/test_check_env_core.py tests/test_check_env_network.py tests/test_config_settings.py tests/test_config_utils.py tests/test_ping_agent.py -q\n- python scripts/check_ci_status.py --help | head\n\n\n------\n[Codex Task](https://chatgpt.com/codex/tasks/task_e_69252b82ef948333b9ec68dd942ef80b)",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-11-25T04:13:47Z",
+        "closed_at": "2025-11-25T04:51:53Z",
+        "merged_at": "2025-11-25T04:51:53Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/4086"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 77,
+      "row": {
+        "id": 3098511757,
+        "number": 377,
+        "title": "Refactor adapter types",
+        "body": "## Notes\n- define generic schema types in `adapter.ts`\n- update code to use new adapter types\n- remove type exports from `zod3` adapter\n- adjust examples and tests for new generics\n\n## Testing\n- `npm run lint-fix`\n- `npm run lint`\n- `npm run tsc`\n- `npm run test`\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 204765,
+        "user": "danielweinmann",
+        "state": "closed",
+        "created_at": "2025-05-28T20:43:30Z",
+        "closed_at": "2025-06-02T19:24:18Z",
+        "merged_at": "2025-06-02T19:24:18Z",
+        "repo_id": 463116412,
+        "repo_url": "https://api.github.com/repos/seasonedcc/remix-forms",
+        "html_url": "https://github.com/seasonedcc/remix-forms/pull/377"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 78,
+      "row": {
+        "id": 3098518830,
+        "number": 1079,
+        "title": "[alpha_factory] extend adapter tests",
+        "body": "## Summary\n- exercise ADK/MCP adapters when optional packages are available\n- ensure adapters degrade gracefully when those packages are absent\n\n## Testing\n- `python check_env.py --auto-install`\n- `pytest -q`\n- `pip install pre-commit` *(fails: no network access)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-05-28T20:46:59Z",
+        "closed_at": "2025-05-28T20:47:25Z",
+        "merged_at": "2025-05-28T20:47:25Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/1079"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 79,
+      "row": {
+        "id": 3098522197,
+        "number": 159,
+        "title": "Add experimental command",
+        "body": "## Summary\n- add `experimental` command\n- support switching to experimental cost mode\n\n## Testing\n- `npx nx build npm-app --skip-nx-cache`\n- `npm test` *(fails: Preset ts-jest not found)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 9735006,
+        "user": "brandonkachen",
+        "state": "closed",
+        "created_at": "2025-05-28T20:48:49Z",
+        "closed_at": "2025-05-28T21:19:08Z",
+        "merged_at": "2025-05-28T21:19:08Z",
+        "repo_id": 826515105,
+        "repo_url": "https://api.github.com/repos/CodebuffAI/codebuff",
+        "html_url": "https://github.com/CodebuffAI/codebuff/pull/159"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 80,
+      "row": {
+        "id": 3098526325,
+        "number": 12,
+        "title": "Add ProgramStore tests and patching coverage",
+        "body": "## Summary\n- cover indentation logic in apply_patch\n- add tests for ProgramStore insert/get and pruning logic\n- add integration tests for Controller spawning\n\n## Testing\n- `pytest -q`",
+        "agent": "OpenAI_Codex",
+        "user_id": 13941363,
+        "user": "edarchimbaud",
+        "state": "closed",
+        "created_at": "2025-05-28T20:50:41Z",
+        "closed_at": "2025-05-28T20:51:06Z",
+        "merged_at": "2025-05-28T20:51:06Z",
+        "repo_id": 984720778,
+        "repo_url": "https://api.github.com/repos/paperswithbacktest/pwb-alphaevolve",
+        "html_url": "https://github.com/paperswithbacktest/pwb-alphaevolve/pull/12"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 81,
+      "row": {
+        "id": 3098528457,
+        "number": 527,
+        "title": "Fix special float deserialization",
+        "body": "## Summary\n- handle 'Infinity', '-Infinity' and 'nan' in deserializer\n- add tests for special float handling\n\n## Testing\n- `pytest pylabrobot/tests/serializer_tests.py -q`\n- `pytest -q` *(fails: ModuleNotFoundError for optional dependencies)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 36956818,
+        "user": "rickwierenga",
+        "state": "closed",
+        "created_at": "2025-05-28T20:51:49Z",
+        "closed_at": "2025-05-28T20:54:18Z",
+        "merged_at": "2025-05-28T20:54:18Z",
+        "repo_id": 524145041,
+        "repo_url": "https://api.github.com/repos/PyLabRobot/pylabrobot",
+        "html_url": "https://github.com/PyLabRobot/pylabrobot/pull/527"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 82,
+      "row": {
+        "id": 3098534619,
+        "number": 1080,
+        "title": "[alpha_factory] fuzz safety guardian envelopes",
+        "body": "## Summary\n- expand SafetyGuardian property tests\n- fuzz random envelope fields and broadcast Merkle roots\n\n## Testing\n- `python check_env.py --auto-install`\n- `pytest -q`",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-05-28T20:54:52Z",
+        "closed_at": "2025-05-28T20:55:04Z",
+        "merged_at": "2025-05-28T20:55:04Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/1080"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 83,
+      "row": {
+        "id": 3098545707,
+        "number": 1081,
+        "title": "[alpha_factory] Add insight Helm example",
+        "body": "## Summary\n- add values.example.yaml for the \u03b1\u2011AGI Insight Helm chart\n- document example values in Insight README and chart README\n- note new file in CHANGELOGs\n- test Helm template rendering with the new values file\n\n## Testing\n- `python check_env.py --auto-install`\n- `pytest -q tests/test_insight_helm_template.py tests/test_helm_template.py`",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-05-28T20:59:53Z",
+        "closed_at": "2025-05-28T21:00:22Z",
+        "merged_at": "2025-05-28T21:00:22Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/1081"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 84,
+      "row": {
+        "id": 3098546304,
+        "number": 2709,
+        "title": "feat(swap): Implement maker fallback in TakerBloc",
+        "body": "TODO: \r\n- [x] prototype removing taker/maker order selection: only have \"taker\" swap form\r\n  - [x] remove maker form and tab switcher\r\n  - [x] update buy dropdown to show all coins, but keep best_orders at the top\r\n- [x] re-review available rpcs for swaps\r\n- [ ] add swap RPCs to SDK (in-progress)\r\n- [ ] test functionality\r\n\r\n## Summary\r\n\r\n- extend `DexRepository` with `setPrice` helper\r\n- update `TakerBloc` to fetch latest orders before submitting\r\n- if no matching order exists, place a maker order via `setPrice`\r\n- remove Maker form BLoC and all maker widgets\r\n- drop maker-specific UI and section switching\r\n- update router and helpers accordingly\r\n- simplify DEX list wrapper to always show the taker form\r\n- parse `setPrice` response and return order UUID\r\n- use `Logger` in `TakerBloc` and implement helper wait function\r\n- handle maker fallback with try/catch and structured logging\r\n\r\n## Testing\r\n\r\n- `dart format lib/bloc/dex_repository.dart lib/bloc/taker_form/taker_bloc.dart`\r\n- `flutter analyze lib/bloc/dex_repository.dart lib/bloc/taker_form/taker_bloc.dart`",
+        "agent": "OpenAI_Codex",
+        "user_id": 11577022,
+        "user": "takenagain",
+        "state": "closed",
+        "created_at": "2025-05-28T21:00:12Z",
+        "closed_at": "2025-08-06T06:59:42Z",
+        "merged_at": null,
+        "repo_id": 225880766,
+        "repo_url": "https://api.github.com/repos/GLEECBTC/gleec-wallet",
+        "html_url": "https://github.com/GLEECBTC/gleec-wallet/pull/2709"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 85,
+      "row": {
+        "id": 3098557986,
+        "number": 528,
+        "title": "Fix state loading for resources",
+        "body": "## Summary\n- ensure Resource.load_all_state loads state for the resource itself\n\n## Testing\n- `ruff check pylabrobot`\n- `pytest -q` *(fails: ModuleNotFoundError: No module named 'requests')*",
+        "agent": "OpenAI_Codex",
+        "user_id": 36956818,
+        "user": "rickwierenga",
+        "state": "closed",
+        "created_at": "2025-05-28T21:05:44Z",
+        "closed_at": "2025-05-28T21:07:55Z",
+        "merged_at": "2025-05-28T21:07:55Z",
+        "repo_id": 524145041,
+        "repo_url": "https://api.github.com/repos/PyLabRobot/pylabrobot",
+        "html_url": "https://github.com/PyLabRobot/pylabrobot/pull/528"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 86,
+      "row": {
+        "id": 3098559261,
+        "number": 1082,
+        "title": "[alpha_factory] add terraform validation test for insight demo",
+        "body": "## Summary\n- add Terraform syntax validation test for the Insight demo\n\n## Testing\n- `python check_env.py --auto-install`\n- `pytest -q`\n",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-05-28T21:06:28Z",
+        "closed_at": "2025-05-28T21:06:37Z",
+        "merged_at": "2025-05-28T21:06:37Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/1082"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 87,
+      "row": {
+        "id": 3098559350,
+        "number": 13,
+        "title": "Fix multiple code issues",
+        "body": "## Summary\n- drop unused `config_path` parameter\n- replace blocking OpenAI call with async client\n- prevent duplicate seeding and remove stray print\n- clean up unused imports\n- handle short return series in `sharpe`\n- test `sharpe` edge case\n\n## Testing\n- `pytest -q`",
+        "agent": "OpenAI_Codex",
+        "user_id": 13941363,
+        "user": "edarchimbaud",
+        "state": "closed",
+        "created_at": "2025-05-28T21:06:31Z",
+        "closed_at": "2025-05-28T21:06:58Z",
+        "merged_at": "2025-05-28T21:06:58Z",
+        "repo_id": 984720778,
+        "repo_url": "https://api.github.com/repos/paperswithbacktest/pwb-alphaevolve",
+        "html_url": "https://github.com/paperswithbacktest/pwb-alphaevolve/pull/13"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 88,
+      "row": {
+        "id": 3098585469,
+        "number": 14,
+        "title": "Fix typos and improve metrics tests",
+        "body": "## Summary\n- fix outdated references in `.env.example`\n- export `strategies` module so `from alphaevolve import *` works\n- expand metrics test coverage for max drawdown and CAGR\n\n## Testing\n- `pytest -q`",
+        "agent": "OpenAI_Codex",
+        "user_id": 13941363,
+        "user": "edarchimbaud",
+        "state": "closed",
+        "created_at": "2025-05-28T21:18:28Z",
+        "closed_at": "2025-05-28T21:18:52Z",
+        "merged_at": "2025-05-28T21:18:52Z",
+        "repo_id": 984720778,
+        "repo_url": "https://api.github.com/repos/paperswithbacktest/pwb-alphaevolve",
+        "html_url": "https://github.com/paperswithbacktest/pwb-alphaevolve/pull/14"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 89,
+      "row": {
+        "id": 3129001522,
+        "number": 1919,
+        "title": "[alpha_factory] Document failed test run",
+        "body": "## Summary\n- add testing notes documenting failure to run tests\n\n## Checks\n- [ ] I ran `pre-commit run --files testing_notes.md`\n- [ ] I ran `python check_env.py --auto-install`\n- [ ] I ran `pytest -q` and documented any failures below\n\n## Testing\n- `pre-commit run --files tests/README.md` *(failed: Missing tools)*\n- `python check_env.py --auto-install` *(failed: Timed out installing baseline requirements)*\n- `pytest -q` *(failed: installation timed out / KeyboardInterrupt)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_6846475ffaf08333af0466161ec39325",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-06-09T03:09:52Z",
+        "closed_at": "2025-06-09T03:10:02Z",
+        "merged_at": "2025-06-09T03:10:02Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/1919"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 90,
+      "row": {
+        "id": 3129002284,
+        "number": 87,
+        "title": "Fix gift code double redemption",
+        "body": "## Summary\n- prevent duplicate usage of redemption codes under heavy load\n- make redemption log unique per user per gift code\n\n## Testing\n- `go vet ./...` *(fails: pattern web/dist no matching files)*\n- `go test ./...` *(fails: pattern web/dist no matching files)*\n\n------\nhttps://chatgpt.com/codex/tasks/task_b_68464e508df0832cb3edaab5f1471bb2",
+        "agent": "OpenAI_Codex",
+        "user_id": 180962954,
+        "user": "TethysPlex",
+        "state": "closed",
+        "created_at": "2025-06-09T03:10:34Z",
+        "closed_at": "2025-06-09T04:07:05Z",
+        "merged_at": null,
+        "repo_id": 967377293,
+        "repo_url": "https://api.github.com/repos/Veloera/Veloera",
+        "html_url": "https://github.com/Veloera/Veloera/pull/87"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 91,
+      "row": {
+        "id": 3129012897,
+        "number": 5,
+        "title": "Package project for installation",
+        "body": "## Summary\n- add setuptools configuration in `pyproject.toml`\n- expose a console script `stata_mcp`\n- provide a `main` function for the CLI\n\n## Testing\n- `pip install -e .` *(fails: Could not fetch build dependencies)*\n- `python -m stata_mcp --help` *(fails: ModuleNotFoundError: No module named 'pandas')*\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68464d825d088320b324f0156d3cd200",
+        "agent": "OpenAI_Codex",
+        "user_id": 165980942,
+        "user": "SepineTam",
+        "state": "closed",
+        "created_at": "2025-06-09T03:20:10Z",
+        "closed_at": "2025-06-09T03:20:41Z",
+        "merged_at": "2025-06-09T03:20:41Z",
+        "repo_id": 956330003,
+        "repo_url": "https://api.github.com/repos/SepineTam/stata-mcp",
+        "html_url": "https://github.com/SepineTam/stata-mcp/pull/5"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 92,
+      "row": {
+        "id": 3512519873,
+        "number": 2341,
+        "title": "Allow viewing quotes for supported instances",
+        "body": "## Summary\n- add a `canViewStatusQuotes` flag on `CurrentInstance` to detect Mastodon API v8 support\n- use the flag in `StatusRowDetailView` so any user can open and browse quotes when available\n\n## Testing\n- not run\n\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68edea2a2d58832590c8341fead2b819",
+        "agent": "OpenAI_Codex",
+        "user_id": 535509,
+        "user": "Dimillian",
+        "state": "closed",
+        "created_at": "2025-10-14T06:18:09Z",
+        "closed_at": "2025-10-14T06:50:46Z",
+        "merged_at": "2025-10-14T06:50:46Z",
+        "repo_id": 568430347,
+        "repo_url": "https://api.github.com/repos/Dimillian/IceCubesApp",
+        "html_url": "https://github.com/Dimillian/IceCubesApp/pull/2341"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 93,
+      "row": {
+        "id": 3137658294,
+        "number": 4,
+        "title": "Fix HostsTable scrolling behavior",
+        "body": "## Summary\n- highlight a selected host row by scrolling directly to the index\n\n## Testing\n- `npm run build`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_68484d0bada88324bb239a63864fe823",
+        "agent": "OpenAI_Codex",
+        "user_id": 37446151,
+        "user": "karam-ajaj",
+        "state": "closed",
+        "created_at": "2025-06-11T17:50:18Z",
+        "closed_at": "2025-06-11T17:50:57Z",
+        "merged_at": "2025-06-11T17:50:57Z",
+        "repo_id": 984410363,
+        "repo_url": "https://api.github.com/repos/karam-ajaj/atlas",
+        "html_url": "https://github.com/karam-ajaj/atlas/pull/4"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 94,
+      "row": {
+        "id": 3137660182,
+        "number": 778,
+        "title": "Implement lazy Snowflake connection",
+        "body": "## Summary\n- make Snowflake DB open connection lazily\n- ensure connections are initialised on first use\n\n## Testing\n- `go test ./pkg/sqlparser -run . -count=1 -race` *(fails: signal interrupt)*\n\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_6849bb2d750c8320a81a28f5510d5911",
+        "agent": "OpenAI_Codex",
+        "user_id": 16530606,
+        "user": "karakanb",
+        "state": "closed",
+        "created_at": "2025-06-11T17:51:07Z",
+        "closed_at": "2025-06-11T18:22:50Z",
+        "merged_at": "2025-06-11T18:22:49Z",
+        "repo_id": 674225653,
+        "repo_url": "https://api.github.com/repos/bruin-data/bruin",
+        "html_url": "https://github.com/bruin-data/bruin/pull/778"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 95,
+      "row": {
+        "id": 3137666078,
+        "number": 437,
+        "title": "Add infer command",
+        "body": "## Summary\n- add `infer` command for CLI\n- document the new command and examples\n\n## Testing\n- `go test ./...`\n\n------\nhttps://chatgpt.com/codex/tasks/task_e_6849bff3af34832097999e89d7984243",
+        "agent": "OpenAI_Codex",
+        "user_id": 1218621,
+        "user": "tamnd",
+        "state": "closed",
+        "created_at": "2025-06-11T17:53:50Z",
+        "closed_at": "2025-06-11T17:55:20Z",
+        "merged_at": "2025-06-11T17:55:20Z",
+        "repo_id": 985853139,
+        "repo_url": "https://api.github.com/repos/mochilang/mochi",
+        "html_url": "https://github.com/mochilang/mochi/pull/437"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 96,
+      "row": {
+        "id": 3077817610,
+        "number": 428,
+        "title": "Improve Agents bridge wait mechanism",
+        "body": "## Summary\n- add `--wait-secs` option in `openai_agents_bridge.py`\n- document the argument in README\n- update Colab notebook to use longer wait when starting the bridge\n\n## Testing\n- `pytest -q` *(fails: command not found)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-05-20T18:00:42Z",
+        "closed_at": "2025-05-20T18:03:27Z",
+        "merged_at": "2025-05-20T18:03:26Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/428"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 97,
+      "row": {
+        "id": 3077821939,
+        "number": 112,
+        "title": "Implement mouse drag behaviors",
+        "body": "## Summary\n- add `MouseDragElementBehavior` to drag a control with the pointer\n- add `MultiMouseDragElementBehavior` to drag multiple controls together\n- add `MouseDragBehaviorView` page demonstrating the behaviors\n\n## Testing\n- `bash -x ./build.sh` *(fails: `curl: (7) Failed to connect to proxy port 8080`)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 2297442,
+        "user": "wieslawsoltes",
+        "state": "closed",
+        "created_at": "2025-05-20T18:01:50Z",
+        "closed_at": "2025-05-20T19:36:33Z",
+        "merged_at": "2025-05-20T19:36:33Z",
+        "repo_id": 792160692,
+        "repo_url": "https://api.github.com/repos/wieslawsoltes/Xaml.Behaviors",
+        "html_url": "https://github.com/wieslawsoltes/Xaml.Behaviors/pull/112"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 98,
+      "row": {
+        "id": 3077844454,
+        "number": 684,
+        "title": "Remove ts-nocheck comments",
+        "body": "## Summary\n- clean up TypeScript suppressions in taxonium component\n- add worker module declaration\n- update SnapshotButton to handle Dialog overlay type\n- make ColorPicker and backend type-safe\n\n## Testing\n- `npm run check-types`",
+        "agent": "OpenAI_Codex",
+        "user_id": 19732295,
+        "user": "theosanderson",
+        "state": "closed",
+        "created_at": "2025-05-20T18:09:09Z",
+        "closed_at": "2025-05-20T18:10:13Z",
+        "merged_at": "2025-05-20T18:10:13Z",
+        "repo_id": 380002519,
+        "repo_url": "https://api.github.com/repos/theosanderson/taxonium",
+        "html_url": "https://github.com/theosanderson/taxonium/pull/684"
+      },
+      "truncated_cells": []
+    },
+    {
+      "row_idx": 99,
+      "row": {
+        "id": 3077846012,
+        "number": 429,
+        "title": "Add Colab badge",
+        "body": "## Summary\n- add one-click Colab badge to the alpha_agi_business_v1 README\n\n## Testing\n- `pytest -q` *(fails: command not found)*",
+        "agent": "OpenAI_Codex",
+        "user_id": 24208299,
+        "user": "MontrealAI",
+        "state": "closed",
+        "created_at": "2025-05-20T18:09:45Z",
+        "closed_at": "2025-05-20T18:12:45Z",
+        "merged_at": "2025-05-20T18:12:45Z",
+        "repo_id": 922805069,
+        "repo_url": "https://api.github.com/repos/MontrealAI/AGI-Alpha-Agent-v0",
+        "html_url": "https://github.com/MontrealAI/AGI-Alpha-Agent-v0/pull/429"
+      },
+      "truncated_cells": []
+    }
+  ],
+  "num_rows_total": 361296,
+  "num_rows_per_page": 100,
+  "partial": false
+}

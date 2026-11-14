@@ -1,0 +1,390 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/consent.py:2",
+      "path": "ledger/consent.py",
+      "name": "Consent",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-12\")\n"
+      ],
+      "new": [
+        "    return value is True or str(value).lower() in (\"yes\", \"true\", \"1\")\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/consent.json:0",
+      "path": "config/consent.json",
+      "name": "Consent",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"consent\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Parse consent checkboxes\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Parse consent checkboxes\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Parse consent checkboxes\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Parse consent checkboxes\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Parse consent checkboxes\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Parse consent checkboxes\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-12/head.xml",
+        "oracle/test_consent.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_consent.test_ask[yes-True]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_consent.test_ask[false-False]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_consent.test_ask[False-False]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-12/trial-001.xml",
+        "oracle/test_consent.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2028,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "7feaa5c477680e99829eb5c229426ebc1c4e40cf180f3c36acc529490be1ef2f",
+      "measured": true,
+      "removedBlock": "ledger/consent.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n______________________________ test_ask[yes-True] ______________________________\n\nvalue = 'yes', expected = True\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'yes'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError\n____________________________ test_ask[false-False] _____________________________\n\nvalue = 'false', expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'false'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError\n____________________________ test_ask[False-False] _____________________________\n\nvalue = False, expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = False\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError\n=========================== short test summary i",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_consent.test_ask[yes-True]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'yes', expected = True\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'yes'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_consent.test_ask[false-False]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'false', expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'false'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_consent.test_ask[False-False]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = False, expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = False\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-12/trial-002.xml",
+        "oracle/test_consent.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1998,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "removedBlock": "config/consent.json:0",
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-12/trial-003.xml",
+        "oracle/test_consent.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2015,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "7feaa5c477680e99829eb5c229426ebc1c4e40cf180f3c36acc529490be1ef2f",
+      "measured": true,
+      "removedBlock": "ledger/consent.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n______________________________ test_ask[yes-True] ______________________________\n\nvalue = 'yes', expected = True\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'yes'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError\n____________________________ test_ask[false-False] _____________________________\n\nvalue = 'false', expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'false'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError\n____________________________ test_ask[False-False] _____________________________\n\nvalue = False, expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = False\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError\n=========================== short test summary i",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_consent.test_ask[yes-True]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'yes', expected = True\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'yes'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_consent.test_ask[false-False]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'false', expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'false'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_consent.test_ask[False-False]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = False, expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = False\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-12/trimmed.xml",
+        "oracle/test_consent.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1949,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_consent.test_ask[yes-True]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_consent.test_ask[false-False]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_consent.test_ask[False-False]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-12/trial-003.xml",
+        "oracle/test_consent.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2015,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "7feaa5c477680e99829eb5c229426ebc1c4e40cf180f3c36acc529490be1ef2f",
+      "measured": true,
+      "removedBlock": "ledger/consent.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n______________________________ test_ask[yes-True] ______________________________\n\nvalue = 'yes', expected = True\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'yes'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError\n____________________________ test_ask[false-False] _____________________________\n\nvalue = 'false', expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'false'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError\n____________________________ test_ask[False-False] _____________________________\n\nvalue = False, expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = False\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError\n=========================== short test summary i",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_consent.test_ask[yes-True]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'yes', expected = True\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'yes'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_consent.test_ask[false-False]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'false', expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'false'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_consent.test_ask[False-False]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = False, expected = False\n\n    @pytest.mark.parametrize(\"value, expected\", [('yes', True), ('false', False), (False, False)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_consent.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = False\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-12\")\nE       NotImplementedError: KASSA-12\n\nledger/consent.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-12/trimmed.xml",
+      "oracle/test_consent.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.1949,
+    "tests": 3,
+    "passed": 3,
+    "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+    "measured": true,
+    "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_consent.test_ask[yes-True]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_consent.test_ask[false-False]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_consent.test_ask[False-False]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 3
+  },
+  "patch": "--- a/ledger/consent.py\n+++ b/ledger/consent.py\n@@ -1,3 +1,3 @@\n \"\"\"Parse consent checkboxes.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-12\")\n+    return value is True or str(value).lower() in (\"yes\", \"true\", \"1\")\n",
+  "patchSha256": "b275d4c7ebe9b81f4e1b3c65a6055915b44c2f1cf1c8538a0a25a3b996776f13",
+  "meta": {
+    "title": "Parse consent checkboxes",
+    "ask": "Parse consent checkboxes. Preserve the other bank operations.",
+    "did": "Implements consent for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-12.full.json.gz"
+}

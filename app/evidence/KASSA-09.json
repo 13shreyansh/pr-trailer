@@ -1,0 +1,354 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/payee.py:2",
+      "path": "ledger/payee.py",
+      "name": "Payee",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-9\")\n"
+      ],
+      "new": [
+        "    return \"\".join(c for c in value if c.isprintable()).strip()\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/payee.json:0",
+      "path": "config/payee.json",
+      "name": "Payee",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"payee\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Strip control characters from payees\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Strip control characters from payees\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Strip control characters from payees\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Strip control characters from payees\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Strip control characters from payees\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Strip control characters from payees\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-09/head.xml",
+        "oracle/test_payee.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1945,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_payee.test_ask[Anna\\nLind-AnnaLind]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_payee.test_ask[  Olli  -Olli]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-09/trial-001.xml",
+        "oracle/test_payee.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2014,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "2b5cfd4657a37a23cb79a43f9ebde36e57213875415ca493eaea0869deec5cf8",
+      "measured": true,
+      "removedBlock": "ledger/payee.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n________________________ test_ask[Anna\\nLind-AnnaLind] _________________________\n\nvalue = 'Anna\\nLind', expected = 'AnnaLind'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'Anna\\nLind'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError\n___________________________ test_ask[  Olli  -Olli] ____________________________\n\nvalue = '  Olli  ', expected = 'Olli'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  Olli  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_payee.py::test_ask[Anna\\nLind-AnnaLind] - NotImplementedEr...\nFAILED oracle/test_payee.py::test_ask[  Olli  -Olli] - NotImplementedError: K...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_payee.test_ask[Anna\\nLind-AnnaLind]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'Anna\\nLind', expected = 'AnnaLind'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'Anna\\nLind'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_payee.test_ask[  Olli  -Olli]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '  Olli  ', expected = 'Olli'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  Olli  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-09/trial-002.xml",
+        "oracle/test_payee.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.195,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "removedBlock": "config/payee.json:0",
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-09/trial-003.xml",
+        "oracle/test_payee.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2004,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "2b5cfd4657a37a23cb79a43f9ebde36e57213875415ca493eaea0869deec5cf8",
+      "measured": true,
+      "removedBlock": "ledger/payee.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n________________________ test_ask[Anna\\nLind-AnnaLind] _________________________\n\nvalue = 'Anna\\nLind', expected = 'AnnaLind'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'Anna\\nLind'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError\n___________________________ test_ask[  Olli  -Olli] ____________________________\n\nvalue = '  Olli  ', expected = 'Olli'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  Olli  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_payee.py::test_ask[Anna\\nLind-AnnaLind] - NotImplementedEr...\nFAILED oracle/test_payee.py::test_ask[  Olli  -Olli] - NotImplementedError: K...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_payee.test_ask[Anna\\nLind-AnnaLind]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'Anna\\nLind', expected = 'AnnaLind'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'Anna\\nLind'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_payee.test_ask[  Olli  -Olli]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '  Olli  ', expected = 'Olli'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  Olli  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-09/trimmed.xml",
+        "oracle/test_payee.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2005,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_payee.test_ask[Anna\\nLind-AnnaLind]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_payee.test_ask[  Olli  -Olli]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-09/trial-003.xml",
+        "oracle/test_payee.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2004,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "2b5cfd4657a37a23cb79a43f9ebde36e57213875415ca493eaea0869deec5cf8",
+      "measured": true,
+      "removedBlock": "ledger/payee.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n________________________ test_ask[Anna\\nLind-AnnaLind] _________________________\n\nvalue = 'Anna\\nLind', expected = 'AnnaLind'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'Anna\\nLind'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError\n___________________________ test_ask[  Olli  -Olli] ____________________________\n\nvalue = '  Olli  ', expected = 'Olli'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  Olli  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_payee.py::test_ask[Anna\\nLind-AnnaLind] - NotImplementedEr...\nFAILED oracle/test_payee.py::test_ask[  Olli  -Olli] - NotImplementedError: K...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_payee.test_ask[Anna\\nLind-AnnaLind]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'Anna\\nLind', expected = 'AnnaLind'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'Anna\\nLind'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_payee.test_ask[  Olli  -Olli]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '  Olli  ', expected = 'Olli'\n\n    @pytest.mark.parametrize(\"value, expected\", [('Anna\\nLind', 'AnnaLind'), ('  Olli  ', 'Olli')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_payee.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  Olli  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-9\")\nE       NotImplementedError: KASSA-9\n\nledger/payee.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-09/trimmed.xml",
+      "oracle/test_payee.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.2005,
+    "tests": 2,
+    "passed": 2,
+    "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+    "measured": true,
+    "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_payee.test_ask[Anna\\nLind-AnnaLind]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_payee.test_ask[  Olli  -Olli]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 2
+  },
+  "patch": "--- a/ledger/payee.py\n+++ b/ledger/payee.py\n@@ -1,3 +1,3 @@\n \"\"\"Strip control characters from payees.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-9\")\n+    return \"\".join(c for c in value if c.isprintable()).strip()\n",
+  "patchSha256": "07dec3852202ab2815d8a046597d41320b85f5664381ffa52eebf199d3139d43",
+  "meta": {
+    "title": "Strip control characters from payees",
+    "ask": "Strip control characters from payees. Preserve the other bank operations.",
+    "did": "Implements payee for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-09.full.json.gz"
+}

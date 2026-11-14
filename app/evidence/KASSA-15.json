@@ -1,0 +1,354 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/channels.py:2",
+      "path": "ledger/channels.py",
+      "name": "Channels",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-15\")\n"
+      ],
+      "new": [
+        "    return sorted(set(value) & {\"email\", \"push\", \"sms\"})\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/channels.json:0",
+      "path": "config/channels.json",
+      "name": "Channels",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"channels\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Deduplicate notification channels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Deduplicate notification channels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Deduplicate notification channels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Deduplicate notification channels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Deduplicate notification channels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Deduplicate notification channels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-15/head.xml",
+        "oracle/test_channels.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.198,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_channels.test_ask[value0-expected0]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_channels.test_ask[value1-expected1]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-15/trial-001.xml",
+        "oracle/test_channels.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.207,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "13a92db7eb0659183ac71217e8f77480646cb455aed90d325ff1678dc763a73c",
+      "measured": true,
+      "removedBlock": "ledger/channels.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n__________________________ test_ask[value0-expected0] __________________________\n\nvalue = ['push', 'push', 'email'], expected = ['email', 'push']\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['push', 'push', 'email']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError\n__________________________ test_ask[value1-expected1] __________________________\n\nvalue = ['fax'], expected = []\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['fax']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_channels.py::test_ask[value0-expected0] - NotImplementedEr...\nFAILED oracle/test_channels.py::test_ask[value1-expected1] - NotImplementedEr...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_channels.test_ask[value0-expected0]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ['push', 'push', 'email'], expected = ['email', 'push']\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['push', 'push', 'email']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_channels.test_ask[value1-expected1]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ['fax'], expected = []\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['fax']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-15/trial-002.xml",
+        "oracle/test_channels.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1937,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "removedBlock": "config/channels.json:0",
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-15/trial-003.xml",
+        "oracle/test_channels.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2014,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "13a92db7eb0659183ac71217e8f77480646cb455aed90d325ff1678dc763a73c",
+      "measured": true,
+      "removedBlock": "ledger/channels.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n__________________________ test_ask[value0-expected0] __________________________\n\nvalue = ['push', 'push', 'email'], expected = ['email', 'push']\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['push', 'push', 'email']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError\n__________________________ test_ask[value1-expected1] __________________________\n\nvalue = ['fax'], expected = []\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['fax']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_channels.py::test_ask[value0-expected0] - NotImplementedEr...\nFAILED oracle/test_channels.py::test_ask[value1-expected1] - NotImplementedEr...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_channels.test_ask[value0-expected0]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ['push', 'push', 'email'], expected = ['email', 'push']\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['push', 'push', 'email']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_channels.test_ask[value1-expected1]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ['fax'], expected = []\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['fax']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-15/trimmed.xml",
+        "oracle/test_channels.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1953,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_channels.test_ask[value0-expected0]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_channels.test_ask[value1-expected1]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-15/trial-003.xml",
+        "oracle/test_channels.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2014,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "13a92db7eb0659183ac71217e8f77480646cb455aed90d325ff1678dc763a73c",
+      "measured": true,
+      "removedBlock": "ledger/channels.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n__________________________ test_ask[value0-expected0] __________________________\n\nvalue = ['push', 'push', 'email'], expected = ['email', 'push']\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['push', 'push', 'email']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError\n__________________________ test_ask[value1-expected1] __________________________\n\nvalue = ['fax'], expected = []\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['fax']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_channels.py::test_ask[value0-expected0] - NotImplementedEr...\nFAILED oracle/test_channels.py::test_ask[value1-expected1] - NotImplementedEr...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_channels.test_ask[value0-expected0]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ['push', 'push', 'email'], expected = ['email', 'push']\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['push', 'push', 'email']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_channels.test_ask[value1-expected1]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ['fax'], expected = []\n\n    @pytest.mark.parametrize(\"value, expected\", [(['push', 'push', 'email'], ['email', 'push']), (['fax'], [])])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_channels.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ['fax']\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-15\")\nE       NotImplementedError: KASSA-15\n\nledger/channels.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-15/trimmed.xml",
+      "oracle/test_channels.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.1953,
+    "tests": 2,
+    "passed": 2,
+    "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+    "measured": true,
+    "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_channels.test_ask[value0-expected0]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_channels.test_ask[value1-expected1]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 2
+  },
+  "patch": "--- a/ledger/channels.py\n+++ b/ledger/channels.py\n@@ -1,3 +1,3 @@\n \"\"\"Deduplicate notification channels.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-15\")\n+    return sorted(set(value) & {\"email\", \"push\", \"sms\"})\n",
+  "patchSha256": "eb46eab0eb2932d0a70ea4c09fc66e0e8b497e9f1fb385acea90a63c48103f93",
+  "meta": {
+    "title": "Deduplicate notification channels",
+    "ask": "Deduplicate notification channels. Preserve the other bank operations.",
+    "did": "Implements channels for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-15.full.json.gz"
+}

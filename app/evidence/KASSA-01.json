@@ -1,0 +1,354 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/mask_account.py:2",
+      "path": "ledger/mask_account.py",
+      "name": "Mask account",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-1\")\n"
+      ],
+      "new": [
+        "    return value[:4] + \"*\" * max(0, len(value)-8) + value[-4:]\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/mask_account.json:0",
+      "path": "config/mask_account.json",
+      "name": "Mask account",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"mask_account\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Mask account numbers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Mask account numbers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Mask account numbers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Mask account numbers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Mask account numbers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Mask account numbers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-01/head.xml",
+        "oracle/test_mask_account.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2009,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_mask_account.test_ask[FI2112345600000785-FI21**********0785]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_mask_account.test_ask[NO9386011117947-NO93*******7947]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-01/trial-001.xml",
+        "oracle/test_mask_account.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2261,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "881f98e4bc3dd3e5aa35c3fc1a26075a15607bdef77b9ae6f1d1d01bc2a13845",
+      "measured": true,
+      "removedBlock": "ledger/mask_account.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_______________ test_ask[FI2112345600000785-FI21**********0785] ________________\n\nvalue = 'FI2112345600000785', expected = 'FI21**********0785'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI2112345600000785'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError\n__________________ test_ask[NO9386011117947-NO93*******7947] ___________________\n\nvalue = 'NO9386011117947', expected = 'NO93*******7947'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'NO9386011117947'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_mask_account.py::test_ask[FI2112345600000785-FI21**********0785]\nFAILED oracle/test_mask_account.py::test_ask[NO9386011117947-NO93*******7947]\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_mask_account.test_ask[FI2112345600000785-FI21**********0785]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'FI2112345600000785', expected = 'FI21**********0785'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI2112345600000785'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_mask_account.test_ask[NO9386011117947-NO93*******7947]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'NO9386011117947', expected = 'NO93*******7947'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'NO9386011117947'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-01/trial-002.xml",
+        "oracle/test_mask_account.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2299,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "removedBlock": "config/mask_account.json:0",
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-01/trial-003.xml",
+        "oracle/test_mask_account.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2463,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "aa4c0094aecf3a2b9b7d1189ffe9d9a7e580d4925972cdd9d081d9029367685c",
+      "measured": true,
+      "removedBlock": "ledger/mask_account.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_______________ test_ask[FI2112345600000785-FI21**********0785] ________________\n\nvalue = 'FI2112345600000785', expected = 'FI21**********0785'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI2112345600000785'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError\n__________________ test_ask[NO9386011117947-NO93*******7947] ___________________\n\nvalue = 'NO9386011117947', expected = 'NO93*******7947'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'NO9386011117947'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_mask_account.py::test_ask[FI2112345600000785-FI21**********0785]\nFAILED oracle/test_mask_account.py::test_ask[NO9386011117947-NO93*******7947]\n2 failed in 0.02s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_mask_account.test_ask[FI2112345600000785-FI21**********0785]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'FI2112345600000785', expected = 'FI21**********0785'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI2112345600000785'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_mask_account.test_ask[NO9386011117947-NO93*******7947]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'NO9386011117947', expected = 'NO93*******7947'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'NO9386011117947'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-01/trimmed.xml",
+        "oracle/test_mask_account.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2446,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_mask_account.test_ask[FI2112345600000785-FI21**********0785]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_mask_account.test_ask[NO9386011117947-NO93*******7947]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-01/trial-003.xml",
+        "oracle/test_mask_account.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2463,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "aa4c0094aecf3a2b9b7d1189ffe9d9a7e580d4925972cdd9d081d9029367685c",
+      "measured": true,
+      "removedBlock": "ledger/mask_account.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_______________ test_ask[FI2112345600000785-FI21**********0785] ________________\n\nvalue = 'FI2112345600000785', expected = 'FI21**********0785'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI2112345600000785'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError\n__________________ test_ask[NO9386011117947-NO93*******7947] ___________________\n\nvalue = 'NO9386011117947', expected = 'NO93*******7947'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'NO9386011117947'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_mask_account.py::test_ask[FI2112345600000785-FI21**********0785]\nFAILED oracle/test_mask_account.py::test_ask[NO9386011117947-NO93*******7947]\n2 failed in 0.02s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_mask_account.test_ask[FI2112345600000785-FI21**********0785]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'FI2112345600000785', expected = 'FI21**********0785'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI2112345600000785'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_mask_account.test_ask[NO9386011117947-NO93*******7947]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'NO9386011117947', expected = 'NO93*******7947'\n\n    @pytest.mark.parametrize(\"value, expected\", [('FI2112345600000785', 'FI21**********0785'), ('NO9386011117947', 'NO93*******7947')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_mask_account.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'NO9386011117947'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-1\")\nE       NotImplementedError: KASSA-1\n\nledger/mask_account.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-01/trimmed.xml",
+      "oracle/test_mask_account.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.2446,
+    "tests": 2,
+    "passed": 2,
+    "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+    "measured": true,
+    "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_mask_account.test_ask[FI2112345600000785-FI21**********0785]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_mask_account.test_ask[NO9386011117947-NO93*******7947]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 2
+  },
+  "patch": "--- a/ledger/mask_account.py\n+++ b/ledger/mask_account.py\n@@ -1,3 +1,3 @@\n \"\"\"Mask account numbers.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-1\")\n+    return value[:4] + \"*\" * max(0, len(value)-8) + value[-4:]\n",
+  "patchSha256": "cbaa70a5362045155c15e4cd06fe9906f7bf83de9509f8bedf907351b9d832b1",
+  "meta": {
+    "title": "Mask account numbers",
+    "ask": "Mask account numbers. Preserve the other bank operations.",
+    "did": "Implements mask account for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-01.full.json.gz"
+}

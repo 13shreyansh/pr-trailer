@@ -1,0 +1,390 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/tier_label.py:2",
+      "path": "ledger/tier_label.py",
+      "name": "Tier label",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-14\")\n"
+      ],
+      "new": [
+        "    return {\"basic\": \"Everyday\", \"premium\": \"Premium\", \"business\": \"Business\"}.get(value, \"Everyday\")\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/tier_label.json:0",
+      "path": "config/tier_label.json",
+      "name": "Tier label",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"tier_label\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Show account tier names\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Show account tier names\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Show account tier names\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Show account tier names\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Show account tier names\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Show account tier names\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-14/head.xml",
+        "oracle/test_tier_label.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2118,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_tier_label.test_ask[basic-Everyday]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_tier_label.test_ask[business-Business]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_tier_label.test_ask[unknown-Everyday]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-14/trial-001.xml",
+        "oracle/test_tier_label.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2121,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "45ded8002f92feb3d96ba857c314f5930db5cfaff9e3701dfbc1f0c2c3fb4cfb",
+      "measured": true,
+      "removedBlock": "ledger/tier_label.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n___________________________ test_ask[basic-Everyday] ___________________________\n\nvalue = 'basic', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'basic'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError\n_________________________ test_ask[business-Business] __________________________\n\nvalue = 'business', expected = 'Business'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'business'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError\n__________________________ test_ask[unknown-Everyday] __________________________\n\nvalue = 'unknown', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'unknown'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE   ",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_tier_label.test_ask[basic-Everyday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'basic', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'basic'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_tier_label.test_ask[business-Business]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'business', expected = 'Business'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'business'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_tier_label.test_ask[unknown-Everyday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'unknown', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'unknown'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-14/trial-002.xml",
+        "oracle/test_tier_label.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1957,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "removedBlock": "config/tier_label.json:0",
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-14/trial-003.xml",
+        "oracle/test_tier_label.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2018,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "45ded8002f92feb3d96ba857c314f5930db5cfaff9e3701dfbc1f0c2c3fb4cfb",
+      "measured": true,
+      "removedBlock": "ledger/tier_label.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n___________________________ test_ask[basic-Everyday] ___________________________\n\nvalue = 'basic', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'basic'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError\n_________________________ test_ask[business-Business] __________________________\n\nvalue = 'business', expected = 'Business'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'business'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError\n__________________________ test_ask[unknown-Everyday] __________________________\n\nvalue = 'unknown', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'unknown'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE   ",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_tier_label.test_ask[basic-Everyday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'basic', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'basic'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_tier_label.test_ask[business-Business]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'business', expected = 'Business'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'business'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_tier_label.test_ask[unknown-Everyday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'unknown', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'unknown'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-14/trimmed.xml",
+        "oracle/test_tier_label.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1983,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_tier_label.test_ask[basic-Everyday]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_tier_label.test_ask[business-Business]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_tier_label.test_ask[unknown-Everyday]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-14/trial-003.xml",
+        "oracle/test_tier_label.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2018,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "45ded8002f92feb3d96ba857c314f5930db5cfaff9e3701dfbc1f0c2c3fb4cfb",
+      "measured": true,
+      "removedBlock": "ledger/tier_label.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n___________________________ test_ask[basic-Everyday] ___________________________\n\nvalue = 'basic', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'basic'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError\n_________________________ test_ask[business-Business] __________________________\n\nvalue = 'business', expected = 'Business'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'business'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError\n__________________________ test_ask[unknown-Everyday] __________________________\n\nvalue = 'unknown', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'unknown'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE   ",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_tier_label.test_ask[basic-Everyday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'basic', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'basic'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_tier_label.test_ask[business-Business]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'business', expected = 'Business'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'business'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_tier_label.test_ask[unknown-Everyday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'unknown', expected = 'Everyday'\n\n    @pytest.mark.parametrize(\"value, expected\", [('basic', 'Everyday'), ('business', 'Business'), ('unknown', 'Everyday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_tier_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'unknown'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-14\")\nE       NotImplementedError: KASSA-14\n\nledger/tier_label.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-14/trimmed.xml",
+      "oracle/test_tier_label.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.1983,
+    "tests": 3,
+    "passed": 3,
+    "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+    "measured": true,
+    "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_tier_label.test_ask[basic-Everyday]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_tier_label.test_ask[business-Business]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_tier_label.test_ask[unknown-Everyday]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 3
+  },
+  "patch": "--- a/ledger/tier_label.py\n+++ b/ledger/tier_label.py\n@@ -1,3 +1,3 @@\n \"\"\"Show account tier names.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-14\")\n+    return {\"basic\": \"Everyday\", \"premium\": \"Premium\", \"business\": \"Business\"}.get(value, \"Everyday\")\n",
+  "patchSha256": "58a6275ad8bfb8b37f82636dbeebd391fde69619500e127d12b1c3254e072c2a",
+  "meta": {
+    "title": "Show account tier names",
+    "ask": "Show account tier names. Preserve the other bank operations.",
+    "did": "Implements tier label for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-14.full.json.gz"
+}

@@ -1,0 +1,7 @@
+--- a/ledger/branch_search.py
++++ b/ledger/branch_search.py
+@@ -1,3 +1,3 @@
+ """Make branch search case insensitive."""
+ def resolve(value):
+-    raise NotImplementedError("KASSA-19")
++    return " ".join(value.casefold().split())

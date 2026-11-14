@@ -1,0 +1,190 @@
+{
+  "baseline": {
+    "label": "baseline",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-INTERN/baseline.xml",
+      "oracle/test_safety.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.1975,
+    "tests": 3,
+    "passed": 3,
+    "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+    "measured": true,
+    "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [],
+    "fullCaseCount": 3
+  },
+  "checks": [
+    {
+      "label": "isolated-1",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-INTERN/isolated-1.xml",
+        "oracle/test_safety.py::test_ownership"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2006,
+      "tests": 1,
+      "passed": 0,
+      "outputSha256": "1f8f60675fa859129eb654aea8530ca76fda1395ff359aaaa452bfe63ced95de",
+      "measured": true,
+      "path": "ledger/auth.py",
+      "note": "Bypasses account ownership. Another customer can read the account.",
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n________________________________ test_ownership ________________________________\n\n    def test_ownership():\n        conn=db.connect();db.seed(conn)\n>       with pytest.raises(auth.Forbidden):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE Forbidden\n\noracle/test_safety.py:8: Failed\n=========================== short test summary info ============================\nFAILED oracle/test_safety.py::test_ownership - Failed: DID NOT RAISE Forbidden\n1 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_safety.test_ownership",
+          "passed": false,
+          "skipped": false,
+          "failure": "def test_ownership():\n        conn=db.connect();db.seed(conn)\n>       with pytest.raises(auth.Forbidden):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE Forbidden\n\noracle/test_safety.py:8: Failed"
+        }
+      ],
+      "fullCaseCount": 1
+    },
+    {
+      "label": "isolated-2",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-INTERN/isolated-2.xml",
+        "oracle/test_safety.py::test_statement_schema"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2087,
+      "tests": 1,
+      "passed": 0,
+      "outputSha256": "2fc27d449eef0395d90fdad036a79619865546057986b28117ee3fcd31a61520",
+      "measured": true,
+      "path": "migrations/002_best_bank.sql",
+      "note": "Drops memo, which statement export still reads.",
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________________ test_statement_schema _____________________________\n\n    def test_statement_schema():\n        conn=db.connect();db.seed(conn)\n>       assert \"memo\" in export_csv(conn,\"acc-anna\").splitlines()[0]\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\noracle/test_safety.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndb = <sqlite3.Connection object at 0x108acb2e0>, account_id = 'acc-anna'\n\n    def export_csv(db, account_id: str) -> str:\n>       rows = db.execute(\n            \"SELECT created_day, to_iban, amount_cents, fee_cents, memo FROM transfers WHERE from_account = ? ORDER BY id\",\n            (account_id,),\n        ).fetchall()\nE       sqlite3.OperationalError: no such column: memo\n\nledger/statements.py:7: OperationalError\n=========================== short test summary info ============================\nFAILED oracle/test_safety.py::test_statement_schema - sqlite3.OperationalErro...\n1 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_safety.test_statement_schema",
+          "passed": false,
+          "skipped": false,
+          "failure": "def test_statement_schema():\n        conn=db.connect();db.seed(conn)\n>       assert \"memo\" in export_csv(conn,\"acc-anna\").splitlines()[0]\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\noracle/test_safety.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndb = <sqlite3.Connection object at 0x108acb2e0>, account_id = 'acc-anna'\n\n    def export_csv(db, account_id: str) -> str:\n>       rows = db.execute(\n            \"SELECT created_day, to_iban, amount_cents, fee_cents, memo FROM transfers WHERE from_account = ? ORDER BY id\",\n            (account_id,),\n        ).fetchall()\nE       sqlite3.OperationalError: no such column: memo\n\nledger/statements.py:7: OperationalError"
+        }
+      ],
+      "fullCaseCount": 1
+    },
+    {
+      "label": "isolated-3",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-INTERN/isolated-3.xml",
+        "oracle/test_safety.py::test_nonnegative_fees"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2092,
+      "tests": 1,
+      "passed": 0,
+      "outputSha256": "7dd0c1b4e01f94e4e0d769e23afcf86fe8769d1f65e2dcd06361c35c76233612",
+      "measured": true,
+      "path": "ledger/fees.py",
+      "note": "Makes fees negative. Transfers credit the customer for fees.",
+      "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________________ test_nonnegative_fees _____________________________\n\n    def test_nonnegative_fees():\n>       assert transfer_fee(1000,\"instant\") >= 0\nE       AssertionError: assert -50 >= 0\nE        +  where -50 = transfer_fee(1000, 'instant')\n\noracle/test_safety.py:16: AssertionError\n=========================== short test summary info ============================\nFAILED oracle/test_safety.py::test_nonnegative_fees - AssertionError: assert ...\n1 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_safety.test_nonnegative_fees",
+          "passed": false,
+          "skipped": false,
+          "failure": "def test_nonnegative_fees():\n>       assert transfer_fee(1000,\"instant\") >= 0\nE       AssertionError: assert -50 >= 0\nE        +  where -50 = transfer_fee(1000, 'instant')\n\noracle/test_safety.py:16: AssertionError"
+        }
+      ],
+      "fullCaseCount": 1
+    }
+  ],
+  "combined": {
+    "label": "combined",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-INTERN/combined.xml",
+      "oracle/test_safety.py"
+    ],
+    "exitCode": 1,
+    "seconds": 0.2026,
+    "tests": 3,
+    "passed": 0,
+    "outputSha256": "245c9b89e4d2fdd55accf6ecd614b1e100a9a93dd0ed231bb2d4c98a10e3c57e",
+    "measured": true,
+    "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n________________________________ test_ownership ________________________________\n\n    def test_ownership():\n        conn=db.connect();db.seed(conn)\n>       with pytest.raises(auth.Forbidden):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE Forbidden\n\noracle/test_safety.py:8: Failed\n____________________________ test_statement_schema _____________________________\n\n    def test_statement_schema():\n        conn=db.connect();db.seed(conn)\n>       assert \"memo\" in export_csv(conn,\"acc-anna\").splitlines()[0]\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\noracle/test_safety.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndb = <sqlite3.Connection object at 0x10ab87d30>, account_id = 'acc-anna'\n\n    def export_csv(db, account_id: str) -> str:\n>       rows = db.execute(\n            \"SELECT created_day, to_iban, amount_cents, fee_cents, memo FROM transfers WHERE from_account = ? ORDER BY id\",\n            (account_id,),\n        ).fetchall()\nE       sqlite3.OperationalError: no such column: memo\n\nledger/statements.py:7: OperationalError\n____________________________ test_nonnegative_fees _____________________________\n\n    def test_nonnegative_fees():\n>       assert transfer_fee(1000,\"instant\") >= 0\nE       AssertionError: assert -50 >= 0\nE        +  where -50 = transfer_fee(1000, 'instant')\n\noracle/test_safety.py:16: AssertionError\n=========================== short test summary info ============================\nFAILED oracle/test_safety.py::test_ownership - Failed: DID NOT RAISE Forbidden\nFAILED oracle/test_safety.py::test_statement_schema - sqlite3.OperationalErro...\nFAILED oracle/test_safety.py::test_nonnegative_fees - AssertionError: assert ...\n3 failed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_safety.test_ownership",
+        "passed": false,
+        "skipped": false,
+        "failure": "def test_ownership():\n        conn=db.connect();db.seed(conn)\n>       with pytest.raises(auth.Forbidden):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE Forbidden\n\noracle/test_safety.py:8: Failed"
+      },
+      {
+        "name": "oracle.test_safety.test_statement_schema",
+        "passed": false,
+        "skipped": false,
+        "failure": "def test_statement_schema():\n        conn=db.connect();db.seed(conn)\n>       assert \"memo\" in export_csv(conn,\"acc-anna\").splitlines()[0]\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\noracle/test_safety.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndb = <sqlite3.Connection object at 0x10ab87d30>, account_id = 'acc-anna'\n\n    def export_csv(db, account_id: str) -> str:\n>       rows = db.execute(\n            \"SELECT created_day, to_iban, amount_cents, fee_cents, memo FROM transfers WHERE from_account = ? ORDER BY id\",\n            (account_id,),\n        ).fetchall()\nE       sqlite3.OperationalError: no such column: memo\n\nledger/statements.py:7: OperationalError"
+      },
+      {
+        "name": "oracle.test_safety.test_nonnegative_fees",
+        "passed": false,
+        "skipped": false,
+        "failure": "def test_nonnegative_fees():\n>       assert transfer_fee(1000,\"instant\") >= 0\nE       AssertionError: assert -50 >= 0\nE        +  where -50 = transfer_fee(1000, 'instant')\n\noracle/test_safety.py:16: AssertionError"
+      }
+    ],
+    "fullCaseCount": 3
+  },
+  "written": 3830,
+  "blocks": [
+    {
+      "path": "ledger/auth.py",
+      "lines": 2
+    },
+    {
+      "path": "migrations/002_best_bank.sql",
+      "lines": 1
+    },
+    {
+      "path": "ledger/fees.py",
+      "lines": 2
+    },
+    {
+      "path": "schema/bank-api.json",
+      "lines": 3825
+    }
+  ],
+  "fullLogArchive": "KASSA-INTERN.full.json.gz"
+}

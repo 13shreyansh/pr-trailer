@@ -1,0 +1,1234 @@
+From 4d09f4a9b1bf74ec6d6f7005d15adca9900da37c Mon Sep 17 00:00:00 2001
+From: Arnav Bajaj <49639514+Jackhammer9@users.noreply.github.com>
+Date: Sat, 1 Nov 2025 15:32:23 +0100
+Subject: [PATCH 1/3] Add servo support to transpiler and code generation
+
+---
+ src/Reduino/Actuators/Servo.py    |  84 ++++++++++
+ src/Reduino/Actuators/__init__.py |   3 +-
+ src/Reduino/transpile/ast.py      |  28 ++++
+ src/Reduino/transpile/emitter.py  | 257 ++++++++++++++++++++++++++++--
+ src/Reduino/transpile/parser.py   | 160 ++++++++++++++++++-
+ tests/test_actuators.py           |  36 ++++-
+ tests/test_emitter.py             |  27 ++++
+ tests/test_parser.py              |  36 +++++
+ 8 files changed, 612 insertions(+), 19 deletions(-)
+ create mode 100644 src/Reduino/Actuators/Servo.py
+
+diff --git a/src/Reduino/Actuators/Servo.py b/src/Reduino/Actuators/Servo.py
+new file mode 100644
+index 0000000..b31d36f
+--- /dev/null
++++ b/src/Reduino/Actuators/Servo.py
+@@ -0,0 +1,84 @@
++"""High-level abstraction representing a hobby servo."""
++
++from __future__ import annotations
++
++
++class Servo:
++    """In-memory model of a servo actuator.
++
++    The helper mimics a basic positional servo that uses pulse widths between
++    ``min_pulse_us`` and ``max_pulse_us`` microseconds to cover the angular range
++    from ``min_angle`` to ``max_angle`` degrees.  The defaults match the Arduino
++    Servo library (approximately 0-180 degrees mapped to 544-2400 microseconds).
++    """
++
++    def __init__(
++        self,
++        pin: int = 9,
++        *,
++        min_angle: float = 0.0,
++        max_angle: float = 180.0,
++        min_pulse_us: float = 544.0,
++        max_pulse_us: float = 2400.0,
++    ) -> None:
++        if min_angle >= max_angle:
++            raise ValueError("min_angle must be smaller than max_angle")
++        if min_pulse_us >= max_pulse_us:
++            raise ValueError("min_pulse_us must be smaller than max_pulse_us")
++
++        self.pin = pin
++        self._min_angle = float(min_angle)
++        self._max_angle = float(max_angle)
++        self._min_pulse = float(min_pulse_us)
++        self._max_pulse = float(max_pulse_us)
++        self._current_angle = self._min_angle
++        self._current_pulse = self._min_pulse
++
++    def _angle_to_pulse(self, angle: float) -> float:
++        span_angle = self._max_angle - self._min_angle
++        return self._min_pulse + ((angle - self._min_angle) / span_angle) * (
++            self._max_pulse - self._min_pulse
++        )
++
++    def _pulse_to_angle(self, pulse: float) -> float:
++        span_pulse = self._max_pulse - self._min_pulse
++        return self._min_angle + ((pulse - self._min_pulse) / span_pulse) * (
++            self._max_angle - self._min_angle
++        )
++
++    def write(self, angle: float) -> None:
++        """Command the servo to ``angle`` degrees."""
++
++        if not self._min_angle <= angle <= self._max_angle:
++            raise ValueError("angle must be within the configured bounds")
++
++        self._current_angle = float(angle)
++        self._current_pulse = self._angle_to_pulse(self._current_angle)
++
++    def write_us(self, pulse: float) -> None:
++        """Command the servo using a pulse width in microseconds."""
++
++        if not self._min_pulse <= pulse <= self._max_pulse:
++            raise ValueError("pulse must be within the configured bounds")
++
++        self._current_pulse = float(pulse)
++        self._current_angle = self._pulse_to_angle(self._current_pulse)
++
++    def read(self) -> float:
++        """Return the last angle requested via :meth:`write` or :meth:`write_us`."""
++
++        return self._current_angle
++
++    def read_us(self) -> float:
++        """Return the last pulse width requested."""
++
++        return self._current_pulse
++
++    def __repr__(self) -> str:  # pragma: no cover - debug helper
++        return (
++            "Servo("
++            f"pin={self.pin}, "
++            f"angle={self._current_angle}, "
++            f"pulse={self._current_pulse}"
++            ")"
++        )
+diff --git a/src/Reduino/Actuators/__init__.py b/src/Reduino/Actuators/__init__.py
+index 9a93f6a..015fc04 100644
+--- a/src/Reduino/Actuators/__init__.py
++++ b/src/Reduino/Actuators/__init__.py
+@@ -8,5 +8,6 @@
+ 
+ from .Led import Led
+ from .RGBLed import RGBLed
++from .Servo import Servo
+ 
+-__all__ = [*__all__, "Led", "RGBLed"]
++__all__ = [*__all__, "Led", "RGBLed", "Servo"]
+diff --git a/src/Reduino/transpile/ast.py b/src/Reduino/transpile/ast.py
+index fffb3d8..fc26174 100644
+--- a/src/Reduino/transpile/ast.py
++++ b/src/Reduino/transpile/ast.py
+@@ -178,6 +178,34 @@ class RGBLedBlink:
+     delay_ms: Union[int, str]
+ 
+ 
++@dataclass
++class ServoDecl:
++    """Declare a hobby servo bound to ``pin`` with optional calibration."""
++
++    name: str
++    pin: Union[int, str] = 9
++    min_angle: Union[float, int, str] = 0.0
++    max_angle: Union[float, int, str] = 180.0
++    min_pulse_us: Union[float, int, str] = 544.0
++    max_pulse_us: Union[float, int, str] = 2400.0
++
++
++@dataclass
++class ServoWrite:
++    """Command the servo to move to an angle in degrees."""
++
++    name: str
++    angle: Union[float, int, str]
++
++
++@dataclass
++class ServoWriteMicroseconds:
++    """Command the servo using a pulse width in microseconds."""
++
++    name: str
++    pulse_us: Union[float, int, str]
++
++
+ @dataclass
+ class Sleep:
+     """Delay execution for ``ms`` milliseconds."""
+diff --git a/src/Reduino/transpile/emitter.py b/src/Reduino/transpile/emitter.py
+index 3c05dab..356c1f4 100644
+--- a/src/Reduino/transpile/emitter.py
++++ b/src/Reduino/transpile/emitter.py
+@@ -28,6 +28,9 @@
+     RGBLedOff,
+     RGBLedOn,
+     RGBLedSetColor,
++    ServoDecl,
++    ServoWrite,
++    ServoWriteMicroseconds,
+     PotentiometerDecl,
+     ReturnStmt,
+     SerialMonitorDecl,
+@@ -221,6 +224,8 @@ def _emit_block(
+     ultrasonic_decls: Dict[str, UltrasonicDecl],
+     potentiometer_decls: Dict[str, PotentiometerDecl],
+     button_decls: Dict[str, ButtonDecl],
++    servo_decls: Dict[str, ServoDecl],
++    servo_state: Dict[str, Dict[str, str]],
+     indent: str = "  ",
+     *,
+     in_setup: bool = False,
+@@ -246,6 +251,8 @@ def _emit_block(
+                     ultrasonic_decls,
+                     potentiometer_decls,
+                     button_decls,
++                    servo_decls,
++                    servo_state,
+                     indent + "  ",
+                     in_setup=in_setup,
+                     emitted_pin_modes=emitted_pin_modes,
+@@ -277,6 +284,10 @@ def _emit_block(
+             lines.append(f"{indent}{value_var} = {next_var};")
+             continue
+ 
++        if isinstance(node, ServoDecl):
++            servo_decls.setdefault(node.name, node)
++            continue
++
+         if isinstance(node, PotentiometerDecl):
+             potentiometer_decls[node.name] = node
+             continue
+@@ -286,22 +297,24 @@ def _emit_block(
+                 keyword = "if" if idx == 0 else "else if"
+                 lines.append(f"{indent}{keyword} ({branch.condition}) {{")
+                 lines.extend(
+-                    _emit_block(
+-                        branch.body,
+-                        led_pin,
+-                        led_state,
+-                        led_brightness,
+-                        rgb_led_pins,
+-                        rgb_led_state,
+-                        rgb_led_colors,
+-                        ultrasonic_decls,
+-                        potentiometer_decls,
+-                        button_decls,
+-                        indent + "  ",
+-                        in_setup=in_setup,
+-                        emitted_pin_modes=emitted_pin_modes,
+-                        ultrasonic_pin_modes=ultrasonic_pin_modes,
+-                    )
++                _emit_block(
++                    branch.body,
++                    led_pin,
++                    led_state,
++                    led_brightness,
++                    rgb_led_pins,
++                    rgb_led_state,
++                    rgb_led_colors,
++                    ultrasonic_decls,
++                    potentiometer_decls,
++                    button_decls,
++                    servo_decls,
++                    servo_state,
++                    indent + "  ",
++                    in_setup=in_setup,
++                    emitted_pin_modes=emitted_pin_modes,
++                    ultrasonic_pin_modes=ultrasonic_pin_modes,
++                )
+                 )
+                 lines.append(f"{indent}}}")
+             if node.else_body:
+@@ -318,6 +331,8 @@ def _emit_block(
+                         ultrasonic_decls,
+                         potentiometer_decls,
+                         button_decls,
++                        servo_decls,
++                        servo_state,
+                         indent + "  ",
+                         in_setup=in_setup,
+                         emitted_pin_modes=emitted_pin_modes,
+@@ -341,6 +356,8 @@ def _emit_block(
+                     ultrasonic_decls,
+                     potentiometer_decls,
+                     button_decls,
++                    servo_decls,
++                    servo_state,
+                     indent + "  ",
+                     in_setup=in_setup,
+                     emitted_pin_modes=emitted_pin_modes,
+@@ -366,6 +383,8 @@ def _emit_block(
+                     ultrasonic_decls,
+                     potentiometer_decls,
+                     button_decls,
++                    servo_decls,
++                    servo_state,
+                     indent + "  ",
+                     in_setup=in_setup,
+                     emitted_pin_modes=emitted_pin_modes,
+@@ -389,6 +408,8 @@ def _emit_block(
+                     ultrasonic_decls,
+                     potentiometer_decls,
+                     button_decls,
++                    servo_decls,
++                    servo_state,
+                     indent + "  ",
+                     in_setup=in_setup,
+                     emitted_pin_modes=emitted_pin_modes,
+@@ -419,6 +440,8 @@ def _emit_block(
+                         ultrasonic_decls,
+                         potentiometer_decls,
+                         button_decls,
++                        servo_decls,
++                        servo_state,
+                         indent + "  ",
+                         in_setup=in_setup,
+                         emitted_pin_modes=emitted_pin_modes,
+@@ -510,6 +533,31 @@ def _emit_rgb_update(name: str, red_expr: str, green_expr: str, blue_expr: str)
+             block_lines.append(f"{indent}}}")
+             return block_lines
+ 
++        def _ensure_servo_tracking(
++            name: str,
++        ) -> Tuple[str, str, str, str, str, str, str]:
++            info = servo_state.setdefault(
++                name,
++                {
++                    "object": f"__servo_{name}",
++                    "min_angle": f"__servo_min_angle_{name}",
++                    "max_angle": f"__servo_max_angle_{name}",
++                    "min_pulse": f"__servo_min_pulse_{name}",
++                    "max_pulse": f"__servo_max_pulse_{name}",
++                    "angle": f"__servo_angle_{name}",
++                    "pulse": f"__servo_pulse_{name}",
++                },
++            )
++            return (
++                info["object"],
++                info["min_angle"],
++                info["max_angle"],
++                info["min_pulse"],
++                info["max_pulse"],
++                info["angle"],
++                info["pulse"],
++            )
++
+         if isinstance(node, LedDecl):
+             led_pin[node.name] = node.pin
+             led_state[node.name] = f"__state_{node.name}"
+@@ -563,6 +611,88 @@ def _emit_rgb_update(name: str, red_expr: str, green_expr: str, blue_expr: str)
+                     lines.append(f"{indent}pinMode({echo_expr}, INPUT);")
+             continue
+ 
++        if isinstance(node, ServoWrite):
++            (
++                servo_obj,
++                min_angle_var,
++                max_angle_var,
++                min_pulse_var,
++                max_pulse_var,
++                angle_var,
++                pulse_var,
++            ) = _ensure_servo_tracking(node.name)
++            angle_expr = _emit_expr(node.angle)
++            lines.append(f"{indent}{{")
++            lines.append(
++                f"{indent}  float __redu_angle = static_cast<float>({angle_expr});"
++            )
++            lines.append(
++                f"{indent}  if (__redu_angle < {min_angle_var}) {{ __redu_angle = {min_angle_var}; }}"
++            )
++            lines.append(
++                f"{indent}  if (__redu_angle > {max_angle_var}) {{ __redu_angle = {max_angle_var}; }}"
++            )
++            lines.append(f"{indent}  {angle_var} = __redu_angle;")
++            lines.append(
++                f"{indent}  float __redu_span = {max_angle_var} - {min_angle_var};"
++            )
++            lines.append(
++                f"{indent}  if (__redu_span == 0.0f) {{ __redu_span = 1.0f; }}"
++            )
++            lines.append(
++                f"{indent}  float __redu_pulse = {min_pulse_var} + ((__redu_angle - {min_angle_var}) / __redu_span) * ({max_pulse_var} - {min_pulse_var});"
++            )
++            lines.append(
++                f"{indent}  if (__redu_pulse < {min_pulse_var}) {{ __redu_pulse = {min_pulse_var}; }}"
++            )
++            lines.append(
++                f"{indent}  if (__redu_pulse > {max_pulse_var}) {{ __redu_pulse = {max_pulse_var}; }}"
++            )
++            lines.append(f"{indent}  {pulse_var} = __redu_pulse;")
++            lines.append(
++                f"{indent}  {servo_obj}.writeMicroseconds(static_cast<int>({pulse_var} + 0.5f));"
++            )
++            lines.append(f"{indent}}}")
++            continue
++
++        if isinstance(node, ServoWriteMicroseconds):
++            (
++                servo_obj,
++                min_angle_var,
++                max_angle_var,
++                min_pulse_var,
++                max_pulse_var,
++                angle_var,
++                pulse_var,
++            ) = _ensure_servo_tracking(node.name)
++            pulse_expr = _emit_expr(node.pulse_us)
++            lines.append(f"{indent}{{")
++            lines.append(
++                f"{indent}  float __redu_pulse = static_cast<float>({pulse_expr});"
++            )
++            lines.append(
++                f"{indent}  if (__redu_pulse < {min_pulse_var}) {{ __redu_pulse = {min_pulse_var}; }}"
++            )
++            lines.append(
++                f"{indent}  if (__redu_pulse > {max_pulse_var}) {{ __redu_pulse = {max_pulse_var}; }}"
++            )
++            lines.append(f"{indent}  {pulse_var} = __redu_pulse;")
++            lines.append(
++                f"{indent}  float __redu_span = {max_pulse_var} - {min_pulse_var};"
++            )
++            lines.append(
++                f"{indent}  if (__redu_span == 0.0f) {{ __redu_span = 1.0f; }}"
++            )
++            lines.append(
++                f"{indent}  float __redu_angle = {min_angle_var} + ((__redu_pulse - {min_pulse_var}) / __redu_span) * ({max_angle_var} - {min_angle_var});"
++            )
++            lines.append(f"{indent}  {angle_var} = __redu_angle;")
++            lines.append(
++                f"{indent}  {servo_obj}.writeMicroseconds(static_cast<int>({pulse_var} + 0.5f));"
++            )
++            lines.append(f"{indent}}}")
++            continue
++
+         if isinstance(node, LedOn):
+             pin_code, state_var, brightness_var = _ensure_led_tracking(node.name)
+             lines.append(f"{indent}{state_var} = true;")
+@@ -899,6 +1029,10 @@ def emit(ast: Program) -> str:
+     rgb_led_state: Dict[str, str] = {}
+     rgb_led_colors: Dict[str, Tuple[str, str, str]] = {}
+     potentiometer_decls: Dict[str, PotentiometerDecl] = {}
++    servo_decls: Dict[str, ServoDecl] = {}
++    servo_state: Dict[str, Dict[str, str]] = {}
++    servo_attach_emitted: Set[str] = set()
++    servo_used = False
+     helpers = getattr(ast, "helpers", set())
+     ultrasonic_measurements = getattr(ast, "ultrasonic_measurements", set())
+ 
+@@ -927,6 +1061,57 @@ def emit(ast: Program) -> str:
+     # Pass 1: collect LED declarations to create globals & pinModes in setup()
+     pin_mode_emitted: Set[Tuple[str, ...]] = set()
+ 
++    def _ensure_servo_globals(node: ServoDecl) -> Dict[str, str]:
++        nonlocal servo_used
++        servo_used = True
++        info = servo_state.setdefault(
++            node.name,
++            {
++                "object": f"__servo_{node.name}",
++                "min_angle": f"__servo_min_angle_{node.name}",
++                "max_angle": f"__servo_max_angle_{node.name}",
++                "min_pulse": f"__servo_min_pulse_{node.name}",
++                "max_pulse": f"__servo_max_pulse_{node.name}",
++                "angle": f"__servo_angle_{node.name}",
++                "pulse": f"__servo_pulse_{node.name}",
++            },
++        )
++        servo_decls[node.name] = node
++        obj_line = f"Servo {info['object']};"
++        if obj_line not in globals_:
++            globals_.append(obj_line)
++        min_angle_expr = _emit_expr(node.min_angle)
++        max_angle_expr = _emit_expr(node.max_angle)
++        min_pulse_expr = _emit_expr(node.min_pulse_us)
++        max_pulse_expr = _emit_expr(node.max_pulse_us)
++        min_angle_line = (
++            f"float {info['min_angle']} = static_cast<float>({min_angle_expr});"
++        )
++        if min_angle_line not in globals_:
++            globals_.append(min_angle_line)
++        max_angle_line = (
++            f"float {info['max_angle']} = static_cast<float>({max_angle_expr});"
++        )
++        if max_angle_line not in globals_:
++            globals_.append(max_angle_line)
++        min_pulse_line = (
++            f"float {info['min_pulse']} = static_cast<float>({min_pulse_expr});"
++        )
++        if min_pulse_line not in globals_:
++            globals_.append(min_pulse_line)
++        max_pulse_line = (
++            f"float {info['max_pulse']} = static_cast<float>({max_pulse_expr});"
++        )
++        if max_pulse_line not in globals_:
++            globals_.append(max_pulse_line)
++        angle_line = f"float {info['angle']} = {info['min_angle']};"
++        if angle_line not in globals_:
++            globals_.append(angle_line)
++        pulse_line = f"float {info['pulse']} = {info['min_pulse']};"
++        if pulse_line not in globals_:
++            globals_.append(pulse_line)
++        return info
++
+     for node in (setup_body or []):
+         if isinstance(node, ButtonDecl):
+             button_decls[node.name] = node
+@@ -951,6 +1136,21 @@ def emit(ast: Program) -> str:
+                 button_init_emitted.add(node.name)
+             continue
+ 
++        if isinstance(node, ServoDecl):
++            info = _ensure_servo_globals(node)
++            if node.name not in servo_attach_emitted:
++                servo_attach_emitted.add(node.name)
++                pin_expr = _emit_expr(node.pin)
++                min_pulse_expr = _emit_expr(node.min_pulse_us)
++                max_pulse_expr = _emit_expr(node.max_pulse_us)
++                setup_lines.append(
++                    f"  {info['object']}.attach({pin_expr}, static_cast<int>({min_pulse_expr}), static_cast<int>({max_pulse_expr}));"
++                )
++                setup_lines.append(
++                    f"  {info['object']}.writeMicroseconds(static_cast<int>({min_pulse_expr}));"
++                )
++            continue
++
+         if isinstance(node, LedDecl):
+             state_var = f"__state_{node.name}"
+             bright_var = f"__brightness_{node.name}"
+@@ -1008,6 +1208,21 @@ def emit(ast: Program) -> str:
+                 setup_lines.append(f"  pinMode({pin_expr}, {node.mode});")
+             continue
+ 
++        if isinstance(node, ServoDecl):
++            info = _ensure_servo_globals(node)
++            if node.name not in servo_attach_emitted:
++                servo_attach_emitted.add(node.name)
++                pin_expr = _emit_expr(node.pin)
++                min_pulse_expr = _emit_expr(node.min_pulse_us)
++                max_pulse_expr = _emit_expr(node.max_pulse_us)
++                setup_lines.append(
++                    f"  {info['object']}.attach({pin_expr}, static_cast<int>({min_pulse_expr}), static_cast<int>({max_pulse_expr}));"
++                )
++                setup_lines.append(
++                    f"  {info['object']}.writeMicroseconds(static_cast<int>({min_pulse_expr}));"
++                )
++            continue
++
+         if isinstance(node, LedDecl):
+             state_var = f"__state_{node.name}"
+             bright_var = f"__brightness_{node.name}"
+@@ -1092,6 +1307,8 @@ def emit(ast: Program) -> str:
+             ultrasonic_decls,
+             potentiometer_decls,
+             button_decls,
++            servo_decls,
++            servo_state,
+             in_setup=True,
+             emitted_pin_modes=pin_mode_emitted,
+             ultrasonic_pin_modes=ultrasonic_pin_modes,
+@@ -1114,6 +1331,8 @@ def emit(ast: Program) -> str:
+                     ultrasonic_decls,
+                     potentiometer_decls,
+                     button_decls,
++                    servo_decls,
++                    servo_state,
+                     in_setup=False,
+                     emitted_pin_modes=pin_mode_emitted,
+                     ultrasonic_pin_modes=ultrasonic_pin_modes,
+@@ -1133,6 +1352,8 @@ def emit(ast: Program) -> str:
+             ultrasonic_decls,
+             potentiometer_decls,
+             button_decls,
++            servo_decls,
++            servo_state,
+             in_setup=False,
+             emitted_pin_modes=pin_mode_emitted,
+             ultrasonic_pin_modes=ultrasonic_pin_modes,
+@@ -1154,6 +1375,8 @@ def emit(ast: Program) -> str:
+             ultrasonic_decls,
+             potentiometer_decls,
+             button_decls,
++            servo_decls,
++            servo_state,
+             indent="  ",
+             in_setup=False,
+             emitted_pin_modes=set(),
+@@ -1212,6 +1435,8 @@ def emit(ast: Program) -> str:
+ 
+     # Stitch sections
+     parts: List[str] = [HEADER]
++    if servo_used:
++        parts.append("#include <Servo.h>\n\n")
+     if "list" in helpers:
+         parts.append(LIST_HELPER_SNIPPET + "\n")
+     if "len" in helpers:
+diff --git a/src/Reduino/transpile/parser.py b/src/Reduino/transpile/parser.py
+index 636db63..4e2f9c6 100644
+--- a/src/Reduino/transpile/parser.py
++++ b/src/Reduino/transpile/parser.py
+@@ -32,6 +32,9 @@
+     RGBLedOff,
+     RGBLedOn,
+     RGBLedSetColor,
++    ServoDecl,
++    ServoWrite,
++    ServoWriteMicroseconds,
+     Program,
+     ReturnStmt,
+     SerialMonitorDecl,
+@@ -593,6 +596,12 @@ def emit(n: ast.AST) -> str:
+                 raise ValueError("unsupported attribute call")
+ 
+             if attr == "read":
++                if isinstance(owner_node, ast.Name) and ctx is not None:
++                    servo_names = ctx.get("servo_names", set())
++                    if owner_node.id in servo_names:
++                        if n.args or n.keywords:
++                            raise ValueError("unsupported attribute call")
++                        return f"__servo_angle_{owner_node.id}"
+                 if isinstance(owner_node, ast.Name) and ctx is not None:
+                     potentiometers = ctx.get("potentiometer_names", set())
+                     if owner_node.id in potentiometers:
+@@ -634,6 +643,15 @@ def emit(n: ast.AST) -> str:
+                         return ''
+                 raise ValueError("unsupported attribute call")
+ 
++            if attr == "read_us":
++                if isinstance(owner_node, ast.Name) and ctx is not None:
++                    servo_names = ctx.get("servo_names", set())
++                    if owner_node.id in servo_names:
++                        if n.args or n.keywords:
++                            raise ValueError("unsupported attribute call")
++                        return f"__servo_pulse_{owner_node.id}"
++                raise ValueError("unsupported attribute call")
++
+             raise ValueError("unsupported attribute call")
+ 
+         if isinstance(n, ast.Call) and isinstance(n.func, ast.Name):
+@@ -880,14 +898,26 @@ def _infer_expr_type(
+             led_names = ctx.get("led_names", set())
+             if owner.id in led_names:
+                 return "int"
+-            
++
+         if attr == "read" and isinstance(owner, ast.Name):
++            if ctx is None:
++                return "float"
++            servo_names = ctx.get("servo_names", set())
++            if owner.id in servo_names:
++                return "float"
+             if ctx is None:
+                 return "String"
+             serials = ctx.get("serial_monitors", set())
+             if owner.id in serials:
+                 return "String"
+ 
++        if attr == "read_us" and isinstance(owner, ast.Name):
++            if ctx is None:
++                return "float"
++            servo_names = ctx.get("servo_names", set())
++            if owner.id in servo_names:
++                return "float"
++
+         if attr == "measure_distance" and isinstance(owner, ast.Name):
+             if ctx is None:
+                 return "float"
+@@ -1163,6 +1193,7 @@ def _merge_return_types(types: List[str], has_void: bool) -> str:
+ # Imports to ignore
+ RE_IMPORT_LED     = re.compile(r"^\s*from\s+Reduino\.Actuators\s+import\s+Led\s*$")
+ RE_IMPORT_RGB_LED = re.compile(r"^\s*from\s+Reduino\.Actuators\s+import\s+RGBLed\s*$")
++RE_IMPORT_SERVO   = re.compile(r"^\s*from\s+Reduino\.Actuators\s+import\s+Servo\s*$")
+ RE_IMPORT_SLEEP   = re.compile(r"^\s*from\s+Reduino\.Utils\s+import\s+sleep\s*$")
+ RE_IMPORT_SERIAL  = re.compile(r"^\s*from\s+Reduino\.Communication\s+import\s+SerialMonitor\s*$")
+ RE_IMPORT_TARGET  = re.compile(r"^\s*from\s+Reduino\s+import\s+target\s*$")
+@@ -1176,6 +1207,7 @@ def _merge_return_types(types: List[str], has_void: bool) -> str:
+ RE_ASSIGN     = re.compile(r"^\s*([A-Za-z_]\w*)\s*=\s*(.+)$")
+ RE_LED_DECL   = re.compile(r"^\s*([A-Za-z_]\w*)\s*=\s*Led\s*\(\s*(.*?)\s*\)\s*$")
+ RE_RGB_LED_DECL = re.compile(r"^\s*([A-Za-z_]\w*)\s*=\s*RGBLed\s*\(\s*(.*?)\s*\)\s*$")
++RE_SERVO_DECL = re.compile(r"^\s*([A-Za-z_]\w*)\s*=\s*Servo\s*\(\s*(.*?)\s*\)\s*$")
+ RE_ULTRASONIC_DECL = re.compile(r"^\s*([A-Za-z_]\w*)\s*=\s*Ultrasonic\s*\(\s*(.*?)\s*\)\s*$")
+ RE_BUTTON_DECL = re.compile(r"^\s*([A-Za-z_]\w*)\s*=\s*Button\s*\(\s*(.*?)\s*\)\s*$")
+ RE_POTENTIOMETER_DECL = re.compile(
+@@ -1194,6 +1226,8 @@ def _merge_return_types(types: List[str], has_void: bool) -> str:
+ RE_RGB_LED_SET_COLOR = re.compile(r"^\s*([A-Za-z_]\w*)\s*\.set_color\(\s*(.*)\s*\)\s*$")
+ RE_RGB_LED_FADE      = re.compile(r"^\s*([A-Za-z_]\w*)\s*\.fade\(\s*(.*)\s*\)\s*$")
+ RE_RGB_LED_BLINK     = re.compile(r"^\s*([A-Za-z_]\w*)\s*\.blink\(\s*(.*)\s*\)\s*$")
++RE_SERVO_WRITE       = re.compile(r"^\s*([A-Za-z_]\w*)\s*\.write\(\s*(.*)\s*\)\s*$")
++RE_SERVO_WRITE_US    = re.compile(r"^\s*([A-Za-z_]\w*)\s*\.write_us\(\s*(.*)\s*\)\s*$")
+ 
+ # Serial primitives
+ RE_SERIAL_DECL    = re.compile(r"^\s*([A-Za-z_]\w*)\s*=\s*SerialMonitor\s*\(\s*(.*?)\s*\)\s*$")
+@@ -1498,6 +1532,9 @@ def is_led_call(n: ast.AST) -> bool:
+     def is_rgb_led_call(n: ast.AST) -> bool:
+         return isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id == "RGBLed"
+ 
++    def is_servo_call(n: ast.AST) -> bool:
++        return isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id == "Servo"
++
+     def is_serial_monitor_call(n: ast.AST) -> bool:
+         return (
+             isinstance(n, ast.Call)
+@@ -1511,6 +1548,7 @@ def is_ultrasonic_call(n: ast.AST) -> bool:
+     if isinstance(target, ast.Name) and (
+         is_led_call(value)
+         or is_rgb_led_call(value)
++        or is_servo_call(value)
+         or is_serial_monitor_call(value)
+         or is_ultrasonic_call(value)
+     ):
+@@ -1519,6 +1557,7 @@ def is_ultrasonic_call(n: ast.AST) -> bool:
+         if any(
+             is_led_call(elt)
+             or is_rgb_led_call(elt)
++            or is_servo_call(elt)
+             or is_serial_monitor_call(elt)
+             or is_ultrasonic_call(elt)
+             for elt in value.elts
+@@ -1941,6 +1980,7 @@ def _parse_simple_lines(
+     ctx.setdefault("functions", {})
+     list_info = ctx.setdefault("list_info", {})
+     rgb_led_names = ctx.setdefault("rgb_led_names", set())
++    servo_names = ctx.setdefault("servo_names", set())
+     button_names = ctx.setdefault("button_names", set())
+     button_pins = ctx.setdefault("button_pins", {})
+     button_callbacks = ctx.setdefault("button_callbacks", {})
+@@ -1965,6 +2005,27 @@ def _resolve_numeric_arg(arg_src: Optional[str], default: Union[int, str]) -> Un
+                     return int(value)
+         return _to_c_expr(arg_src, vars, ctx)
+ 
++    def _resolve_float_arg(
++        arg_src: Optional[str], default: Union[float, int, str]
++    ) -> Union[float, int, str]:
++        if arg_src is None or not arg_src.strip():
++            return default
++        try:
++            expr_ast = ast.parse(arg_src, mode="eval").body
++        except Exception:
++            expr_ast = None
++        if expr_ast is not None and not _expr_has_name(expr_ast):
++            try:
++                value = _eval_const(arg_src, vars)
++            except Exception:
++                pass
++            else:
++                if isinstance(value, bool):
++                    return 1.0 if value else 0.0
++                if isinstance(value, (int, float)):
++                    return float(value)
++        return _to_c_expr(arg_src, vars, ctx)
++
+     i = 0
+     while i < len(snippet):
+         raw = snippet[i]
+@@ -1981,6 +2042,7 @@ def _resolve_numeric_arg(arg_src: Optional[str], default: Union[int, str]) -> Un
+         if (
+             RE_IMPORT_LED.match(line)
+             or RE_IMPORT_RGB_LED.match(line)
++            or RE_IMPORT_SERVO.match(line)
+             or RE_IMPORT_SLEEP.match(line)
+             or RE_IMPORT_SERIAL.match(line)
+             or RE_IMPORT_TARGET.match(line)
+@@ -2566,6 +2628,72 @@ def _collect_order(nodes: List[object]) -> None:
+             i += 1
+             continue
+ 
++        m = RE_SERVO_DECL.match(line)
++        if m:
++            name, args_src = m.group(1), m.group(2)
++            pin_arg = _extract_call_argument(args_src, keyword="pin")
++            if pin_arg is None:
++                pin_arg = _extract_call_argument(args_src)
++            pin_value: Union[int, str] = 9
++            if pin_arg and pin_arg.strip():
++                handled = False
++                try:
++                    expr_ast = ast.parse(pin_arg, mode="eval").body
++                except Exception:
++                    expr_ast = None
++                if expr_ast is not None and not _expr_has_name(expr_ast):
++                    try:
++                        value = _eval_const(pin_arg, vars)
++                    except Exception:
++                        pass
++                    else:
++                        if isinstance(value, bool):
++                            pin_value = 1 if value else 0
++                            handled = True
++                        elif isinstance(value, (int, float)):
++                            pin_value = int(value)
++                            handled = True
++                if not handled:
++                    pin_value = _to_c_expr(pin_arg, vars, ctx)
++
++            min_angle_arg = _extract_call_argument(args_src, keyword="min_angle")
++            max_angle_arg = _extract_call_argument(args_src, keyword="max_angle")
++            min_pulse_arg = _extract_call_argument(args_src, keyword="min_pulse_us")
++            max_pulse_arg = _extract_call_argument(args_src, keyword="max_pulse_us")
++
++            min_angle = _resolve_float_arg(min_angle_arg, 0.0)
++            max_angle = _resolve_float_arg(max_angle_arg, 180.0)
++            min_pulse = _resolve_numeric_arg(min_pulse_arg, 544)
++            max_pulse = _resolve_numeric_arg(max_pulse_arg, 2400)
++
++            if (
++                isinstance(min_angle, (int, float))
++                and isinstance(max_angle, (int, float))
++                and float(min_angle) >= float(max_angle)
++            ):
++                raise ValueError("min_angle must be smaller than max_angle")
++            if (
++                isinstance(min_pulse, int)
++                and isinstance(max_pulse, int)
++                and min_pulse >= max_pulse
++            ):
++                raise ValueError("min_pulse_us must be smaller than max_pulse_us")
++
++            servo_names.add(name)
++            vars[name] = _ExprStr(name)
++            body.append(
++                ServoDecl(
++                    name=name,
++                    pin=pin_value,
++                    min_angle=min_angle,
++                    max_angle=max_angle,
++                    min_pulse_us=min_pulse,
++                    max_pulse_us=max_pulse,
++                )
++            )
++            i += 1
++            continue
++
+         m = RE_RGB_LED_DECL.match(line)
+         if m:
+             name, args_src = m.group(1), m.group(2)
+@@ -2955,6 +3083,36 @@ def _coerce_pattern(value: object) -> None:
+             i += 1
+             continue
+ 
++        m = RE_SERVO_WRITE.match(line)
++        if m:
++            name, args_src = m.group(1), m.group(2)
++            if name in servo_names:
++                angle_arg = _extract_call_argument(args_src, keyword="angle")
++                if angle_arg is None:
++                    angle_arg = _extract_call_argument(args_src)
++                if angle_arg is None or not angle_arg.strip():
++                    raise ValueError("Servo.write requires an angle argument")
++                angle_expr = _to_c_expr(angle_arg, vars, ctx)
++                body.append(ServoWrite(name=name, angle=angle_expr))
++                i += 1
++                continue
++
++        m = RE_SERVO_WRITE_US.match(line)
++        if m:
++            name, args_src = m.group(1), m.group(2)
++            if name in servo_names:
++                pulse_arg = _extract_call_argument(args_src, keyword="pulse_us")
++                if pulse_arg is None:
++                    pulse_arg = _extract_call_argument(args_src, keyword="pulse")
++                if pulse_arg is None:
++                    pulse_arg = _extract_call_argument(args_src)
++                if pulse_arg is None or not pulse_arg.strip():
++                    raise ValueError("Servo.write_us requires a pulse argument")
++                pulse_expr = _to_c_expr(pulse_arg, vars, ctx)
++                body.append(ServoWriteMicroseconds(name=name, pulse_us=pulse_expr))
++                i += 1
++                continue
++
+         m = RE_SERIAL_WRITE.match(line)
+         if m:
+             owner, arg_src = m.group(1), m.group(2)
+diff --git a/tests/test_actuators.py b/tests/test_actuators.py
+index 2560495..315dbc7 100644
+--- a/tests/test_actuators.py
++++ b/tests/test_actuators.py
+@@ -7,7 +7,7 @@
+ 
+ import pytest
+ 
+-from Reduino.Actuators import Led, RGBLed
++from Reduino.Actuators import Led, RGBLed, Servo
+ 
+ 
+ def _patch_sleep(monkeypatch: pytest.MonkeyPatch, collector: list[float]) -> None:
+@@ -220,3 +220,37 @@ def test_blink_restores_original_color(self, monkeypatch: pytest.MonkeyPatch) ->
+             led.blink(0, 0, 0, times=0)
+         with pytest.raises(ValueError):
+             led.blink(0, 0, 0, delay_ms=-1)
++
++
++class TestServo:
++    """Tests covering the :class:`Reduino.Actuators.Servo` helper."""
++
++    def test_defaults_and_pin(self) -> None:
++        servo = Servo()
++        assert servo.pin == 9
++        assert servo.read() == 0
++        assert servo.read_us() == pytest.approx(544)
++
++    def test_write_accepts_within_bounds(self) -> None:
++        servo = Servo()
++        servo.write(90)
++        assert servo.read() == 90
++        expected_pulse = 544 + (2400 - 544) * (90 / 180)
++        assert servo.read_us() == pytest.approx(expected_pulse)
++
++    def test_write_rejects_out_of_bounds(self) -> None:
++        servo = Servo()
++        with pytest.raises(ValueError, match="angle must be within the configured bounds"):
++            servo.write(200)
++
++    def test_write_us_roundtrip(self) -> None:
++        servo = Servo()
++        servo.write_us(1500)
++        assert servo.read_us() == pytest.approx(1500)
++        expected_angle = (1500 - 544) / (2400 - 544) * 180
++        assert servo.read() == pytest.approx(expected_angle)
++
++    def test_write_us_rejects_out_of_bounds(self) -> None:
++        servo = Servo()
++        with pytest.raises(ValueError, match="pulse must be within the configured bounds"):
++            servo.write_us(500)
+diff --git a/tests/test_emitter.py b/tests/test_emitter.py
+index 85935a2..39e80fb 100644
+--- a/tests/test_emitter.py
++++ b/tests/test_emitter.py
+@@ -163,6 +163,33 @@ def test_emit_handles_led_and_rgb_led_actions(src, norm) -> None:
+     assert "analogWrite(5, __rgb_blue_rgb);" in cpp
+ 
+ 
++def test_emit_servo_support(src, norm) -> None:
++    cpp = compile_source(
++        src(
++            """
++            from Reduino.Actuators import Servo
++
++            servo = Servo(9, min_angle=10, max_angle=170, min_pulse_us=500, max_pulse_us=2500)
++            servo.write(45)
++            servo.write_us(1500)
++            angle = servo.read()
++            pulse = servo.read_us()
++            """
++        )
++    )
++
++    text = norm(cpp)
++    assert "#include <Servo.h>" in cpp
++    assert "Servo __servo_servo;" in cpp
++    assert "float __servo_min_angle_servo" in cpp
++    assert "__servo_servo.attach(9, static_cast<int>(500), static_cast<int>(2500));" in cpp
++    assert "__servo_servo.writeMicroseconds(static_cast<int>(500));" in cpp
++    assert "float __redu_angle = static_cast<float>(45);" in cpp
++    assert "angle = __servo_angle_servo;" in cpp
++    assert "pulse = __servo_pulse_servo;" in cpp
++    assert text.count("__servo_servo.writeMicroseconds") >= 3
++
++
+ def test_emit_serial_monitor_and_variables(src, norm) -> None:
+     cpp = compile_source(
+         src(
+diff --git a/tests/test_parser.py b/tests/test_parser.py
+index 6e699d0..eb7d2e0 100644
+--- a/tests/test_parser.py
++++ b/tests/test_parser.py
+@@ -20,6 +20,9 @@
+     RGBLedOff,
+     RGBLedOn,
+     RGBLedSetColor,
++    ServoDecl,
++    ServoWrite,
++    ServoWriteMicroseconds,
+     ReturnStmt,
+     SerialMonitorDecl,
+     SerialWrite,
+@@ -199,6 +202,39 @@ def test_parser_rgb_led_nodes(src) -> None:
+     }
+ 
+ 
++def test_parser_servo_nodes(src) -> None:
++    code = src(
++        """
++        from Reduino.Actuators import Servo
++
++        servo = Servo(9, min_angle=15.0, max_angle=165.0, min_pulse_us=500, max_pulse_us=2400)
++        servo.write(90)
++        servo.write_us(1500)
++        angle = servo.read()
++        pulse = servo.read_us()
++        """
++    )
++
++    program = _parse(code)
++    servo_nodes = [node for node in program.setup_body if node.__class__.__name__.startswith("Servo")]
++    assert any(isinstance(node, ServoDecl) for node in servo_nodes)
++    assert any(isinstance(node, ServoWrite) for node in servo_nodes)
++    assert any(isinstance(node, ServoWriteMicroseconds) for node in servo_nodes)
++
++    angle_exprs = [
++        getattr(node, "expr", None)
++        for node in program.setup_body
++        if getattr(node, "name", None) == "angle"
++    ]
++    pulse_exprs = [
++        getattr(node, "expr", None)
++        for node in program.setup_body
++        if getattr(node, "name", None) == "pulse"
++    ]
++    assert "__servo_angle_servo" in angle_exprs
++    assert "__servo_pulse_servo" in pulse_exprs
++
++
+ def test_parser_try_statement(src) -> None:
+     code = src(
+         """
+
+From 3b916a48a30a5a688f512e2a7abf17fc4e28cab8 Mon Sep 17 00:00:00 2001
+From: Arnav Bajaj <49639514+Jackhammer9@users.noreply.github.com>
+Date: Sat, 1 Nov 2025 15:46:40 +0100
+Subject: [PATCH 2/3] Ensure Servo library dependency is installed
+ automatically
+
+---
+ src/Reduino/__init__.py      | 56 ++++++++++++++++++++++++++++++++++--
+ src/Reduino/toolchain/pio.py | 39 +++++++++++++++++++++++--
+ tests/test_toolchain.py      | 43 +++++++++++++++++++++++++++
+ 3 files changed, 133 insertions(+), 5 deletions(-)
+ create mode 100644 tests/test_toolchain.py
+
+diff --git a/src/Reduino/__init__.py b/src/Reduino/__init__.py
+index 34e7a96..9300a9d 100644
+--- a/src/Reduino/__init__.py
++++ b/src/Reduino/__init__.py
+@@ -8,12 +8,56 @@
+ import pathlib
+ import sys
+ import tempfile
++from typing import List, Type
+ 
+ from Reduino.toolchain.pio import compile_upload, ensure_pio, write_project
++from Reduino.transpile.ast import Program, ServoDecl
+ from Reduino.transpile.emitter import emit
+ from Reduino.transpile.parser import parse
+ 
+ 
++def _program_contains(program: Program, node_type: Type[object]) -> bool:
++    """Recursively determine whether ``program`` includes ``node_type``."""
++
++    seen: set[int] = set()
++
++    def _visit(value: object) -> bool:
++        if isinstance(value, node_type):
++            return True
++        if isinstance(value, (str, bytes, bytearray)):
++            return False
++        if isinstance(value, (list, tuple, set)):
++            for item in value:
++                if _visit(item):
++                    return True
++            return False
++        if isinstance(value, dict):
++            for item in value.values():
++                if _visit(item):
++                    return True
++            return False
++        if hasattr(value, "__dict__"):
++            key = id(value)
++            if key in seen:
++                return False
++            seen.add(key)
++            for attr_value in value.__dict__.values():
++                if _visit(attr_value):
++                    return True
++        return False
++
++    return _visit(program)
++
++
++def _collect_required_libraries(program: Program) -> List[str]:
++    """Return PlatformIO libraries required by the transpiled program."""
++
++    requirements: List[str] = []
++    if _program_contains(program, ServoDecl):
++        requirements.append("Servo")
++    return requirements
++
++
+ def target(port: str, *, upload: bool = True) -> None:
+     """Transpile the invoking script and prepare a PlatformIO project.
+ 
+@@ -32,10 +76,18 @@ def target(port: str, *, upload: bool = True) -> None:
+ 
+     main_file = pathlib.Path(sys.modules["__main__"].__file__)
+     src = main_file.read_text(encoding="utf-8")
+-    cpp = emit(parse(src))
++    program = parse(src)
++    required_libs = _collect_required_libraries(program)
++    if "Servo" in required_libs:
++        print(
++            "Reduino: Servo support requires the PlatformIO Servo library. "
++            "PlatformIO will download it automatically if it's missing.",
++            file=sys.stderr,
++        )
++    cpp = emit(program)
+ 
+     tmp = pathlib.Path(tempfile.mkdtemp(prefix="reduino-pio-"))
+-    write_project(tmp, cpp, port=port)
++    write_project(tmp, cpp, port=port, lib_deps=required_libs)
+     if upload:
+         compile_upload(tmp)
+ 
+diff --git a/src/Reduino/toolchain/pio.py b/src/Reduino/toolchain/pio.py
+index a38cf70..08d029a 100644
+--- a/src/Reduino/toolchain/pio.py
++++ b/src/Reduino/toolchain/pio.py
+@@ -1,14 +1,39 @@
+ from __future__ import annotations
+-import subprocess, sys, os
++
++import subprocess
+ from pathlib import Path
++from typing import Iterable, List
+ 
+ PIO_INI = """[env:uno]
+ platform = atmelavr
+ board = uno
+ framework = arduino
+ upload_port = {port}
++
++{lib_section}
+ """
+ 
++
++def _format_lib_section(libraries: Iterable[str] | None) -> str:
++    """Render a ``lib_deps`` section for ``platformio.ini`` if needed."""
++
++    if not libraries:
++        return ""
++
++    unique: List[str] = []
++    for entry in libraries:
++        if not entry:
++            continue
++        if entry not in unique:
++            unique.append(entry)
++
++    if not unique:
++        return ""
++
++    lines = ["lib_deps ="]
++    lines.extend(f"  {name}" for name in unique)
++    return "\n".join(lines)
++
+ def ensure_pio() -> None:
+     try:
+         subprocess.run(["pio", "--version"], check=True, stdout=subprocess.DEVNULL)
+@@ -17,10 +42,18 @@ def ensure_pio() -> None:
+             "PlatformIO (pio) not found. Install with: pip install platformio"
+         ) from e
+ 
+-def write_project(project_dir: Path, cpp_code: str, port: str) -> None:
++def write_project(
++    project_dir: Path,
++    cpp_code: str,
++    port: str,
++    *,
++    lib_deps: Iterable[str] | None = None,
++) -> None:
+     (project_dir / "src").mkdir(parents=True, exist_ok=True)
+     (project_dir / "src" / "main.cpp").write_text(cpp_code, encoding="utf-8")
+-    (project_dir / "platformio.ini").write_text(PIO_INI.format(port=port), encoding="utf-8")
++    lib_section = _format_lib_section(lib_deps)
++    ini_contents = PIO_INI.format(port=port, lib_section=lib_section).rstrip() + "\n"
++    (project_dir / "platformio.ini").write_text(ini_contents, encoding="utf-8")
+ 
+ def compile_upload(project_dir: str | Path) -> None:
+     project_dir = Path(project_dir)
+diff --git a/tests/test_toolchain.py b/tests/test_toolchain.py
+new file mode 100644
+index 0000000..8c91253
+--- /dev/null
++++ b/tests/test_toolchain.py
+@@ -0,0 +1,43 @@
++from __future__ import annotations
++
++import pathlib
++
++from Reduino import _collect_required_libraries
++from Reduino.toolchain.pio import write_project
++from Reduino.transpile.ast import Program, ServoDecl
++
++
++def _read_ini(tmp_path: pathlib.Path) -> str:
++    return (tmp_path / "platformio.ini").read_text(encoding="utf-8")
++
++
++def test_write_project_includes_lib_deps(tmp_path) -> None:
++    write_project(
++        tmp_path,
++        cpp_code="void setup() {}\nvoid loop() {}\n",
++        port="/dev/ttyACM0",
++        lib_deps=["Servo"],
++    )
++    ini = _read_ini(tmp_path)
++    assert "lib_deps =" in ini
++    assert "  Servo" in ini
++
++
++def test_write_project_omits_empty_lib_deps(tmp_path) -> None:
++    write_project(
++        tmp_path,
++        cpp_code="void setup() {}\nvoid loop() {}\n",
++        port="/dev/ttyACM0",
++    )
++    ini = _read_ini(tmp_path)
++    assert "lib_deps" not in ini
++
++
++def test_collect_required_libraries_detects_servo() -> None:
++    program = Program(setup_body=[ServoDecl(name="servo", pin=9)])
++    assert _collect_required_libraries(program) == ["Servo"]
++
++
++def test_collect_required_libraries_handles_absence() -> None:
++    program = Program()
++    assert _collect_required_libraries(program) == []
+
+From 9c2e4599ea0f73d05b4a4e862339680e38590490 Mon Sep 17 00:00:00 2001
+From: Arnav Bajaj <49639514+Jackhammer9@users.noreply.github.com>
+Date: Sat, 1 Nov 2025 15:56:58 +0100
+Subject: [PATCH 3/3] Fix servo write to emit angle-based call
+
+---
+ src/Reduino/transpile/emitter.py | 2 +-
+ tests/test_emitter.py            | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/Reduino/transpile/emitter.py b/src/Reduino/transpile/emitter.py
+index 356c1f4..6d973cc 100644
+--- a/src/Reduino/transpile/emitter.py
++++ b/src/Reduino/transpile/emitter.py
+@@ -650,7 +650,7 @@ def _ensure_servo_tracking(
+             )
+             lines.append(f"{indent}  {pulse_var} = __redu_pulse;")
+             lines.append(
+-                f"{indent}  {servo_obj}.writeMicroseconds(static_cast<int>({pulse_var} + 0.5f));"
++                f"{indent}  {servo_obj}.write(static_cast<int>(__redu_angle + 0.5f));"
+             )
+             lines.append(f"{indent}}}")
+             continue
+diff --git a/tests/test_emitter.py b/tests/test_emitter.py
+index 39e80fb..0b8c6a8 100644
+--- a/tests/test_emitter.py
++++ b/tests/test_emitter.py
+@@ -187,7 +187,8 @@ def test_emit_servo_support(src, norm) -> None:
+     assert "float __redu_angle = static_cast<float>(45);" in cpp
+     assert "angle = __servo_angle_servo;" in cpp
+     assert "pulse = __servo_pulse_servo;" in cpp
+-    assert text.count("__servo_servo.writeMicroseconds") >= 3
++    assert "__servo_servo.write(static_cast<int>(__redu_angle + 0.5f));" in cpp
++    assert text.count("__servo_servo.writeMicroseconds") >= 2
+ 
+ 
+ def test_emit_serial_monitor_and_variables(src, norm) -> None:

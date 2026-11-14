@@ -1,0 +1,58 @@
+[
+  {
+    "path": "index.html",
+    "status": 200,
+    "bytes": 1089,
+    "sha256": "c36bc554ff174d1dc20fce2ed73cf41743ee6267eaebf52663e1eebdca9f149e",
+    "measured": true
+  },
+  {
+    "path": "app.js",
+    "status": 200,
+    "bytes": 19998,
+    "sha256": "b89b1b89077f55586cdcf8f66b3155e14c2da58976569ffd14372809054c2000",
+    "measured": true
+  },
+  {
+    "path": "review.js",
+    "status": 200,
+    "bytes": 2593,
+    "sha256": "c6b768225d06fcebc96acd668ff6fa6be23eaa8031619b21e9066c69932bac57",
+    "measured": true
+  },
+  {
+    "path": "fixture.js",
+    "status": 200,
+    "bytes": 28015,
+    "sha256": "a4e4fe53fbb77f03544974f82af2f1c80cf2f270586231ce686a72e4121c36bd",
+    "measured": true
+  },
+  {
+    "path": "style.css",
+    "status": 200,
+    "bytes": 14201,
+    "sha256": "d4adcaf1947077ede626d6b01e0e3f7235781f31b3d352300539a74f4856be31",
+    "measured": true
+  },
+  {
+    "path": "fonts/Archivo.ttf",
+    "status": 200,
+    "bytes": 658596,
+    "sha256": "0e094a7d3c7c4c25cf1310c4b30014f1dae9332220b1c2c88f4fa996f0b05053",
+    "measured": true
+  },
+  {
+    "path": "fonts/JetBrainsMono.ttf",
+    "status": 200,
+    "bytes": 187208,
+    "sha256": "48715a42ec242c21e9f02692891e147d022299a52e48d5e413e1a942193ffeda",
+    "measured": true
+  },
+  {
+    "path": "evidence/manifest.json",
+    "status": 200,
+    "bytes": 35640,
+    "sha256": "1a31e376caf3bf78cc0362e78d7995e5a763746d44cb3ca150926b7dd15295f8",
+    "measured": true
+  }
+]

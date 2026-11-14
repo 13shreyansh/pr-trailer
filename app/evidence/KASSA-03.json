@@ -1,0 +1,354 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/memo.py:2",
+      "path": "ledger/memo.py",
+      "name": "Memo",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-3\")\n"
+      ],
+      "new": [
+        "    return value.strip()[:140] or \"Payment\"\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/memo.json:0",
+      "path": "config/memo.json",
+      "name": "Memo",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"memo\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Reject empty payment memos\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Reject empty payment memos\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Reject empty payment memos\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Reject empty payment memos\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Reject empty payment memos\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Reject empty payment memos\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-03/head.xml",
+        "oracle/test_memo.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2447,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_memo.test_ask[  rent  -rent]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_memo.test_ask[   -Payment]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-03/trial-001.xml",
+        "oracle/test_memo.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2596,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "a38aa7a55057d81581260eec0fe716b8b944d24e185cad3c5956f8901f5569f4",
+      "measured": true,
+      "removedBlock": "ledger/memo.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n___________________________ test_ask[  rent  -rent] ____________________________\n\nvalue = '  rent  ', expected = 'rent'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  rent  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError\n____________________________ test_ask[   -Payment] _____________________________\n\nvalue = '   ', expected = 'Payment'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '   '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_memo.py::test_ask[  rent  -rent] - NotImplementedError: KA...\nFAILED oracle/test_memo.py::test_ask[   -Payment] - NotImplementedError: KASSA-3\n2 failed in 0.02s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_memo.test_ask[  rent  -rent]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '  rent  ', expected = 'rent'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  rent  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_memo.test_ask[   -Payment]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '   ', expected = 'Payment'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '   '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-03/trial-002.xml",
+        "oracle/test_memo.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2512,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "removedBlock": "config/memo.json:0",
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-03/trial-003.xml",
+        "oracle/test_memo.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2371,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "4ace0a84f840b198ead6308e3b73851cdbb21de9b07c7ae630fadc07e05e2234",
+      "measured": true,
+      "removedBlock": "ledger/memo.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n___________________________ test_ask[  rent  -rent] ____________________________\n\nvalue = '  rent  ', expected = 'rent'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  rent  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError\n____________________________ test_ask[   -Payment] _____________________________\n\nvalue = '   ', expected = 'Payment'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '   '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_memo.py::test_ask[  rent  -rent] - NotImplementedError: KA...\nFAILED oracle/test_memo.py::test_ask[   -Payment] - NotImplementedError: KASSA-3\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_memo.test_ask[  rent  -rent]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '  rent  ', expected = 'rent'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  rent  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_memo.test_ask[   -Payment]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '   ', expected = 'Payment'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '   '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-03/trimmed.xml",
+        "oracle/test_memo.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2176,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_memo.test_ask[  rent  -rent]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_memo.test_ask[   -Payment]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-03/trial-003.xml",
+        "oracle/test_memo.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2371,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "4ace0a84f840b198ead6308e3b73851cdbb21de9b07c7ae630fadc07e05e2234",
+      "measured": true,
+      "removedBlock": "ledger/memo.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n___________________________ test_ask[  rent  -rent] ____________________________\n\nvalue = '  rent  ', expected = 'rent'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  rent  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError\n____________________________ test_ask[   -Payment] _____________________________\n\nvalue = '   ', expected = 'Payment'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '   '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_memo.py::test_ask[  rent  -rent] - NotImplementedError: KA...\nFAILED oracle/test_memo.py::test_ask[   -Payment] - NotImplementedError: KASSA-3\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_memo.test_ask[  rent  -rent]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '  rent  ', expected = 'rent'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  rent  '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_memo.test_ask[   -Payment]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '   ', expected = 'Payment'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  rent  ', 'rent'), ('   ', 'Payment')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_memo.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '   '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-3\")\nE       NotImplementedError: KASSA-3\n\nledger/memo.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-03/trimmed.xml",
+      "oracle/test_memo.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.2176,
+    "tests": 2,
+    "passed": 2,
+    "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+    "measured": true,
+    "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_memo.test_ask[  rent  -rent]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_memo.test_ask[   -Payment]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 2
+  },
+  "patch": "--- a/ledger/memo.py\n+++ b/ledger/memo.py\n@@ -1,3 +1,3 @@\n \"\"\"Reject empty payment memos.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-3\")\n+    return value.strip()[:140] or \"Payment\"\n",
+  "patchSha256": "7e61ef0a16d85022e0b891460b4d2d256a0cdd8a8cf100d4f246ca6b6a89bfbf",
+  "meta": {
+    "title": "Reject empty payment memos",
+    "ask": "Reject empty payment memos. Preserve the other bank operations.",
+    "did": "Implements memo for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-03.full.json.gz"
+}

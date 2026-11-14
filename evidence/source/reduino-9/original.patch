@@ -1,0 +1,628 @@
+From f11ecb33f58e62ffbef821e6c4967156e713767a Mon Sep 17 00:00:00 2001
+From: Arnav Bajaj <49639514+Jackhammer9@users.noreply.github.com>
+Date: Tue, 28 Oct 2025 19:46:27 +0100
+Subject: [PATCH 1/2] Add SerialMonitor utility and transpiler support
+
+---
+ src/Reduino/Utils/__init__.py    | 62 ++++++++++++++++++++++++++
+ src/Reduino/transpile/ast.py     | 17 ++++++++
+ src/Reduino/transpile/emitter.py | 11 +++++
+ src/Reduino/transpile/parser.py  | 74 +++++++++++++++++++++++++++++---
+ tests/test_emitter.py            | 16 +++++++
+ tests/test_parser.py             | 45 +++++++++++++++++++
+ tests/test_utils.py              | 26 +++++++++++
+ 7 files changed, 244 insertions(+), 7 deletions(-)
+ create mode 100644 src/Reduino/Utils/__init__.py
+ create mode 100644 tests/test_utils.py
+
+diff --git a/src/Reduino/Utils/__init__.py b/src/Reduino/Utils/__init__.py
+new file mode 100644
+index 0000000..acf9f16
+--- /dev/null
++++ b/src/Reduino/Utils/__init__.py
+@@ -0,0 +1,62 @@
++"""Utility helpers for interacting with the Reduino runtime."""
++
++from __future__ import annotations
++
++from collections import deque
++from typing import Deque, Optional
++
++
++class SerialMonitor:
++    """High level helper that mirrors Arduino's ``Serial`` interface."""
++
++    def __init__(
++        self,
++        baud_rate: int = 9600,
++        *,
++        port: Optional[str] = None,
++        newline: str = "\n",
++    ) -> None:
++        """Initialise a virtual serial monitor configuration.
++
++        Parameters
++        ----------
++        baud_rate:
++            Baud rate that will be passed to ``Serial.begin`` when transpiled.
++        port:
++            Optional identifier of the serial port used on the host machine.
++            The value is stored for diagnostic purposes only.
++        newline:
++            Delimiter appended to messages written via :meth:`write`. The
++            default mirrors :func:`Serial.println` on Arduino boards.
++        """
++
++        if baud_rate <= 0:
++            raise ValueError("baud_rate must be positive")
++
++        self.baud_rate = int(baud_rate)
++        self.port = port
++        self.newline = newline
++        self._buffer: Deque[str] = deque()
++
++    def write(self, value: object) -> str:
++        """Queue ``value`` for emission to the serial monitor.
++
++        The transpiler maps calls to this method to ``Serial.println`` in the
++        generated sketch. During host-side execution the helper stores the
++        string representation of ``value`` so that :meth:`read` can surface the
++        output for inspection.
++        """
++
++        text = f"{value}"
++        self._buffer.append(text)
++        return text
++
++    def read(self) -> str:
++        """Return the next buffered message and echo it to stdout."""
++
++        if not self._buffer:
++            return ""
++
++        message = self._buffer.popleft()
++        print(message + self.newline, end="")
++        return message
+diff --git a/src/Reduino/transpile/ast.py b/src/Reduino/transpile/ast.py
+index 436ac55..1165114 100644
+--- a/src/Reduino/transpile/ast.py
++++ b/src/Reduino/transpile/ast.py
+@@ -54,6 +54,23 @@ class Sleep:
+     ms: Union[int, str]
+ 
+ 
++@dataclass
++class SerialMonitorDecl:
++    """Declare a serial monitor configuration with a baud rate."""
++
++    name: str
++    baud: Union[int, str] = 9600
++
++
++@dataclass
++class SerialWrite:
++    """Emit data to the serial monitor."""
++
++    name: str
++    value: str
++    newline: bool = True
++
++
+ @dataclass
+ class VarDecl:
+     """Declare a variable with an optional initializer."""
+diff --git a/src/Reduino/transpile/emitter.py b/src/Reduino/transpile/emitter.py
+index 5380c96..dfe7530 100644
+--- a/src/Reduino/transpile/emitter.py
++++ b/src/Reduino/transpile/emitter.py
+@@ -16,6 +16,8 @@
+     LedToggle,
+     Program,
+     ReturnStmt,
++    SerialMonitorDecl,
++    SerialWrite,
+     Sleep,
+     TryStatement,
+     VarAssign,
+@@ -318,6 +320,15 @@ def _emit_block(
+                 lines.append(f"{indent}}}")
+             continue
+ 
++        if isinstance(node, SerialMonitorDecl):
++            lines.append(f"{indent}Serial.begin({_emit_expr(node.baud)});")
++            continue
++
++        if isinstance(node, SerialWrite):
++            method = "println" if getattr(node, "newline", True) else "print"
++            lines.append(f"{indent}Serial.{method}({node.value});")
++            continue
++
+         if isinstance(node, VarDecl):
+             if node.global_scope:
+                 continue
+diff --git a/src/Reduino/transpile/parser.py b/src/Reduino/transpile/parser.py
+index bafa40e..e310f13 100644
+--- a/src/Reduino/transpile/parser.py
++++ b/src/Reduino/transpile/parser.py
+@@ -5,7 +5,7 @@
+ import ast
+ import operator as op
+ import re
+-from typing import Any, Dict, List, Optional, Set, Tuple
++from typing import Any, Dict, List, Optional, Set, Tuple, Union
+ 
+ from .ast import (
+     BreakStmt,
+@@ -21,6 +21,8 @@
+     LedToggle,
+     Program,
+     ReturnStmt,
++    SerialMonitorDecl,
++    SerialWrite,
+     Sleep,
+     TryStatement,
+     VarAssign,
+@@ -994,6 +996,7 @@ def _merge_return_types(types: List[str], has_void: bool) -> str:
+ # Imports to ignore
+ RE_IMPORT_LED     = re.compile(r"^\s*from\s+Reduino\.Actuators\s+import\s+Led\s*$")
+ RE_IMPORT_SLEEP   = re.compile(r"^\s*from\s+Reduino\.Time\s+import\s+Sleep\s*$")
++RE_IMPORT_SERIAL  = re.compile(r"^\s*from\s+Reduino\.Utils\s+import\s+SerialMonitor\s*$")
+ RE_IMPORT_TARGET  = re.compile(r"^\s*from\s+Reduino\s+import\s+target\s*$")
+ 
+ # Led Primitives
+@@ -1003,6 +1006,10 @@ def _merge_return_types(types: List[str], has_void: bool) -> str:
+ RE_LED_OFF        = re.compile(r"^\s*([A-Za-z_]\w*)\s*\.off\(\s*\)\s*$")
+ RE_LED_TOGGLE     = re.compile(r"^\s*([A-Za-z_]\w*)\s*\.toggle\(\s*\)\s*$")
+ 
++# Serial primitives
++RE_SERIAL_DECL    = re.compile(r"^\s*([A-Za-z_]\w*)\s*=\s*SerialMonitor\s*\(\s*(.*?)\s*\)\s*$")
++RE_SERIAL_WRITE   = re.compile(r"^\s*([A-Za-z_]\w*)\s*\.write\(\s*(.*?)\s*\)\s*$")
++
+ #Time Primitives
+ RE_SLEEP_EXPR = re.compile(r"^\s*Sleep\s*\(\s*(.+?)\s*\)\s*$")
+ 
+@@ -1296,10 +1303,17 @@ def _handle_assignment_ast(
+     def is_led_call(n: ast.AST) -> bool:
+         return isinstance(n, ast.Call) and isinstance(n.func, ast.Name) and n.func.id == "Led"
+ 
+-    if isinstance(target, ast.Name) and is_led_call(value):
++    def is_serial_monitor_call(n: ast.AST) -> bool:
++        return (
++            isinstance(n, ast.Call)
++            and isinstance(n.func, ast.Name)
++            and n.func.id == "SerialMonitor"
++        )
++
++    if isinstance(target, ast.Name) and (is_led_call(value) or is_serial_monitor_call(value)):
+         return None
+     if isinstance(target, (ast.Tuple, ast.List)) and isinstance(value, (ast.Tuple, ast.List)):
+-        if any(is_led_call(elt) for elt in value.elts):
++        if any(is_led_call(elt) or is_serial_monitor_call(elt) for elt in value.elts):
+             return None
+ 
+     vars_env = ctx.setdefault("vars", {})
+@@ -1727,8 +1741,12 @@ def _parse_simple_lines(
+             continue
+ 
+         # ignore imports
+-        if (RE_IMPORT_LED.match(line) or RE_IMPORT_SLEEP.match(line) or
+-            RE_IMPORT_TARGET.match(line)):
++        if (
++            RE_IMPORT_LED.match(line)
++            or RE_IMPORT_SLEEP.match(line)
++            or RE_IMPORT_SERIAL.match(line)
++            or RE_IMPORT_TARGET.match(line)
++        ):
+             i += 1
+             continue
+ 
+@@ -2192,6 +2210,31 @@ def _collect_order(nodes: List[object]) -> None:
+             i += 1
+             continue
+ 
++        m = RE_SERIAL_DECL.match(line)
++        if m:
++            name, expr = m.group(1), m.group(2)
++            baud_arg = _extract_call_argument(expr, keyword="baud_rate")
++            if baud_arg is None:
++                baud_arg = _extract_call_argument(expr)
++            baud_value: Union[int, str] = 9600
++            if baud_arg is not None and baud_arg.strip():
++                try:
++                    expr_ast = ast.parse(baud_arg, mode="eval").body
++                except Exception:
++                    expr_ast = None
++                if expr_ast is not None and not _expr_has_name(expr_ast):
++                    try:
++                        baud_value = int(_eval_const(baud_arg, vars))
++                    except Exception:
++                        baud_value = _to_c_expr(baud_arg, vars, ctx)
++                else:
++                    baud_value = _to_c_expr(baud_arg, vars, ctx)
++            body.append(SerialMonitorDecl(name=name, baud=baud_value))
++            ctx.setdefault("serial_monitors", set()).add(name)
++            vars[name] = _ExprStr(name)
++            i += 1
++            continue
++
+         # Actions
+         m = RE_LED_ON.match(line)
+         if m:
+@@ -2211,6 +2254,19 @@ def _collect_order(nodes: List[object]) -> None:
+             i += 1
+             continue
+ 
++        m = RE_SERIAL_WRITE.match(line)
++        if m:
++            owner, arg_src = m.group(1), m.group(2)
++            arg_src = arg_src.strip()
++            value_expr = ""
++            if arg_src:
++                value_expr = _to_c_expr(arg_src, vars, ctx)
++            else:
++                value_expr = '""'
++            body.append(SerialWrite(name=owner, value=value_expr, newline=True))
++            i += 1
++            continue
++
+         # Sleep with expression
+         m = RE_SLEEP_EXPR.match(line)
+         if m:
+@@ -2334,8 +2390,12 @@ def parse(src: str) -> Program:
+             i += 1; continue
+ 
+         # ignore imports
+-        if (RE_IMPORT_LED.match(text) or RE_IMPORT_SLEEP.match(text) or
+-            RE_IMPORT_TARGET.match(text)):
++        if (
++            RE_IMPORT_LED.match(text)
++            or RE_IMPORT_SLEEP.match(text)
++            or RE_IMPORT_SERIAL.match(text)
++            or RE_IMPORT_TARGET.match(text)
++        ):
+             i += 1; continue
+ 
+         # controls
+diff --git a/tests/test_emitter.py b/tests/test_emitter.py
+index 22d1ca6..79f78ba 100644
+--- a/tests/test_emitter.py
++++ b/tests/test_emitter.py
+@@ -125,6 +125,22 @@ def test_led_pinmode_follows_conditional_assignment(norm):
+     assert "c = 9;" in setup_section
+ 
+ 
++def test_emit_serial_monitor(norm):
++    src = """
++    from Reduino.Utils import SerialMonitor
++
++    monitor = SerialMonitor(115200)
++    monitor.write("hi")
++    """
++
++    cpp = emit(parse(src))
++    text = norm(cpp)
++
++    assert "Serial.begin(115200);" in cpp
++    assert 'Serial.println("hi");' in cpp
++    # ensure helper lands in setup body
++    setup_section = text.split("void loop()", 1)[0]
++    assert "Serial.begin(115200);" in setup_section
+ def test_emit_includes_len_helper_and_call(norm):
+     src = """
+     total = len(readings)
+diff --git a/tests/test_parser.py b/tests/test_parser.py
+index d214ce5..f6f18c5 100644
+--- a/tests/test_parser.py
++++ b/tests/test_parser.py
+@@ -10,6 +10,8 @@
+     IfStatement,
+     LedDecl,
+     ReturnStmt,
++    SerialMonitorDecl,
++    SerialWrite,
+     Sleep,
+     TryStatement,
+     VarAssign,
+@@ -159,6 +161,49 @@ def test_parser_preserves_symbolic_expressions(src):
+     assert led_nodes[0].pin == "(pin_base + offset)"
+ 
+ 
++def test_parser_serial_monitor_decl_and_write(src):
++    code = src(
++        """
++        from Reduino.Utils import SerialMonitor
++
++        monitor = SerialMonitor(baud_rate=115200)
++        monitor.write("hello")
++        """
++    )
++
++    prog = parse(code)
++
++    serial_nodes = [node for node in prog.setup_body if isinstance(node, SerialMonitorDecl)]
++    assert len(serial_nodes) == 1
++    assert serial_nodes[0].baud == 115200
++
++    write_nodes = [node for node in prog.setup_body if isinstance(node, SerialWrite)]
++    assert len(write_nodes) == 1
++    assert write_nodes[0].value == '"hello"'
++
++
++def test_parser_serial_monitor_accepts_expressions(src):
++    code = src(
++        """
++        from Reduino.Utils import SerialMonitor
++
++        base_rate = 4800
++        monitor = SerialMonitor(base_rate * 2)
++        monitor.write(base_rate)
++        """
++    )
++
++    prog = parse(code)
++
++    serial_nodes = [node for node in prog.setup_body if isinstance(node, SerialMonitorDecl)]
++    assert len(serial_nodes) == 1
++    assert serial_nodes[0].baud == "(base_rate * 2)"
++
++    write_nodes = [node for node in prog.setup_body if isinstance(node, SerialWrite)]
++    assert len(write_nodes) == 1
++    assert write_nodes[0].value == "base_rate"
++
++
+ def test_parser_allows_led_pin_from_list_index(src):
+     code = src("""
+         from Reduino.Actuators import Led
+diff --git a/tests/test_utils.py b/tests/test_utils.py
+new file mode 100644
+index 0000000..5ff63bd
+--- /dev/null
++++ b/tests/test_utils.py
+@@ -0,0 +1,26 @@
++import pytest
++
++from Reduino.Utils import SerialMonitor
++
++
++def test_serial_monitor_buffers_and_reads(capfd):
++    monitor = SerialMonitor(baud_rate=9600)
++    monitor.write("hello")
++    monitor.write("world")
++
++    first = monitor.read()
++    out = capfd.readouterr().out
++    assert first == "hello"
++    assert "hello\n" in out
++
++    second = monitor.read()
++    out = capfd.readouterr().out
++    assert second == "world"
++    assert "world\n" in out
++
++    assert monitor.read() == ""
++
++
++def test_serial_monitor_requires_positive_baud():
++    with pytest.raises(ValueError):
++        SerialMonitor(0)
+
+From 8b117d4e257798b83d057184e090137044c70e2a Mon Sep 17 00:00:00 2001
+From: Arnav Bajaj <49639514+Jackhammer9@users.noreply.github.com>
+Date: Tue, 28 Oct 2025 20:11:00 +0100
+Subject: [PATCH 2/2] Connect SerialMonitor to physical serial ports
+
+---
+ pyproject.toml                |  1 +
+ requirements.txt              |  1 +
+ src/Reduino/Utils/__init__.py | 72 ++++++++++++++++++++++++++---------
+ tests/test_utils.py           | 54 ++++++++++++++++++++------
+ 4 files changed, 98 insertions(+), 30 deletions(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index a9696de..8afd410 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -22,6 +22,7 @@ classifiers = [
+ ]
+ 
+ dependencies = [
++  "pyserial",
+   "pytest"
+ ]
+ 
+diff --git a/requirements.txt b/requirements.txt
+index f4e0343..69f46e9 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1,2 +1,3 @@
+ platformio
++pyserial
+ pytest
+\ No newline at end of file
+diff --git a/src/Reduino/Utils/__init__.py b/src/Reduino/Utils/__init__.py
+index acf9f16..4095dd6 100644
+--- a/src/Reduino/Utils/__init__.py
++++ b/src/Reduino/Utils/__init__.py
+@@ -2,8 +2,12 @@
+ 
+ from __future__ import annotations
+ 
+-from collections import deque
+-from typing import Deque, Optional
++from typing import Optional
++
++try:
++    import serial  # type: ignore[import]
++except ModuleNotFoundError:  # pragma: no cover - exercised in real environments
++    serial = None  # type: ignore[assignment]
+ 
+ 
+ class SerialMonitor:
+@@ -14,17 +18,21 @@ def __init__(
+         baud_rate: int = 9600,
+         *,
+         port: Optional[str] = None,
++        timeout: float = 1.0,
+         newline: str = "\n",
+     ) -> None:
+-        """Initialise a virtual serial monitor configuration.
++        """Initialise a serial monitor configuration bound to an MCU port.
+ 
+         Parameters
+         ----------
+         baud_rate:
+-            Baud rate that will be passed to ``Serial.begin`` when transpiled.
++            Baud rate that will be passed to ``Serial.begin`` when transpiled
++            and used when establishing a host serial connection.
+         port:
+             Optional identifier of the serial port used on the host machine.
+-            The value is stored for diagnostic purposes only.
++            If supplied the monitor immediately connects to it.
++        timeout:
++            Read timeout (in seconds) applied to the host serial connection.
+         newline:
+             Delimiter appended to messages written via :meth:`write`. The
+             default mirrors :func:`Serial.println` on Arduino boards.
+@@ -35,28 +43,56 @@ def __init__(
+ 
+         self.baud_rate = int(baud_rate)
+         self.port = port
++        self.timeout = timeout
+         self.newline = newline
+-        self._buffer: Deque[str] = deque()
++        self._serial: Optional["serial.Serial"] = None
+ 
+-    def write(self, value: object) -> str:
+-        """Queue ``value`` for emission to the serial monitor.
++        if port is not None:
++            self.connect(port)
+ 
+-        The transpiler maps calls to this method to ``Serial.println`` in the
+-        generated sketch. During host-side execution the helper stores the
+-        string representation of ``value`` so that :meth:`read` can surface the
+-        output for inspection.
+-        """
++    def connect(self, port: str) -> None:
++        """Open a serial connection to ``port`` using the configured baud rate."""
++
++        if serial is None:
++            raise RuntimeError(
++                "pyserial is required for host-side SerialMonitor reads; install the "
++                "'pyserial' package to enable this functionality."
++            )
++
++        if self._serial is not None and self._serial.is_open:  # pragma: no cover - safety net
++            self._serial.close()
++
++        self.port = port
++        self._serial = serial.Serial(port=port, baudrate=self.baud_rate, timeout=self.timeout)
++
++    def close(self) -> None:
++        """Terminate the current serial connection if one exists."""
++
++        if self._serial is not None and self._serial.is_open:
++            self._serial.close()
++
++        self._serial = None
++
++    def write(self, value: object) -> str:
++        """Send ``value`` to the connected MCU via the serial monitor."""
+ 
+         text = f"{value}"
+-        self._buffer.append(text)
++        if self._serial is not None and self._serial.is_open:
++            payload = (text + self.newline).encode("utf-8")
++            self._serial.write(payload)
+         return text
+ 
+     def read(self) -> str:
+-        """Return the next buffered message and echo it to stdout."""
++        """Read the next message from the MCU and echo it to stdout."""
++
++        if self._serial is None:
++            raise RuntimeError("No serial port configured. Call connect() with a valid port first.")
+ 
+-        if not self._buffer:
++        raw = self._serial.readline()
++        if not raw:
+             return ""
+ 
+-        message = self._buffer.popleft()
+-        print(message + self.newline, end="")
++        message = raw.decode("utf-8", errors="replace").rstrip("\r\n")
++        if message:
++            print(message + self.newline, end="")
+         return message
+diff --git a/tests/test_utils.py b/tests/test_utils.py
+index 5ff63bd..ec17713 100644
+--- a/tests/test_utils.py
++++ b/tests/test_utils.py
+@@ -1,22 +1,44 @@
++from types import SimpleNamespace
++
+ import pytest
+ 
+ from Reduino.Utils import SerialMonitor
+ 
+ 
+-def test_serial_monitor_buffers_and_reads(capfd):
+-    monitor = SerialMonitor(baud_rate=9600)
+-    monitor.write("hello")
+-    monitor.write("world")
++def test_serial_monitor_reads_from_serial_port(monkeypatch, capfd):
++    lines = [b"hello world\r\n", b"", b"ignored"]
++    writes = []
++
++    class FakeSerial:
++        def __init__(self, *, port: str, baudrate: int, timeout: float):
++            self.port = port
++            self.baudrate = baudrate
++            self.timeout = timeout
++            self.is_open = True
++
++        def write(self, payload: bytes) -> int:
++            writes.append(payload)
++            return len(payload)
++
++        def readline(self) -> bytes:
++            return lines.pop(0) if lines else b""
++
++        def close(self) -> None:
++            self.is_open = False
+ 
+-    first = monitor.read()
+-    out = capfd.readouterr().out
+-    assert first == "hello"
+-    assert "hello\n" in out
++    fake_serial = SimpleNamespace(Serial=FakeSerial)
++    monkeypatch.setattr("Reduino.Utils.serial", fake_serial)
+ 
+-    second = monitor.read()
+-    out = capfd.readouterr().out
+-    assert second == "world"
+-    assert "world\n" in out
++    monitor = SerialMonitor(baud_rate=115200, port="/dev/ttyUSB0", timeout=0.5)
++    assert monitor.baud_rate == 115200
++    assert monitor.port == "/dev/ttyUSB0"
++
++    monitor.write("ping")
++    assert writes == [b"ping\n"]
++
++    message = monitor.read()
++    assert message == "hello world"
++    assert capfd.readouterr().out == "hello world\n"
+ 
+     assert monitor.read() == ""
+ 
+@@ -24,3 +46,11 @@ def test_serial_monitor_buffers_and_reads(capfd):
+ def test_serial_monitor_requires_positive_baud():
+     with pytest.raises(ValueError):
+         SerialMonitor(0)
++
++
++def test_serial_monitor_requires_connection_before_read(monkeypatch):
++    monkeypatch.setattr("Reduino.Utils.serial", None)
++    monitor = SerialMonitor()
++
++    with pytest.raises(RuntimeError, match="No serial port configured"):
++        monitor.read()

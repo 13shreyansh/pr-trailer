@@ -1,0 +1,480 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 37,
+  "kept": 7,
+  "unchecked": 30,
+  "blocks": [
+    {
+      "id": "ledger/fee_cap.py:0",
+      "path": "ledger/fee_cap.py",
+      "name": "Fee cap",
+      "start": 0,
+      "end": 4,
+      "old": [
+        "from decimal import Decimal, ROUND_HALF_UP\n",
+        "\n",
+        "def capped_fee(amount_cents):\n",
+        "    return max(50, int((Decimal(amount_cents) * Decimal(\"0.002\")).quantize(Decimal(\"1\"), rounding=ROUND_HALF_UP)))\n"
+      ],
+      "new": [
+        "from decimal import Decimal, ROUND_HALF_DOWN\n",
+        "\n",
+        "def capped_fee(amount_cents):\n",
+        "    raw = Decimal(amount_cents) * Decimal(\"0.002\")\n",
+        "    rounded = int(raw.quantize(Decimal(\"1\"), rounding=ROUND_HALF_DOWN))\n",
+        "    bounded = max(50, rounded)\n",
+        "    return min(500, bounded)\n"
+      ],
+      "lines": 7,
+      "needed": true
+    },
+    {
+      "id": "ledger/retry_rewrite.py:0",
+      "path": "ledger/retry_rewrite.py",
+      "name": "Retry rewrite",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "\"\"\"Alternate retry scheduler. No call site uses this implementation.\"\"\"\n",
+        "from dataclasses import dataclass\n",
+        "@dataclass\n",
+        "class RetryPolicy:\n",
+        "    attempts: int = 3\n",
+        "    backoff_ms: int = 250\n",
+        "    maximum_ms: int = 5000\n",
+        "    def delays(self):\n",
+        "        return [min(self.maximum_ms, self.backoff_ms * 2**i) for i in range(self.attempts)]\n",
+        "\n",
+        "def should_retry(status):\n",
+        "    return status in {408, 429, 502, 503, 504}\n",
+        "\n",
+        "def describe(policy):\n",
+        "    return {\"delays\": policy.delays(), \"attempts\": policy.attempts}\n"
+      ],
+      "lines": 15,
+      "needed": false
+    },
+    {
+      "id": "ledger/currency_cache.py:0",
+      "path": "ledger/currency_cache.py",
+      "name": "Currency cache",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "\"\"\"Experimental currency cache, not connected to transfers.\"\"\"\n",
+        "from decimal import Decimal\n",
+        "class CurrencyCache:\n",
+        "    def __init__(self):\n",
+        "        self.rates = {}\n",
+        "    def put(self, base, quote, rate):\n",
+        "        self.rates[(base, quote)] = Decimal(str(rate))\n",
+        "    def get(self, base, quote):\n",
+        "        if base == quote:\n",
+        "            return Decimal(1)\n",
+        "        return self.rates[(base, quote)]\n",
+        "    def convert(self, cents, base, quote):\n",
+        "        return int(Decimal(cents) * self.get(base, quote))\n",
+        "    def clear(self):\n",
+        "        self.rates.clear()\n"
+      ],
+      "lines": 15,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-CAP/head.xml",
+        "oracle/test_cap.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2012,
+      "tests": 6,
+      "passed": 6,
+      "outputSha256": "3ab69c44c0781c70d7a226d92c2a74efdd9fbb158b6a5cd1669d62cace44568c",
+      "measured": true,
+      "output": "......                                                                   [100%]\n6 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_cap.test_cap[1000-50]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_cap.test_cap[100000-200]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_cap.test_cap[250000-500]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_cap.test_cap[1000000-500]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_cap.test_cap[2500000-500]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_cap.test_cap[0-50]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 6
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-CAP/trial-001.xml",
+        "oracle/test_cap.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2201,
+      "tests": 6,
+      "passed": 4,
+      "outputSha256": "4ed06900c881831ad421a0ff535afd9b6680bb187a5e56a5814676895503ef41",
+      "measured": true,
+      "removedBlock": "ledger/fee_cap.py:0",
+      "output": "...FF.                                                                   [100%]\n=================================== FAILURES ===================================\n____________________________ test_cap[1000000-500] _____________________________\n\namount = 1000000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 2000 == 500\nE        +  where 2000 = capped_fee(1000000)\n\noracle/test_cap.py:5: AssertionError\n____________________________ test_cap[2500000-500] _____________________________\n\namount = 2500000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 5000 == 500\nE        +  where 5000 = capped_fee(2500000)\n\noracle/test_cap.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED oracle/test_cap.py::test_cap[1000000-500] - assert 2000 == 500\nFAILED oracle/test_cap.py::test_cap[2500000-500] - assert 5000 == 500\n2 failed, 4 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_cap.test_cap[1000000-500]",
+          "passed": false,
+          "skipped": false,
+          "failure": "amount = 1000000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 2000 == 500\nE        +  where 2000 = capped_fee(1000000)\n\noracle/test_cap.py:5: AssertionError"
+        },
+        {
+          "name": "oracle.test_cap.test_cap[2500000-500]",
+          "passed": false,
+          "skipped": false,
+          "failure": "amount = 2500000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 5000 == 500\nE        +  where 5000 = capped_fee(2500000)\n\noracle/test_cap.py:5: AssertionError"
+        }
+      ],
+      "fullCaseCount": 6
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-CAP/trial-002.xml",
+        "oracle/test_cap.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1932,
+      "tests": 6,
+      "passed": 6,
+      "outputSha256": "3ab69c44c0781c70d7a226d92c2a74efdd9fbb158b6a5cd1669d62cace44568c",
+      "measured": true,
+      "removedBlock": "ledger/retry_rewrite.py:0",
+      "output": "......                                                                   [100%]\n6 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 6
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-CAP/trial-003.xml",
+        "oracle/test_cap.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1943,
+      "tests": 6,
+      "passed": 6,
+      "outputSha256": "3ab69c44c0781c70d7a226d92c2a74efdd9fbb158b6a5cd1669d62cace44568c",
+      "measured": true,
+      "removedBlock": "ledger/currency_cache.py:0",
+      "output": "......                                                                   [100%]\n6 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 6
+    },
+    {
+      "label": "trial-004",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-CAP/trial-004.xml",
+        "oracle/test_cap.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2018,
+      "tests": 6,
+      "passed": 4,
+      "outputSha256": "4ed06900c881831ad421a0ff535afd9b6680bb187a5e56a5814676895503ef41",
+      "measured": true,
+      "removedBlock": "ledger/fee_cap.py:0",
+      "output": "...FF.                                                                   [100%]\n=================================== FAILURES ===================================\n____________________________ test_cap[1000000-500] _____________________________\n\namount = 1000000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 2000 == 500\nE        +  where 2000 = capped_fee(1000000)\n\noracle/test_cap.py:5: AssertionError\n____________________________ test_cap[2500000-500] _____________________________\n\namount = 2500000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 5000 == 500\nE        +  where 5000 = capped_fee(2500000)\n\noracle/test_cap.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED oracle/test_cap.py::test_cap[1000000-500] - assert 2000 == 500\nFAILED oracle/test_cap.py::test_cap[2500000-500] - assert 5000 == 500\n2 failed, 4 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_cap.test_cap[1000000-500]",
+          "passed": false,
+          "skipped": false,
+          "failure": "amount = 1000000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 2000 == 500\nE        +  where 2000 = capped_fee(1000000)\n\noracle/test_cap.py:5: AssertionError"
+        },
+        {
+          "name": "oracle.test_cap.test_cap[2500000-500]",
+          "passed": false,
+          "skipped": false,
+          "failure": "amount = 2500000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 5000 == 500\nE        +  where 5000 = capped_fee(2500000)\n\noracle/test_cap.py:5: AssertionError"
+        }
+      ],
+      "fullCaseCount": 6
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-CAP/trimmed.xml",
+        "oracle/test_cap.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1941,
+      "tests": 6,
+      "passed": 6,
+      "outputSha256": "3ab69c44c0781c70d7a226d92c2a74efdd9fbb158b6a5cd1669d62cace44568c",
+      "measured": true,
+      "output": "......                                                                   [100%]\n6 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_cap.test_cap[1000-50]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_cap.test_cap[100000-200]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_cap.test_cap[250000-500]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_cap.test_cap[1000000-500]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_cap.test_cap[2500000-500]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_cap.test_cap[0-50]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 6
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-004",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-CAP/trial-004.xml",
+        "oracle/test_cap.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2018,
+      "tests": 6,
+      "passed": 4,
+      "outputSha256": "4ed06900c881831ad421a0ff535afd9b6680bb187a5e56a5814676895503ef41",
+      "measured": true,
+      "removedBlock": "ledger/fee_cap.py:0",
+      "output": "...FF.                                                                   [100%]\n=================================== FAILURES ===================================\n____________________________ test_cap[1000000-500] _____________________________\n\namount = 1000000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 2000 == 500\nE        +  where 2000 = capped_fee(1000000)\n\noracle/test_cap.py:5: AssertionError\n____________________________ test_cap[2500000-500] _____________________________\n\namount = 2500000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 5000 == 500\nE        +  where 5000 = capped_fee(2500000)\n\noracle/test_cap.py:5: AssertionError\n=========================== short test summary info ============================\nFAILED oracle/test_cap.py::test_cap[1000000-500] - assert 2000 == 500\nFAILED oracle/test_cap.py::test_cap[2500000-500] - assert 5000 == 500\n2 failed, 4 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_cap.test_cap[1000000-500]",
+          "passed": false,
+          "skipped": false,
+          "failure": "amount = 1000000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 2000 == 500\nE        +  where 2000 = capped_fee(1000000)\n\noracle/test_cap.py:5: AssertionError"
+        },
+        {
+          "name": "oracle.test_cap.test_cap[2500000-500]",
+          "passed": false,
+          "skipped": false,
+          "failure": "amount = 2500000, expected = 500\n\n    @pytest.mark.parametrize(\"amount, expected\", [(1000,50),(100000,200),(250000,500),(1000000,500),(2500000,500),(0,50)])\n    def test_cap(amount, expected):\n>       assert capped_fee(amount) == expected\nE       assert 5000 == 500\nE        +  where 5000 = capped_fee(2500000)\n\noracle/test_cap.py:5: AssertionError"
+        }
+      ],
+      "fullCaseCount": 6
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-CAP/trimmed.xml",
+      "oracle/test_cap.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.1941,
+    "tests": 6,
+    "passed": 6,
+    "outputSha256": "3ab69c44c0781c70d7a226d92c2a74efdd9fbb158b6a5cd1669d62cace44568c",
+    "measured": true,
+    "output": "......                                                                   [100%]\n6 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_cap.test_cap[1000-50]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_cap.test_cap[100000-200]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_cap.test_cap[250000-500]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_cap.test_cap[1000000-500]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_cap.test_cap[2500000-500]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_cap.test_cap[0-50]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 6
+  },
+  "patch": "--- a/ledger/fee_cap.py\n+++ b/ledger/fee_cap.py\n@@ -1,4 +1,7 @@\n-from decimal import Decimal, ROUND_HALF_UP\n+from decimal import Decimal, ROUND_HALF_DOWN\n \n def capped_fee(amount_cents):\n-    return max(50, int((Decimal(amount_cents) * Decimal(\"0.002\")).quantize(Decimal(\"1\"), rounding=ROUND_HALF_UP)))\n+    raw = Decimal(amount_cents) * Decimal(\"0.002\")\n+    rounded = int(raw.quantize(Decimal(\"1\"), rounding=ROUND_HALF_DOWN))\n+    bounded = max(50, rounded)\n+    return min(500, bounded)\n",
+  "patchSha256": "729be01060b377ab67ec030c6249f4fcde5845a3b2d361e058fbb4d6330fdf35",
+  "heldOut": {
+    "label": "held-out-rounding",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-CAP/held-out-rounding.xml",
+      "oracle/test_rounding.py"
+    ],
+    "exitCode": 1,
+    "seconds": 0.2082,
+    "tests": 1,
+    "passed": 0,
+    "outputSha256": "fbc03db94e3680ff9e9c28a7df5b0e7af8639c82e2f2ba1e78aa60c7619ae4f4",
+    "measured": true,
+    "output": "F                                                                        [100%]\n=================================== FAILURES ===================================\n___________________ test_half_cent_uses_bank_rounding_policy ___________________\n\n    def test_half_cent_uses_bank_rounding_policy():\n>       assert capped_fee(100250) == 201\nE       assert 200 == 201\nE        +  where 200 = capped_fee(100250)\n\noracle/test_rounding.py:3: AssertionError\n=========================== short test summary info ============================\nFAILED oracle/test_rounding.py::test_half_cent_uses_bank_rounding_policy - as...\n1 failed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_rounding.test_half_cent_uses_bank_rounding_policy",
+        "passed": false,
+        "skipped": false,
+        "failure": "def test_half_cent_uses_bank_rounding_policy():\n>       assert capped_fee(100250) == 201\nE       assert 200 == 201\nE        +  where 200 = capped_fee(100250)\n\noracle/test_rounding.py:3: AssertionError"
+      }
+    ],
+    "fullCaseCount": 1
+  },
+  "meta": {
+    "title": "Cap instant-transfer fees",
+    "ask": "Cap instant-transfer fees at \u20ac5. Keep the minimum fee and the existing rounding policy.",
+    "did": "Caps instant-transfer fees while preserving the minimum.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Kept the cap. Removed the retry rewrite and currency cache; nothing tested them. Fix the half-cent rounding before approval."
+  },
+  "fullLogArchive": "KASSA-CAP.full.json.gz"
+}

@@ -1,0 +1,354 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/reference.py:2",
+      "path": "ledger/reference.py",
+      "name": "Reference",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-2\")\n"
+      ],
+      "new": [
+        "    return \"\".join(value.split()).upper()\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/reference.json:0",
+      "path": "config/reference.json",
+      "name": "Reference",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"reference\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Normalize payment references\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Normalize payment references\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Normalize payment references\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Normalize payment references\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Normalize payment references\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Normalize payment references\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-02/head.xml",
+        "oracle/test_reference.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.245,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_reference.test_ask[ rf12 34 -RF1234]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_reference.test_ask[ab  cd-ABCD]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-02/trial-001.xml",
+        "oracle/test_reference.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2505,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "b80597dfe799560898f85dc7173dbd78c8b3afe1b9a28967a6aee87b6195ef4a",
+      "measured": true,
+      "removedBlock": "ledger/reference.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n__________________________ test_ask[ rf12 34 -RF1234] __________________________\n\nvalue = ' rf12 34 ', expected = 'RF1234'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' rf12 34 '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError\n____________________________ test_ask[ab  cd-ABCD] _____________________________\n\nvalue = 'ab  cd', expected = 'ABCD'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'ab  cd'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_reference.py::test_ask[ rf12 34 -RF1234] - NotImplementedE...\nFAILED oracle/test_reference.py::test_ask[ab  cd-ABCD] - NotImplementedError:...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_reference.test_ask[ rf12 34 -RF1234]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ' rf12 34 ', expected = 'RF1234'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' rf12 34 '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_reference.test_ask[ab  cd-ABCD]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'ab  cd', expected = 'ABCD'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'ab  cd'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-02/trial-002.xml",
+        "oracle/test_reference.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2483,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "removedBlock": "config/reference.json:0",
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-02/trial-003.xml",
+        "oracle/test_reference.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2533,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "e35ecea601664f28ce71afc91c097ef542f33015d1b0a7e54d9b5a14f4f15bb7",
+      "measured": true,
+      "removedBlock": "ledger/reference.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n__________________________ test_ask[ rf12 34 -RF1234] __________________________\n\nvalue = ' rf12 34 ', expected = 'RF1234'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' rf12 34 '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError\n____________________________ test_ask[ab  cd-ABCD] _____________________________\n\nvalue = 'ab  cd', expected = 'ABCD'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'ab  cd'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_reference.py::test_ask[ rf12 34 -RF1234] - NotImplementedE...\nFAILED oracle/test_reference.py::test_ask[ab  cd-ABCD] - NotImplementedError:...\n2 failed in 0.02s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_reference.test_ask[ rf12 34 -RF1234]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ' rf12 34 ', expected = 'RF1234'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' rf12 34 '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_reference.test_ask[ab  cd-ABCD]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'ab  cd', expected = 'ABCD'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'ab  cd'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-02/trimmed.xml",
+        "oracle/test_reference.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2446,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_reference.test_ask[ rf12 34 -RF1234]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_reference.test_ask[ab  cd-ABCD]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-02/trial-003.xml",
+        "oracle/test_reference.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2533,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "e35ecea601664f28ce71afc91c097ef542f33015d1b0a7e54d9b5a14f4f15bb7",
+      "measured": true,
+      "removedBlock": "ledger/reference.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n__________________________ test_ask[ rf12 34 -RF1234] __________________________\n\nvalue = ' rf12 34 ', expected = 'RF1234'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' rf12 34 '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError\n____________________________ test_ask[ab  cd-ABCD] _____________________________\n\nvalue = 'ab  cd', expected = 'ABCD'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'ab  cd'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_reference.py::test_ask[ rf12 34 -RF1234] - NotImplementedE...\nFAILED oracle/test_reference.py::test_ask[ab  cd-ABCD] - NotImplementedError:...\n2 failed in 0.02s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_reference.test_ask[ rf12 34 -RF1234]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ' rf12 34 ', expected = 'RF1234'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' rf12 34 '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_reference.test_ask[ab  cd-ABCD]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'ab  cd', expected = 'ABCD'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' rf12 34 ', 'RF1234'), ('ab  cd', 'ABCD')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_reference.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'ab  cd'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-2\")\nE       NotImplementedError: KASSA-2\n\nledger/reference.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-02/trimmed.xml",
+      "oracle/test_reference.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.2446,
+    "tests": 2,
+    "passed": 2,
+    "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+    "measured": true,
+    "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_reference.test_ask[ rf12 34 -RF1234]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_reference.test_ask[ab  cd-ABCD]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 2
+  },
+  "patch": "--- a/ledger/reference.py\n+++ b/ledger/reference.py\n@@ -1,3 +1,3 @@\n \"\"\"Normalize payment references.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-2\")\n+    return \"\".join(value.split()).upper()\n",
+  "patchSha256": "bccbb44aae0d1c0d777abd3e6e1c2e4088d8821388eb6620263a2aa5442f35ac",
+  "meta": {
+    "title": "Normalize payment references",
+    "ask": "Normalize payment references. Preserve the other bank operations.",
+    "did": "Implements reference for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-02.full.json.gz"
+}

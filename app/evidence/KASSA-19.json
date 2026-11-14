@@ -1,0 +1,354 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/branch_search.py:2",
+      "path": "ledger/branch_search.py",
+      "name": "Branch search",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-19\")\n"
+      ],
+      "new": [
+        "    return \" \".join(value.casefold().split())\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/branch_search.json:0",
+      "path": "config/branch_search.json",
+      "name": "Branch search",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"branch_search\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Make branch search case insensitive\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Make branch search case insensitive\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Make branch search case insensitive\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Make branch search case insensitive\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Make branch search case insensitive\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Make branch search case insensitive\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-19/head.xml",
+        "oracle/test_branch_search.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.194,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_branch_search.test_ask[  HELSINKI  Centre -helsinki centre]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_branch_search.test_ask[\\xc5BO-\\xe5bo]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-19/trial-001.xml",
+        "oracle/test_branch_search.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.207,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "2bfe3441eaff6d06beb96ed95bcaa8a8aa483fe9391fdbd7f6b145bd0813a5ae",
+      "measured": true,
+      "removedBlock": "ledger/branch_search.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n________________ test_ask[  HELSINKI  Centre -helsinki centre] _________________\n\nvalue = '  HELSINKI  Centre ', expected = 'helsinki centre'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  HELSINKI  Centre '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError\n___________________________ test_ask[\\xc5BO-\\xe5bo] ____________________________\n\nvalue = '\u00c5BO', expected = '\u00e5bo'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '\u00c5BO'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_branch_search.py::test_ask[  HELSINKI  Centre -helsinki centre]\nFAILED oracle/test_branch_search.py::test_ask[\\xc5BO-\\xe5bo] - NotImplemented...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_branch_search.test_ask[  HELSINKI  Centre -helsinki centre]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '  HELSINKI  Centre ', expected = 'helsinki centre'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  HELSINKI  Centre '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_branch_search.test_ask[\\xc5BO-\\xe5bo]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '\u00c5BO', expected = '\u00e5bo'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '\u00c5BO'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-19/trial-002.xml",
+        "oracle/test_branch_search.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1955,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "removedBlock": "config/branch_search.json:0",
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-19/trial-003.xml",
+        "oracle/test_branch_search.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2018,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "2bfe3441eaff6d06beb96ed95bcaa8a8aa483fe9391fdbd7f6b145bd0813a5ae",
+      "measured": true,
+      "removedBlock": "ledger/branch_search.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n________________ test_ask[  HELSINKI  Centre -helsinki centre] _________________\n\nvalue = '  HELSINKI  Centre ', expected = 'helsinki centre'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  HELSINKI  Centre '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError\n___________________________ test_ask[\\xc5BO-\\xe5bo] ____________________________\n\nvalue = '\u00c5BO', expected = '\u00e5bo'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '\u00c5BO'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_branch_search.py::test_ask[  HELSINKI  Centre -helsinki centre]\nFAILED oracle/test_branch_search.py::test_ask[\\xc5BO-\\xe5bo] - NotImplemented...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_branch_search.test_ask[  HELSINKI  Centre -helsinki centre]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '  HELSINKI  Centre ', expected = 'helsinki centre'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  HELSINKI  Centre '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_branch_search.test_ask[\\xc5BO-\\xe5bo]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '\u00c5BO', expected = '\u00e5bo'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '\u00c5BO'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-19/trimmed.xml",
+        "oracle/test_branch_search.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1935,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_branch_search.test_ask[  HELSINKI  Centre -helsinki centre]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_branch_search.test_ask[\\xc5BO-\\xe5bo]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-19/trial-003.xml",
+        "oracle/test_branch_search.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2018,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "2bfe3441eaff6d06beb96ed95bcaa8a8aa483fe9391fdbd7f6b145bd0813a5ae",
+      "measured": true,
+      "removedBlock": "ledger/branch_search.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n________________ test_ask[  HELSINKI  Centre -helsinki centre] _________________\n\nvalue = '  HELSINKI  Centre ', expected = 'helsinki centre'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  HELSINKI  Centre '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError\n___________________________ test_ask[\\xc5BO-\\xe5bo] ____________________________\n\nvalue = '\u00c5BO', expected = '\u00e5bo'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '\u00c5BO'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_branch_search.py::test_ask[  HELSINKI  Centre -helsinki centre]\nFAILED oracle/test_branch_search.py::test_ask[\\xc5BO-\\xe5bo] - NotImplemented...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_branch_search.test_ask[  HELSINKI  Centre -helsinki centre]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '  HELSINKI  Centre ', expected = 'helsinki centre'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '  HELSINKI  Centre '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_branch_search.test_ask[\\xc5BO-\\xe5bo]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '\u00c5BO', expected = '\u00e5bo'\n\n    @pytest.mark.parametrize(\"value, expected\", [('  HELSINKI  Centre ', 'helsinki centre'), ('\u00c5BO', '\u00e5bo')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_branch_search.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '\u00c5BO'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-19\")\nE       NotImplementedError: KASSA-19\n\nledger/branch_search.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-19/trimmed.xml",
+      "oracle/test_branch_search.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.1935,
+    "tests": 2,
+    "passed": 2,
+    "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+    "measured": true,
+    "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_branch_search.test_ask[  HELSINKI  Centre -helsinki centre]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_branch_search.test_ask[\\xc5BO-\\xe5bo]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 2
+  },
+  "patch": "--- a/ledger/branch_search.py\n+++ b/ledger/branch_search.py\n@@ -1,3 +1,3 @@\n \"\"\"Make branch search case insensitive.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-19\")\n+    return \" \".join(value.casefold().split())\n",
+  "patchSha256": "594415ed5b767c203aec1743ddcc79fb69ad239f21c178df947ac0389117e2c9",
+  "meta": {
+    "title": "Make branch search case insensitive",
+    "ask": "Make branch search case insensitive. Preserve the other bank operations.",
+    "did": "Implements branch search for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-19.full.json.gz"
+}

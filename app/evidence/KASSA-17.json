@@ -1,0 +1,390 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/weekday.py:2",
+      "path": "ledger/weekday.py",
+      "name": "Weekday",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-17\")\n"
+      ],
+      "new": [
+        "    return (\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sunday\")[value % 7]\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/weekday.json:0",
+      "path": "config/weekday.json",
+      "name": "Weekday",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"weekday\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Name settlement weekdays\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Name settlement weekdays\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Name settlement weekdays\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Name settlement weekdays\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Name settlement weekdays\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Name settlement weekdays\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-17/head.xml",
+        "oracle/test_weekday.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.204,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_weekday.test_ask[0-Monday]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_weekday.test_ask[6-Sunday]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_weekday.test_ask[8-Tuesday]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-17/trial-001.xml",
+        "oracle/test_weekday.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2133,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "6d4ee664df48f9a359b6c0daba7dddc7e2125b5a0e158d10cb3dffb02dd3a028",
+      "measured": true,
+      "removedBlock": "ledger/weekday.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n______________________________ test_ask[0-Monday] ______________________________\n\nvalue = 0, expected = 'Monday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError\n______________________________ test_ask[6-Sunday] ______________________________\n\nvalue = 6, expected = 'Sunday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 6\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError\n_____________________________ test_ask[8-Tuesday] ______________________________\n\nvalue = 8, expected = 'Tuesday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 8\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError\n=========================== short test summary info ======================",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_weekday.test_ask[0-Monday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 0, expected = 'Monday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_weekday.test_ask[6-Sunday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 6, expected = 'Sunday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 6\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_weekday.test_ask[8-Tuesday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 8, expected = 'Tuesday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 8\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-17/trial-002.xml",
+        "oracle/test_weekday.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1953,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "removedBlock": "config/weekday.json:0",
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-17/trial-003.xml",
+        "oracle/test_weekday.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2025,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "6d4ee664df48f9a359b6c0daba7dddc7e2125b5a0e158d10cb3dffb02dd3a028",
+      "measured": true,
+      "removedBlock": "ledger/weekday.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n______________________________ test_ask[0-Monday] ______________________________\n\nvalue = 0, expected = 'Monday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError\n______________________________ test_ask[6-Sunday] ______________________________\n\nvalue = 6, expected = 'Sunday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 6\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError\n_____________________________ test_ask[8-Tuesday] ______________________________\n\nvalue = 8, expected = 'Tuesday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 8\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError\n=========================== short test summary info ======================",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_weekday.test_ask[0-Monday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 0, expected = 'Monday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_weekday.test_ask[6-Sunday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 6, expected = 'Sunday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 6\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_weekday.test_ask[8-Tuesday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 8, expected = 'Tuesday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 8\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-17/trimmed.xml",
+        "oracle/test_weekday.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2201,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_weekday.test_ask[0-Monday]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_weekday.test_ask[6-Sunday]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_weekday.test_ask[8-Tuesday]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-17/trial-003.xml",
+        "oracle/test_weekday.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2025,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "6d4ee664df48f9a359b6c0daba7dddc7e2125b5a0e158d10cb3dffb02dd3a028",
+      "measured": true,
+      "removedBlock": "ledger/weekday.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n______________________________ test_ask[0-Monday] ______________________________\n\nvalue = 0, expected = 'Monday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError\n______________________________ test_ask[6-Sunday] ______________________________\n\nvalue = 6, expected = 'Sunday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 6\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError\n_____________________________ test_ask[8-Tuesday] ______________________________\n\nvalue = 8, expected = 'Tuesday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 8\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError\n=========================== short test summary info ======================",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_weekday.test_ask[0-Monday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 0, expected = 'Monday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_weekday.test_ask[6-Sunday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 6, expected = 'Sunday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 6\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_weekday.test_ask[8-Tuesday]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 8, expected = 'Tuesday'\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 'Monday'), (6, 'Sunday'), (8, 'Tuesday')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_weekday.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 8\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-17\")\nE       NotImplementedError: KASSA-17\n\nledger/weekday.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-17/trimmed.xml",
+      "oracle/test_weekday.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.2201,
+    "tests": 3,
+    "passed": 3,
+    "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+    "measured": true,
+    "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_weekday.test_ask[0-Monday]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_weekday.test_ask[6-Sunday]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_weekday.test_ask[8-Tuesday]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 3
+  },
+  "patch": "--- a/ledger/weekday.py\n+++ b/ledger/weekday.py\n@@ -1,3 +1,3 @@\n \"\"\"Name settlement weekdays.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-17\")\n+    return (\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sunday\")[value % 7]\n",
+  "patchSha256": "766fabb4d7ce774369e1cc176bc99e6f673e8a47eb1ca8cfacb71120372ae687",
+  "meta": {
+    "title": "Name settlement weekdays",
+    "ask": "Name settlement weekdays. Preserve the other bank operations.",
+    "did": "Implements weekday for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-17.full.json.gz"
+}

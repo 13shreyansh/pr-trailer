@@ -1,0 +1,354 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/statement_day.py:2",
+      "path": "ledger/statement_day.py",
+      "name": "Statement day",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-4\")\n"
+      ],
+      "new": [
+        "    return \".\".join(reversed(value.split(\"-\")))\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/statement_day.json:0",
+      "path": "config/statement_day.json",
+      "name": "Statement day",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"statement_day\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Format Finnish statement dates\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Format Finnish statement dates\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Format Finnish statement dates\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Format Finnish statement dates\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Format Finnish statement dates\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Format Finnish statement dates\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-04/head.xml",
+        "oracle/test_statement_day.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2132,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_statement_day.test_ask[2026-11-16-16.11.2026]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_statement_day.test_ask[2026-01-02-02.01.2026]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-04/trial-001.xml",
+        "oracle/test_statement_day.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2172,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "c4fd328fafc2c6023222cde7f546a382a520fceb4b4aa33766cc82cf6834cfcb",
+      "measured": true,
+      "removedBlock": "ledger/statement_day.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________ test_ask[2026-11-16-16.11.2026] ________________________\n\nvalue = '2026-11-16', expected = '16.11.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11-16'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError\n_______________________ test_ask[2026-01-02-02.01.2026] ________________________\n\nvalue = '2026-01-02', expected = '02.01.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01-02'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_statement_day.py::test_ask[2026-11-16-16.11.2026] - NotImp...\nFAILED oracle/test_statement_day.py::test_ask[2026-01-02-02.01.2026] - NotImp...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_statement_day.test_ask[2026-11-16-16.11.2026]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-11-16', expected = '16.11.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11-16'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_statement_day.test_ask[2026-01-02-02.01.2026]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-01-02', expected = '02.01.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01-02'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-04/trial-002.xml",
+        "oracle/test_statement_day.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2097,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "removedBlock": "config/statement_day.json:0",
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-04/trial-003.xml",
+        "oracle/test_statement_day.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2173,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "c4fd328fafc2c6023222cde7f546a382a520fceb4b4aa33766cc82cf6834cfcb",
+      "measured": true,
+      "removedBlock": "ledger/statement_day.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________ test_ask[2026-11-16-16.11.2026] ________________________\n\nvalue = '2026-11-16', expected = '16.11.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11-16'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError\n_______________________ test_ask[2026-01-02-02.01.2026] ________________________\n\nvalue = '2026-01-02', expected = '02.01.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01-02'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_statement_day.py::test_ask[2026-11-16-16.11.2026] - NotImp...\nFAILED oracle/test_statement_day.py::test_ask[2026-01-02-02.01.2026] - NotImp...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_statement_day.test_ask[2026-11-16-16.11.2026]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-11-16', expected = '16.11.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11-16'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_statement_day.test_ask[2026-01-02-02.01.2026]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-01-02', expected = '02.01.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01-02'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-04/trimmed.xml",
+        "oracle/test_statement_day.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2191,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_statement_day.test_ask[2026-11-16-16.11.2026]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_statement_day.test_ask[2026-01-02-02.01.2026]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-04/trial-003.xml",
+        "oracle/test_statement_day.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2173,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "c4fd328fafc2c6023222cde7f546a382a520fceb4b4aa33766cc82cf6834cfcb",
+      "measured": true,
+      "removedBlock": "ledger/statement_day.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________ test_ask[2026-11-16-16.11.2026] ________________________\n\nvalue = '2026-11-16', expected = '16.11.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11-16'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError\n_______________________ test_ask[2026-01-02-02.01.2026] ________________________\n\nvalue = '2026-01-02', expected = '02.01.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01-02'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_statement_day.py::test_ask[2026-11-16-16.11.2026] - NotImp...\nFAILED oracle/test_statement_day.py::test_ask[2026-01-02-02.01.2026] - NotImp...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_statement_day.test_ask[2026-11-16-16.11.2026]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-11-16', expected = '16.11.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11-16'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_statement_day.test_ask[2026-01-02-02.01.2026]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-01-02', expected = '02.01.2026'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11-16', '16.11.2026'), ('2026-01-02', '02.01.2026')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_statement_day.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01-02'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-4\")\nE       NotImplementedError: KASSA-4\n\nledger/statement_day.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-04/trimmed.xml",
+      "oracle/test_statement_day.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.2191,
+    "tests": 2,
+    "passed": 2,
+    "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+    "measured": true,
+    "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_statement_day.test_ask[2026-11-16-16.11.2026]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_statement_day.test_ask[2026-01-02-02.01.2026]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 2
+  },
+  "patch": "--- a/ledger/statement_day.py\n+++ b/ledger/statement_day.py\n@@ -1,3 +1,3 @@\n \"\"\"Format Finnish statement dates.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-4\")\n+    return \".\".join(reversed(value.split(\"-\")))\n",
+  "patchSha256": "fdd1ded90128f2cf8d3f2fd2fadf220dbb76e00c6d213d92894dc2fa3b29dfea",
+  "meta": {
+    "title": "Format Finnish statement dates",
+    "ask": "Format Finnish statement dates. Preserve the other bank operations.",
+    "did": "Implements statement day for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-04.full.json.gz"
+}

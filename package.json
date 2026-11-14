@@ -1,0 +1,1 @@
+{"name":"tieto-measure","private":true,"scripts":{"test":"node scripts/test_review.js && node scripts/test_dom.js"},"devDependencies":{"jsdom":"27.0.0"}}

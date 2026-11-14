@@ -2,3 +2,15 @@ out/
 __pycache__/
 *.pyc
 site/data/
+.venv/
+evidence/work/
+evidence/source/*/base/
+evidence/source/*/head/
+node_modules/
+.codex-job*.log
+.vercel/
+.venv312/
+.tools/
+evidence/source/kassa/base/
+evidence/source/kassa/head-*/
+evidence/runs/

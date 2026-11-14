@@ -1,0 +1,390 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/page_size.py:2",
+      "path": "ledger/page_size.py",
+      "name": "Page size",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-7\")\n"
+      ],
+      "new": [
+        "    return min(100, max(1, int(value)))\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/page_size.json:0",
+      "path": "config/page_size.json",
+      "name": "Page size",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"page_size\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Bound statement page size\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Bound statement page size\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Bound statement page size\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Bound statement page size\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Bound statement page size\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Bound statement page size\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-07/head.xml",
+        "oracle/test_page_size.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2024,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_page_size.test_ask[0-1]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_page_size.test_ask[200-100]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_page_size.test_ask[20-20]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-07/trial-001.xml",
+        "oracle/test_page_size.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2113,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "c5e20ab98174b685b7c44352c238c75433f000e24190cbb507191c7eb0a66387",
+      "measured": true,
+      "removedBlock": "ledger/page_size.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n________________________________ test_ask[0-1] _________________________________\n\nvalue = 0, expected = 1\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError\n______________________________ test_ask[200-100] _______________________________\n\nvalue = 200, expected = 100\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 200\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError\n_______________________________ test_ask[20-20] ________________________________\n\nvalue = '20', expected = 20\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '20'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_page_size.py::test_",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_page_size.test_ask[0-1]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 0, expected = 1\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_page_size.test_ask[200-100]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 200, expected = 100\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 200\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_page_size.test_ask[20-20]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '20', expected = 20\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '20'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-07/trial-002.xml",
+        "oracle/test_page_size.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2074,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "removedBlock": "config/page_size.json:0",
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-07/trial-003.xml",
+        "oracle/test_page_size.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2128,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "c5e20ab98174b685b7c44352c238c75433f000e24190cbb507191c7eb0a66387",
+      "measured": true,
+      "removedBlock": "ledger/page_size.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n________________________________ test_ask[0-1] _________________________________\n\nvalue = 0, expected = 1\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError\n______________________________ test_ask[200-100] _______________________________\n\nvalue = 200, expected = 100\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 200\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError\n_______________________________ test_ask[20-20] ________________________________\n\nvalue = '20', expected = 20\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '20'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_page_size.py::test_",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_page_size.test_ask[0-1]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 0, expected = 1\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_page_size.test_ask[200-100]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 200, expected = 100\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 200\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_page_size.test_ask[20-20]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '20', expected = 20\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '20'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-07/trimmed.xml",
+        "oracle/test_page_size.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2079,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_page_size.test_ask[0-1]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_page_size.test_ask[200-100]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_page_size.test_ask[20-20]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-07/trial-003.xml",
+        "oracle/test_page_size.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2128,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "c5e20ab98174b685b7c44352c238c75433f000e24190cbb507191c7eb0a66387",
+      "measured": true,
+      "removedBlock": "ledger/page_size.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n________________________________ test_ask[0-1] _________________________________\n\nvalue = 0, expected = 1\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError\n______________________________ test_ask[200-100] _______________________________\n\nvalue = 200, expected = 100\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 200\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError\n_______________________________ test_ask[20-20] ________________________________\n\nvalue = '20', expected = 20\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '20'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_page_size.py::test_",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_page_size.test_ask[0-1]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 0, expected = 1\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 0\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_page_size.test_ask[200-100]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 200, expected = 100\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 200\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_page_size.test_ask[20-20]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '20', expected = 20\n\n    @pytest.mark.parametrize(\"value, expected\", [(0, 1), (200, 100), ('20', 20)])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_page_size.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '20'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-7\")\nE       NotImplementedError: KASSA-7\n\nledger/page_size.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-07/trimmed.xml",
+      "oracle/test_page_size.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.2079,
+    "tests": 3,
+    "passed": 3,
+    "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+    "measured": true,
+    "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_page_size.test_ask[0-1]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_page_size.test_ask[200-100]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_page_size.test_ask[20-20]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 3
+  },
+  "patch": "--- a/ledger/page_size.py\n+++ b/ledger/page_size.py\n@@ -1,3 +1,3 @@\n \"\"\"Bound statement page size.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-7\")\n+    return min(100, max(1, int(value)))\n",
+  "patchSha256": "60bddfb326cc96abd718643a9a045412ebfb3c5616d90b19215c5ebadbe2a958",
+  "meta": {
+    "title": "Bound statement page size",
+    "ask": "Bound statement page size. Preserve the other bank operations.",
+    "did": "Implements page size for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-07.full.json.gz"
+}

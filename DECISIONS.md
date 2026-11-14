@@ -1,0 +1,13 @@
+# Tieto decisions (newest last)
+- 21:06 Old UI rejected: too many sections, no flow, 290->66 too small. Supersedes the v2 per-PR format router and section pile.
+- 21:10 Home = one review inbox; one short ledger per PR; Finish / Send back trimmed.
+- 21:15 Spine = only what was asked, proven by trimming + re-running tests; two groups: needed / nothing checks it.
+- 21:18 Story: Monday 09:00 Nordic bank, ~10k lines -> ~100 need you; fee-cap PR trimmed; intern PR blocked. Intern PR is synthetic (no need to run an agent on that prompt).
+- 21:35 UI = Option B "The Measure" (DESIGN-DIRECTION.md). Inbox scale linear at 1,200 lines per full width, longer PRs wrap (stated on screen).
+- 21:35 Finish merges the trimmed PR (solid part). Hatched "nothing checks this" parts are not silently dropped: they go back to the agent as one follow-up ("add a test or a reason, or it stays out"), shown in the ledger.
+- 21:46 No scripted "Play the story" mode (supersedes that part of DESIGN-DIRECTION.md). Real product: a clean start screen with a small "Try the demo account" that opens a normal engineering inbox. Everything in the video happens by real clicks; trims shown come from real recorded test runs, and Finish / Send back trimmed really act.
+- Build: measured totals replace the illustrative story counts. Candidate line counts are actual added plus removed implementation lines; published head tests are fixed oracles and are excluded.
+- Build: removal trials produce a block-minimal passing candidate, not a mathematical proof of specification completeness. Import/collection failures count as failing checks, not behavioural proof.
+- Build: the real half-cent counterexample is 200.5 cents rounded to 200 instead of policy-required 201. The hard €5 ceiling still holds; the earlier suggested over-cap explanation was incorrect.
+- Build: Finish builds and tests a downloadable Git branch in the synthetic bank. Send back prepares a real minimal patch and a draft note. No GitHub merge, comment or message is sent.
+- Build: normal Trim all executes allowlisted source snapshots. Story mode uses the recorded fixture and makes no check API calls.

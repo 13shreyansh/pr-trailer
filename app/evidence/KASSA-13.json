@@ -1,0 +1,390 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/language.py:2",
+      "path": "ledger/language.py",
+      "name": "Language",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-13\")\n"
+      ],
+      "new": [
+        "    return value.lower().split(\"-\")[0] if value.lower().split(\"-\")[0] in (\"fi\", \"sv\", \"nb\", \"da\", \"en\") else \"en\"\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/language.json:0",
+      "path": "config/language.json",
+      "name": "Language",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"language\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Normalize customer language\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Normalize customer language\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Normalize customer language\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Normalize customer language\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Normalize customer language\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Normalize customer language\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-13/head.xml",
+        "oracle/test_language.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2035,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_language.test_ask[sv-SE-sv]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_language.test_ask[FI-fi]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_language.test_ask[fr-en]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-13/trial-001.xml",
+        "oracle/test_language.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2004,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "afbd2ed9f3952a6c0752d7632ecbf7e99f1851c73bdbcefe63cb5afd18547570",
+      "measured": true,
+      "removedBlock": "ledger/language.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n______________________________ test_ask[sv-SE-sv] ______________________________\n\nvalue = 'sv-SE', expected = 'sv'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'sv-SE'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError\n_______________________________ test_ask[FI-fi] ________________________________\n\nvalue = 'FI', expected = 'fi'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError\n_______________________________ test_ask[fr-en] ________________________________\n\nvalue = 'fr', expected = 'en'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'fr'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError\n=========================== short test summary info ========",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_language.test_ask[sv-SE-sv]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'sv-SE', expected = 'sv'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'sv-SE'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_language.test_ask[FI-fi]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'FI', expected = 'fi'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_language.test_ask[fr-en]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'fr', expected = 'en'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'fr'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-13/trial-002.xml",
+        "oracle/test_language.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1927,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "removedBlock": "config/language.json:0",
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-13/trial-003.xml",
+        "oracle/test_language.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2017,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "afbd2ed9f3952a6c0752d7632ecbf7e99f1851c73bdbcefe63cb5afd18547570",
+      "measured": true,
+      "removedBlock": "ledger/language.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n______________________________ test_ask[sv-SE-sv] ______________________________\n\nvalue = 'sv-SE', expected = 'sv'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'sv-SE'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError\n_______________________________ test_ask[FI-fi] ________________________________\n\nvalue = 'FI', expected = 'fi'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError\n_______________________________ test_ask[fr-en] ________________________________\n\nvalue = 'fr', expected = 'en'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'fr'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError\n=========================== short test summary info ========",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_language.test_ask[sv-SE-sv]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'sv-SE', expected = 'sv'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'sv-SE'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_language.test_ask[FI-fi]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'FI', expected = 'fi'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_language.test_ask[fr-en]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'fr', expected = 'en'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'fr'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-13/trimmed.xml",
+        "oracle/test_language.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1938,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_language.test_ask[sv-SE-sv]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_language.test_ask[FI-fi]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_language.test_ask[fr-en]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-13/trial-003.xml",
+        "oracle/test_language.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2017,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "afbd2ed9f3952a6c0752d7632ecbf7e99f1851c73bdbcefe63cb5afd18547570",
+      "measured": true,
+      "removedBlock": "ledger/language.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n______________________________ test_ask[sv-SE-sv] ______________________________\n\nvalue = 'sv-SE', expected = 'sv'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'sv-SE'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError\n_______________________________ test_ask[FI-fi] ________________________________\n\nvalue = 'FI', expected = 'fi'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError\n_______________________________ test_ask[fr-en] ________________________________\n\nvalue = 'fr', expected = 'en'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'fr'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError\n=========================== short test summary info ========",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_language.test_ask[sv-SE-sv]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'sv-SE', expected = 'sv'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'sv-SE'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_language.test_ask[FI-fi]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'FI', expected = 'fi'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'FI'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_language.test_ask[fr-en]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'fr', expected = 'en'\n\n    @pytest.mark.parametrize(\"value, expected\", [('sv-SE', 'sv'), ('FI', 'fi'), ('fr', 'en')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_language.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'fr'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-13\")\nE       NotImplementedError: KASSA-13\n\nledger/language.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-13/trimmed.xml",
+      "oracle/test_language.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.1938,
+    "tests": 3,
+    "passed": 3,
+    "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+    "measured": true,
+    "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_language.test_ask[sv-SE-sv]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_language.test_ask[FI-fi]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_language.test_ask[fr-en]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 3
+  },
+  "patch": "--- a/ledger/language.py\n+++ b/ledger/language.py\n@@ -1,3 +1,3 @@\n \"\"\"Normalize customer language.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-13\")\n+    return value.lower().split(\"-\")[0] if value.lower().split(\"-\")[0] in (\"fi\", \"sv\", \"nb\", \"da\", \"en\") else \"en\"\n",
+  "patchSha256": "648ef982088da683fe3f78c7b3e6302b0d9eef3c4b4a71f7d6aa3562b4639e52",
+  "meta": {
+    "title": "Normalize customer language",
+    "ask": "Normalize customer language. Preserve the other bank operations.",
+    "did": "Implements language for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-13.full.json.gz"
+}

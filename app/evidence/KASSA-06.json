@@ -1,0 +1,354 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/bic.py:2",
+      "path": "ledger/bic.py",
+      "name": "Bic",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-6\")\n"
+      ],
+      "new": [
+        "    return value.replace(\" \", \"\").upper()\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/bic.json:0",
+      "path": "config/bic.json",
+      "name": "Bic",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"bic\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Normalize BIC identifiers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Normalize BIC identifiers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Normalize BIC identifiers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Normalize BIC identifiers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Normalize BIC identifiers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Normalize BIC identifiers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-06/head.xml",
+        "oracle/test_bic.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.214,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_bic.test_ask[ ndea fi hh -NDEAFIHH]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_bic.test_ask[daba dk kk-DABADKKK]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-06/trial-001.xml",
+        "oracle/test_bic.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2123,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "412512d284ab6427bc1895aad769e8f1bd3c1a1b7111417443b4f03934a15b9d",
+      "measured": true,
+      "removedBlock": "ledger/bic.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________ test_ask[ ndea fi hh -NDEAFIHH] ________________________\n\nvalue = ' ndea fi hh ', expected = 'NDEAFIHH'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' ndea fi hh '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError\n________________________ test_ask[daba dk kk-DABADKKK] _________________________\n\nvalue = 'daba dk kk', expected = 'DABADKKK'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'daba dk kk'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_bic.py::test_ask[ ndea fi hh -NDEAFIHH] - NotImplementedEr...\nFAILED oracle/test_bic.py::test_ask[daba dk kk-DABADKKK] - NotImplementedErro...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_bic.test_ask[ ndea fi hh -NDEAFIHH]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ' ndea fi hh ', expected = 'NDEAFIHH'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' ndea fi hh '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_bic.test_ask[daba dk kk-DABADKKK]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'daba dk kk', expected = 'DABADKKK'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'daba dk kk'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-06/trial-002.xml",
+        "oracle/test_bic.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2008,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "removedBlock": "config/bic.json:0",
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-06/trial-003.xml",
+        "oracle/test_bic.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2107,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "412512d284ab6427bc1895aad769e8f1bd3c1a1b7111417443b4f03934a15b9d",
+      "measured": true,
+      "removedBlock": "ledger/bic.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________ test_ask[ ndea fi hh -NDEAFIHH] ________________________\n\nvalue = ' ndea fi hh ', expected = 'NDEAFIHH'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' ndea fi hh '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError\n________________________ test_ask[daba dk kk-DABADKKK] _________________________\n\nvalue = 'daba dk kk', expected = 'DABADKKK'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'daba dk kk'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_bic.py::test_ask[ ndea fi hh -NDEAFIHH] - NotImplementedEr...\nFAILED oracle/test_bic.py::test_ask[daba dk kk-DABADKKK] - NotImplementedErro...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_bic.test_ask[ ndea fi hh -NDEAFIHH]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ' ndea fi hh ', expected = 'NDEAFIHH'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' ndea fi hh '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_bic.test_ask[daba dk kk-DABADKKK]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'daba dk kk', expected = 'DABADKKK'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'daba dk kk'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-06/trimmed.xml",
+        "oracle/test_bic.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2055,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_bic.test_ask[ ndea fi hh -NDEAFIHH]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_bic.test_ask[daba dk kk-DABADKKK]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-06/trial-003.xml",
+        "oracle/test_bic.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2107,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "412512d284ab6427bc1895aad769e8f1bd3c1a1b7111417443b4f03934a15b9d",
+      "measured": true,
+      "removedBlock": "ledger/bic.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n_______________________ test_ask[ ndea fi hh -NDEAFIHH] ________________________\n\nvalue = ' ndea fi hh ', expected = 'NDEAFIHH'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' ndea fi hh '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError\n________________________ test_ask[daba dk kk-DABADKKK] _________________________\n\nvalue = 'daba dk kk', expected = 'DABADKKK'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'daba dk kk'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_bic.py::test_ask[ ndea fi hh -NDEAFIHH] - NotImplementedEr...\nFAILED oracle/test_bic.py::test_ask[daba dk kk-DABADKKK] - NotImplementedErro...\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_bic.test_ask[ ndea fi hh -NDEAFIHH]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = ' ndea fi hh ', expected = 'NDEAFIHH'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = ' ndea fi hh '\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_bic.test_ask[daba dk kk-DABADKKK]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'daba dk kk', expected = 'DABADKKK'\n\n    @pytest.mark.parametrize(\"value, expected\", [(' ndea fi hh ', 'NDEAFIHH'), ('daba dk kk', 'DABADKKK')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_bic.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'daba dk kk'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-6\")\nE       NotImplementedError: KASSA-6\n\nledger/bic.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-06/trimmed.xml",
+      "oracle/test_bic.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.2055,
+    "tests": 2,
+    "passed": 2,
+    "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+    "measured": true,
+    "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_bic.test_ask[ ndea fi hh -NDEAFIHH]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_bic.test_ask[daba dk kk-DABADKKK]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 2
+  },
+  "patch": "--- a/ledger/bic.py\n+++ b/ledger/bic.py\n@@ -1,3 +1,3 @@\n \"\"\"Normalize BIC identifiers.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-6\")\n+    return value.replace(\" \", \"\").upper()\n",
+  "patchSha256": "6808d5e9a26943befebe0758c278f8e0d4a84ba29f08a6db6d77e987951d1990",
+  "meta": {
+    "title": "Normalize BIC identifiers",
+    "ask": "Normalize BIC identifiers. Preserve the other bank operations.",
+    "did": "Implements bic for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-06.full.json.gz"
+}

@@ -1,0 +1,390 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/transfer_state.py:2",
+      "path": "ledger/transfer_state.py",
+      "name": "Transfer state",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-8\")\n"
+      ],
+      "new": [
+        "    return {\"P\": \"Pending\", \"S\": \"Settled\", \"R\": \"Rejected\"}.get(value, \"Unknown\")\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/transfer_state.json:0",
+      "path": "config/transfer_state.json",
+      "name": "Transfer state",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"transfer_state\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Label pending transfers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Label pending transfers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Label pending transfers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Label pending transfers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Label pending transfers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Label pending transfers\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-08/head.xml",
+        "oracle/test_transfer_state.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2001,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_transfer_state.test_ask[P-Pending]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_transfer_state.test_ask[S-Settled]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_transfer_state.test_ask[X-Unknown]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-08/trial-001.xml",
+        "oracle/test_transfer_state.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2038,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "1d33fac9738ff8fee182d2d5f100c9dd66f23e9aa22aa11f6e311680666b668c",
+      "measured": true,
+      "removedBlock": "ledger/transfer_state.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n_____________________________ test_ask[P-Pending] ______________________________\n\nvalue = 'P', expected = 'Pending'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'P'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError\n_____________________________ test_ask[S-Settled] ______________________________\n\nvalue = 'S', expected = 'Settled'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'S'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError\n_____________________________ test_ask[X-Unknown] ______________________________\n\nvalue = 'X', expected = 'Unknown'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'X'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError\n",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_transfer_state.test_ask[P-Pending]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'P', expected = 'Pending'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'P'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_transfer_state.test_ask[S-Settled]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'S', expected = 'Settled'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'S'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_transfer_state.test_ask[X-Unknown]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'X', expected = 'Unknown'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'X'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-08/trial-002.xml",
+        "oracle/test_transfer_state.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2104,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "removedBlock": "config/transfer_state.json:0",
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-08/trial-003.xml",
+        "oracle/test_transfer_state.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2204,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "1d33fac9738ff8fee182d2d5f100c9dd66f23e9aa22aa11f6e311680666b668c",
+      "measured": true,
+      "removedBlock": "ledger/transfer_state.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n_____________________________ test_ask[P-Pending] ______________________________\n\nvalue = 'P', expected = 'Pending'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'P'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError\n_____________________________ test_ask[S-Settled] ______________________________\n\nvalue = 'S', expected = 'Settled'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'S'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError\n_____________________________ test_ask[X-Unknown] ______________________________\n\nvalue = 'X', expected = 'Unknown'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'X'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError\n",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_transfer_state.test_ask[P-Pending]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'P', expected = 'Pending'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'P'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_transfer_state.test_ask[S-Settled]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'S', expected = 'Settled'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'S'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_transfer_state.test_ask[X-Unknown]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'X', expected = 'Unknown'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'X'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-08/trimmed.xml",
+        "oracle/test_transfer_state.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2124,
+      "tests": 3,
+      "passed": 3,
+      "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+      "measured": true,
+      "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_transfer_state.test_ask[P-Pending]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_transfer_state.test_ask[S-Settled]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_transfer_state.test_ask[X-Unknown]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-08/trial-003.xml",
+        "oracle/test_transfer_state.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2204,
+      "tests": 3,
+      "passed": 0,
+      "outputSha256": "1d33fac9738ff8fee182d2d5f100c9dd66f23e9aa22aa11f6e311680666b668c",
+      "measured": true,
+      "removedBlock": "ledger/transfer_state.py:2",
+      "output": "FFF                                                                      [100%]\n=================================== FAILURES ===================================\n_____________________________ test_ask[P-Pending] ______________________________\n\nvalue = 'P', expected = 'Pending'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'P'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError\n_____________________________ test_ask[S-Settled] ______________________________\n\nvalue = 'S', expected = 'Settled'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'S'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError\n_____________________________ test_ask[X-Unknown] ______________________________\n\nvalue = 'X', expected = 'Unknown'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'X'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError\n",
+      "outputTruncated": true,
+      "cases": [
+        {
+          "name": "oracle.test_transfer_state.test_ask[P-Pending]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'P', expected = 'Pending'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'P'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_transfer_state.test_ask[S-Settled]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'S', expected = 'Settled'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'S'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_transfer_state.test_ask[X-Unknown]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = 'X', expected = 'Unknown'\n\n    @pytest.mark.parametrize(\"value, expected\", [('P', 'Pending'), ('S', 'Settled'), ('X', 'Unknown')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_transfer_state.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = 'X'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-8\")\nE       NotImplementedError: KASSA-8\n\nledger/transfer_state.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 3
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-08/trimmed.xml",
+      "oracle/test_transfer_state.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.2124,
+    "tests": 3,
+    "passed": 3,
+    "outputSha256": "e0a6ea218ea5d725ce7272da8d68d45a029e489423e03af6960c7bff0f7fe414",
+    "measured": true,
+    "output": "...                                                                      [100%]\n3 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_transfer_state.test_ask[P-Pending]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_transfer_state.test_ask[S-Settled]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_transfer_state.test_ask[X-Unknown]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 3
+  },
+  "patch": "--- a/ledger/transfer_state.py\n+++ b/ledger/transfer_state.py\n@@ -1,3 +1,3 @@\n \"\"\"Label pending transfers.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-8\")\n+    return {\"P\": \"Pending\", \"S\": \"Settled\", \"R\": \"Rejected\"}.get(value, \"Unknown\")\n",
+  "patchSha256": "b4db1fa83d24e83cfb521186bbf6d925eff230f9997a4919fd834a8322689f08",
+  "meta": {
+    "title": "Label pending transfers",
+    "ask": "Label pending transfers. Preserve the other bank operations.",
+    "did": "Implements transfer state for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-08.full.json.gz"
+}

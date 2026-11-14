@@ -1,0 +1,59 @@
+{
+  "title": "Add servo support",
+  "ask": "Add servo support to transpiler and code generation",
+  "did": "Adds the requested helper and transpiles its calls to Arduino C++.",
+  "agent": "OpenAI Codex",
+  "repo": "Jackhammer9 / Reduino",
+  "source": "AIDev",
+  "github": "https://github.com/Jackhammer9/Reduino/pull/24",
+  "note": "Keep the tested implementation. Add a test or a reason for each unchecked block, or it stays out. Hardware behaviour needs a human check.",
+  "id": "AIDEV-24",
+  "written": 627,
+  "kept": 566,
+  "unchecked": 61,
+  "tests": 85,
+  "passed": 85,
+  "seconds": 57.270300000000006,
+  "blocks": [
+    {
+      "id": "needed-implementation",
+      "name": "Tested implementation",
+      "lines": 566,
+      "needed": true
+    },
+    {
+      "id": "unchecked-changes",
+      "name": "Unchecked changes",
+      "lines": 61,
+      "needed": false
+    }
+  ],
+  "patch": "patches/AIDEV-24.patch",
+  "evidence": "evidence/AIDEV-24.json",
+  "patchSha256": "ed33674f8df2872173f6e5bc99cfe2e7d15530faf64e080c342df708abb4e994",
+  "risk": [
+    {
+      "path": "src/Reduino/Actuators/Servo.py",
+      "start": 10,
+      "lines": [
+        "    ``min_pulse_us`` and ``max_pulse_us`` microseconds to cover the angular range",
+        "    from ``min_angle`` to ``max_angle`` degrees.  The defaults match the Arduino",
+        "    Servo library (approximately 0-180 degrees mapped to 544-2400 microseconds).",
+        "    \"\"\"",
+        "",
+        "    def __init__(",
+        "        self,",
+        "        pin: int = 9,"
+      ],
+      "marked": -1,
+      "note": "Host-side tests pass. Check angle and pulse limits against the physical servo specification.",
+      "check": "Fixed head regression suite; physical Arduino not checked."
+    }
+  ],
+  "failedControls": 36,
+  "neededTestFailures": 134,
+  "status": "needs-you",
+  "lampFiles": 9,
+  "readLines": 8,
+  "riskPosition": 0.015901060070671377
+}

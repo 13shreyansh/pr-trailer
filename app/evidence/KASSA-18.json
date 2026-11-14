@@ -1,0 +1,354 @@
+{
+  "granularity": "diff block; each count includes added and removed lines",
+  "written": 55,
+  "kept": 2,
+  "unchecked": 53,
+  "blocks": [
+    {
+      "id": "ledger/download_label.py:2",
+      "path": "ledger/download_label.py",
+      "name": "Download label",
+      "start": 2,
+      "end": 3,
+      "old": [
+        "    raise NotImplementedError(\"KASSA-18\")\n"
+      ],
+      "new": [
+        "    return \"Statement \u00b7 \" + value.replace(\"-\", \"/\")\n"
+      ],
+      "lines": 2,
+      "needed": true
+    },
+    {
+      "id": "config/download_label.json:0",
+      "path": "config/download_label.json",
+      "name": "Download label",
+      "start": 0,
+      "end": 0,
+      "old": [],
+      "new": [
+        "{\n",
+        "  \"module\": \"download_label\",\n",
+        "  \"locales\": {\n",
+        "    \"fi-FI\": {\n",
+        "      \"heading\": \"Build statement download labels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"sv-SE\": {\n",
+        "      \"heading\": \"Build statement download labels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"SEK\",\n",
+        "      \"dateFormat\": \"YYYY-MM-DD\"\n",
+        "    },\n",
+        "    \"nb-NO\": {\n",
+        "      \"heading\": \"Build statement download labels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"NOK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"da-DK\": {\n",
+        "      \"heading\": \"Build statement download labels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"DKK\",\n",
+        "      \"dateFormat\": \"DD-MM-YYYY\"\n",
+        "    },\n",
+        "    \"is-IS\": {\n",
+        "      \"heading\": \"Build statement download labels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"ISK\",\n",
+        "      \"dateFormat\": \"DD.MM.YYYY\"\n",
+        "    },\n",
+        "    \"en-GB\": {\n",
+        "      \"heading\": \"Build statement download labels\",\n",
+        "      \"empty\": \"No entries\",\n",
+        "      \"download\": \"Download statement\",\n",
+        "      \"state\": \"Pending\",\n",
+        "      \"currency\": \"EUR\",\n",
+        "      \"dateFormat\": \"DD/MM/YYYY\"\n",
+        "    }\n",
+        "  }\n",
+        "}\n"
+      ],
+      "lines": 53,
+      "needed": false
+    }
+  ],
+  "runs": [
+    {
+      "label": "head",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-18/head.xml",
+        "oracle/test_download_label.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2172,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_download_label.test_ask[2026-11-Statement \\xb7 2026/11]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_download_label.test_ask[2026-01-Statement \\xb7 2026/01]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-001",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-18/trial-001.xml",
+        "oracle/test_download_label.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2172,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "d9bbf1b4c5ca41fb96a91975eb1186dc7dca1e905532973e95a54d1c247fef9e",
+      "measured": true,
+      "removedBlock": "ledger/download_label.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n___________________ test_ask[2026-11-Statement \\xb7 2026/11] ___________________\n\nvalue = '2026-11', expected = 'Statement \u00b7 2026/11'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError\n___________________ test_ask[2026-01-Statement \\xb7 2026/01] ___________________\n\nvalue = '2026-01', expected = 'Statement \u00b7 2026/01'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_download_label.py::test_ask[2026-11-Statement \\xb7 2026/11]\nFAILED oracle/test_download_label.py::test_ask[2026-01-Statement \\xb7 2026/01]\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_download_label.test_ask[2026-11-Statement \\xb7 2026/11]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-11', expected = 'Statement \u00b7 2026/11'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_download_label.test_ask[2026-01-Statement \\xb7 2026/01]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-01', expected = 'Statement \u00b7 2026/01'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-002",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-18/trial-002.xml",
+        "oracle/test_download_label.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.2209,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "removedBlock": "config/download_label.json:0",
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-18/trial-003.xml",
+        "oracle/test_download_label.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2117,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "d9bbf1b4c5ca41fb96a91975eb1186dc7dca1e905532973e95a54d1c247fef9e",
+      "measured": true,
+      "removedBlock": "ledger/download_label.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n___________________ test_ask[2026-11-Statement \\xb7 2026/11] ___________________\n\nvalue = '2026-11', expected = 'Statement \u00b7 2026/11'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError\n___________________ test_ask[2026-01-Statement \\xb7 2026/01] ___________________\n\nvalue = '2026-01', expected = 'Statement \u00b7 2026/01'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_download_label.py::test_ask[2026-11-Statement \\xb7 2026/11]\nFAILED oracle/test_download_label.py::test_ask[2026-01-Statement \\xb7 2026/01]\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_download_label.test_ask[2026-11-Statement \\xb7 2026/11]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-11', expected = 'Statement \u00b7 2026/11'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_download_label.test_ask[2026-01-Statement \\xb7 2026/01]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-01', expected = 'Statement \u00b7 2026/01'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    },
+    {
+      "label": "trimmed",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-18/trimmed.xml",
+        "oracle/test_download_label.py"
+      ],
+      "exitCode": 0,
+      "seconds": 0.1935,
+      "tests": 2,
+      "passed": 2,
+      "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+      "measured": true,
+      "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_download_label.test_ask[2026-11-Statement \\xb7 2026/11]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        },
+        {
+          "name": "oracle.test_download_label.test_ask[2026-01-Statement \\xb7 2026/01]",
+          "passed": true,
+          "skipped": false,
+          "failure": ""
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "controls": [
+    {
+      "label": "trial-003",
+      "command": [
+        "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+        "-B",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-18/trial-003.xml",
+        "oracle/test_download_label.py"
+      ],
+      "exitCode": 1,
+      "seconds": 0.2117,
+      "tests": 2,
+      "passed": 0,
+      "outputSha256": "d9bbf1b4c5ca41fb96a91975eb1186dc7dca1e905532973e95a54d1c247fef9e",
+      "measured": true,
+      "removedBlock": "ledger/download_label.py:2",
+      "output": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n___________________ test_ask[2026-11-Statement \\xb7 2026/11] ___________________\n\nvalue = '2026-11', expected = 'Statement \u00b7 2026/11'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError\n___________________ test_ask[2026-01-Statement \\xb7 2026/01] ___________________\n\nvalue = '2026-01', expected = 'Statement \u00b7 2026/01'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError\n=========================== short test summary info ============================\nFAILED oracle/test_download_label.py::test_ask[2026-11-Statement \\xb7 2026/11]\nFAILED oracle/test_download_label.py::test_ask[2026-01-Statement \\xb7 2026/01]\n2 failed in 0.01s\n",
+      "outputTruncated": false,
+      "cases": [
+        {
+          "name": "oracle.test_download_label.test_ask[2026-11-Statement \\xb7 2026/11]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-11', expected = 'Statement \u00b7 2026/11'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-11'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError"
+        },
+        {
+          "name": "oracle.test_download_label.test_ask[2026-01-Statement \\xb7 2026/01]",
+          "passed": false,
+          "skipped": false,
+          "failure": "value = '2026-01', expected = 'Statement \u00b7 2026/01'\n\n    @pytest.mark.parametrize(\"value, expected\", [('2026-11', 'Statement \u00b7 2026/11'), ('2026-01', 'Statement \u00b7 2026/01')])\n    def test_ask(value, expected):\n>       assert resolve(value) == expected\n               ^^^^^^^^^^^^^^\n\noracle/test_download_label.py:6: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\nvalue = '2026-01'\n\n    def resolve(value):\n>       raise NotImplementedError(\"KASSA-18\")\nE       NotImplementedError: KASSA-18\n\nledger/download_label.py:3: NotImplementedError"
+        }
+      ],
+      "fullCaseCount": 2
+    }
+  ],
+  "final": {
+    "label": "trimmed",
+    "command": [
+      "/Users/shreyansh/Documents/ChatGPT/Junction/tieto/.venv312/bin/python",
+      "-B",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "--junitxml=/Users/shreyansh/Documents/ChatGPT/Junction/tieto/evidence/runs/KASSA-18/trimmed.xml",
+      "oracle/test_download_label.py"
+    ],
+    "exitCode": 0,
+    "seconds": 0.1935,
+    "tests": 2,
+    "passed": 2,
+    "outputSha256": "fcd476841e8af121ff907e81a92a59579b64c007b70cb79f9d096806f703fc7e",
+    "measured": true,
+    "output": "..                                                                       [100%]\n2 passed in 0.01s\n",
+    "outputTruncated": false,
+    "cases": [
+      {
+        "name": "oracle.test_download_label.test_ask[2026-11-Statement \\xb7 2026/11]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      },
+      {
+        "name": "oracle.test_download_label.test_ask[2026-01-Statement \\xb7 2026/01]",
+        "passed": true,
+        "skipped": false,
+        "failure": ""
+      }
+    ],
+    "fullCaseCount": 2
+  },
+  "patch": "--- a/ledger/download_label.py\n+++ b/ledger/download_label.py\n@@ -1,3 +1,3 @@\n \"\"\"Build statement download labels.\"\"\"\n def resolve(value):\n-    raise NotImplementedError(\"KASSA-18\")\n+    return \"Statement \u00b7 \" + value.replace(\"-\", \"/\")\n",
+  "patchSha256": "0e6991b7ed35f0dabba76cb85779574c270171854890b4a6930724fcbd0c884b",
+  "meta": {
+    "title": "Build statement download labels",
+    "ask": "Build statement download labels. Preserve the other bank operations.",
+    "did": "Implements download label for the stated cases.",
+    "agent": "Bank agent \u00b7 synthetic",
+    "repo": "Kassa / Nordic retail bank",
+    "source": "synthetic",
+    "note": "Keep the tested change. Add a test or a reason for the presentation configuration, or it stays out."
+  },
+  "fullLogArchive": "KASSA-18.full.json.gz"
+}
