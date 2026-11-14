@@ -179,3 +179,13 @@ class MergeRefPropagationRegression(unittest.TestCase):
   from product import service
   with patch.object(service,'api',side_effect=[RuntimeError('GitHub 409: Head branch was modified'),{'head':{'sha':'old','ref':'agent/case'}},{'object':{'sha':'someone-elses-commit'}}]):
    with self.assertRaises(ValueError):service.merge_ready(1,'candidate','Requirement')
+
+class PublicationBoundaryRegression(unittest.TestCase):
+ def test_public_assets_require_exact_commit_and_name(self):
+  from product.server import publication_asset
+  for value in ['../../product/github.py','asset-../../-style','asset-'+('a'*40)+'-github','asset-'+('a'*39)+'-style']:
+   self.assertIsNone(publication_asset(value))
+
+ def test_unpublished_commit_does_not_expose_local_paths(self):
+  from product.server import publication_asset
+  with self.assertRaisesRegex(ValueError,'^Public asset not found$'):publication_asset('asset-'+('a'*40)+'-style')

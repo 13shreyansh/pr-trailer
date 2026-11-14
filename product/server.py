@@ -1,11 +1,21 @@
 """HTTP worker. GitHub credentials are resolved only by the broker, never sent to the UI."""
 from http.server import ThreadingHTTPServer,BaseHTTPRequestHandler
 import json
+import re
+import subprocess
 from pathlib import Path
 import sys
 import urllib.parse
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from product import service
+BOOT_COMMIT=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+
+def publication_asset(id):
+ match=re.fullmatch(r'asset-([a-f0-9]{40})-(style|build)',id)
+ if not match:return None
+ path=ROOT/'var/publications'/match[1]/('style.css' if match[2]=='style' else 'build.json')
+ if not path.is_file():raise ValueError('Public asset not found')
+ return path.read_bytes(),('text/css' if match[2]=='style' else 'application/json')
 
 class Handler(BaseHTTPRequestHandler):
  def log_message(self,*args):pass
@@ -17,11 +27,14 @@ class Handler(BaseHTTPRequestHandler):
  def do_GET(self):
   url=urllib.parse.urlparse(self.path);query=urllib.parse.parse_qs(url.query)
   try:
-   if url.path=='/health':return self.respond(200,{'ready':True,'repo':service.FULL,'commit':__import__('subprocess').check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()})
+   if url.path=='/health':return self.respond(200,{'ready':True,'repo':service.FULL,'commit':BOOT_COMMIT})
    if url.path=='/api/workspace':return self.respond(200,service.sync(True))
    if url.path=='/api/status':return self.respond(200,service.client())
    if url.path in ('/api/proof','/api/patch'):
     id=query.get('id',[''])[0]
+    if url.path=='/api/patch':
+     asset=publication_asset(id)
+     if asset:return self.respond(200,asset[0],asset[1])
     with service.LOCK:p=service.STATE['prs'].get(id)
     if not p or not p.get('_root'):raise ValueError('Run the checks first')
     root=Path(p['_root'])

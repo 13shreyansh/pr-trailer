@@ -13,6 +13,8 @@ def publish(origin):
  except RuntimeError:parent=json.loads((ROOT/'var/workspace.json').read_text())['baseline']
  sha=commit_tree({'.tieto/connection.json':json.dumps({'origin':origin,'updatedAt':time.time()})+'\n'},parent=parent,message='Update public Tieto worker routing')
  set_ref('tieto/connection',sha);(ROOT/'var/runner-origin.txt').write_text(origin+'\n')
+ from .routes import publish as publish_routes
+ publish_routes(origin)
 
 
 def supervise(restart=True):
