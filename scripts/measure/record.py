@@ -107,10 +107,16 @@ if __name__=='__main__':
  elif mode=='assemble':
   rows=json.loads((ROOT/'evidence/bank-inbox.json').read_text());rows=rows[:-1]+[json.loads((ROOT/f'evidence/real-{n}.json').read_text()) for n in (9,24)]+rows[-1:]
   for row in rows:
+   if row['status']=='intern':
+    base=ROOT/'evidence/source/kassa/base';head=ROOT/'evidence/source/kassa/head-intern'
+    for risk in row['risk']:
+     path=risk['path'];before=(base/path).read_text().splitlines() if (base/path).exists() else [];after=(head/path).read_text().splitlines()
+     change=next((x for x in difflib.SequenceMatcher(None,before,after,autojunk=False).get_opcodes() if x[0]!='equal' and x[4]>x[3]),None)
+     if change:risk.update(start=change[3]+1,lines=[after[change[3]]],marked=-1)
    if row['status']!='intern':
     report=json.loads((ROOT/'evidence/runs'/f"{row['id']}.json").read_text())
     row['lampFiles']=len(set('.'.join(c['name'].split('.')[:2]) for c in report['final']['cases']))
     row['seconds']=sum(x['seconds'] for x in report['runs'])
-  fixture={'product':'Tieto','clock':'Mon 16 Nov · 09:00','owner':'Shreyansh','initials':'SB','measurement':'Measured locally from recorded removal trials. Added + removed implementation lines; oracle tests held fixed. Synthetic bank and public AIDev PRs.','prs':rows,'totals':{'written':sum(r['written'] for r in rows),'needYou':sum(r.get('readLines',0) for r in rows),'proven':sum(r['status']=='proven' for r in rows),'prs':len(rows)}}
+  fixture={'product':'Tieto','clock':'Mon 16 Nov · 09:00','owner':'Shreyansh','initials':'S','measurement':'Measured locally from recorded removal trials. Added + removed implementation lines; oracle tests held fixed. Synthetic bank and public AIDev PRs.','prs':rows,'totals':{'written':sum(r['written'] for r in rows),'needYou':sum(r.get('readLines',0) for r in rows),'proven':sum(r['status']=='proven' for r in rows),'prs':len(rows)}}
   (OUT/'fixture.js').write_text('globalThis.TIETO_FIXTURE = '+json.dumps(fixture,ensure_ascii=False)+';\n');(OUT/'evidence/manifest.json').write_text(json.dumps(fixture,indent=2));print(fixture['totals'])
  else: raise SystemExit('Run bank, 9, 24, then assemble')

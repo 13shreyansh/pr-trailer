@@ -1,6 +1,8 @@
 {
   "url": "https://pr-trailer.vercel.app",
-  "deployment": "dpl_H4CMeq8Jir5mKrRs1yBHBDJAhFB3",
+  "deployment": "dpl_5z6WyLt3tXutjc8DvJpNLSjqsbHe",
   "state": "READY",
-  "verification": "Static assets match local hashes. Live test API audit is recorded separately. Browser visual acceptance is blocked by the unavailable IAB host."
+  "verification": "All23 production removal reruns match; exported bank branch passes48/48. Static assets match hashes. Browser visual acceptance blocked by unavailable IAB host.",
+  "apiAuditDeployment": "dpl_H4CMeq8Jir5mKrRs1yBHBDJAhFB3",
+  "apiSourceUnchangedSinceAudit": true
 }

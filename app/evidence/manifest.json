@@ -2,7 +2,7 @@
   "product": "Tieto",
   "clock": "Mon 16 Nov \u00b7 09:00",
   "owner": "Shreyansh",
-  "initials": "SB",
+  "initials": "S",
   "measurement": "Measured locally from recorded removal trials. Added + removed implementation lines; oracle tests held fixed. Synthetic bank and public AIDev PRs.",
   "prs": [
     {
@@ -974,24 +974,33 @@
           "note": "Bypasses account ownership. Another customer can read the account.",
           "failure": "F                                                                        [100%]\n=================================== FAILURES ===================================\n________________________________ test_ownership ________________________________\n\n    def test_ownership():\n        conn=db.connect();db.seed(conn)\n>       with pytest.raises(auth.Forbidden):\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE       Failed: DID NOT RAISE Forbidden\n\noracle/test_safety.py:8: Failed\n=========================== short test summary info ============================\nFAILED oracle/test_safety.py::test_ownership - Failed: DID NOT RAISE Forbidden\n1 failed in 0.01s\n",
           "check": "oracle.test_safety.test_ownership",
-          "lines": [],
-          "start": 1
+          "lines": [
+            "        return  # let every customer access every account"
+          ],
+          "start": 11,
+          "marked": -1
         },
         {
           "path": "migrations/002_best_bank.sql",
           "note": "Drops memo, which statement export still reads.",
           "failure": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________________ test_statement_schema _____________________________\n\n    def test_statement_schema():\n        conn=db.connect();db.seed(conn)\n>       assert \"memo\" in export_csv(conn,\"acc-anna\").splitlines()[0]\n                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\noracle/test_safety.py:13: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \n\ndb = <sqlite3.Connection object at 0x108acb2e0>, account_id = 'acc-anna'\n\n    def export_csv(db, account_id: str) -> str:\n>       rows = db.execute(\n            \"SELECT created_day, to_iban, amount_cents, fee_cents, memo FROM transfers WHERE from_account = ? ORDER BY id\",\n            (account_id,),\n        ).fetchall()\nE       sqlite3.OperationalError: no such column: memo\n\nledger/statements.py:7: OperationalError\n=========================== short test summary info ============================\nFAILED oracle/test_safety.py::test_statement_schema - sqlite3.OperationalErro...\n1 failed in 0.01s\n",
           "check": "oracle.test_safety.test_statement_schema",
-          "lines": [],
-          "start": 1
+          "lines": [
+            "ALTER TABLE transfers DROP COLUMN memo;"
+          ],
+          "start": 1,
+          "marked": -1
         },
         {
           "path": "ledger/fees.py",
           "note": "Makes fees negative. Transfers credit the customer for fees.",
           "failure": "F                                                                        [100%]\n=================================== FAILURES ===================================\n____________________________ test_nonnegative_fees _____________________________\n\n    def test_nonnegative_fees():\n>       assert transfer_fee(1000,\"instant\") >= 0\nE       AssertionError: assert -50 >= 0\nE        +  where -50 = transfer_fee(1000, 'instant')\n\noracle/test_safety.py:16: AssertionError\n=========================== short test summary info ============================\nFAILED oracle/test_safety.py::test_nonnegative_fees - AssertionError: assert ...\n1 failed in 0.01s\n",
           "check": "oracle.test_safety.test_nonnegative_fees",
-          "lines": [],
-          "start": 1
+          "lines": [
+            "        return -max(int(fee), INSTANT_MIN_CENTS)"
+          ],
+          "start": 14,
+          "marked": -1
         }
       ],
       "blocks": [

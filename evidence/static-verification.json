@@ -16,15 +16,15 @@
   {
     "path": "review.js",
     "status": 200,
-    "bytes": 2593,
-    "sha256": "c6b768225d06fcebc96acd668ff6fa6be23eaa8031619b21e9066c69932bac57",
+    "bytes": 2607,
+    "sha256": "2ee4cb5e73ad875cd7d79d8e673ed48616bdd52c762396a3e957b1a6d4de540f",
     "measured": true
   },
   {
     "path": "fixture.js",
     "status": 200,
-    "bytes": 28015,
-    "sha256": "a4e4fe53fbb77f03544974f82af2f1c80cf2f270586231ce686a72e4121c36bd",
+    "bytes": 28208,
+    "sha256": "a914e3f54629234bd641c2d9bb32329484880c868d1eaf7e9b5543f637c97578",
     "measured": true
   },
   {
@@ -51,8 +51,8 @@
   {
     "path": "evidence/manifest.json",
     "status": 200,
-    "bytes": 35640,
-    "sha256": "1a31e376caf3bf78cc0362e78d7995e5a763746d44cb3ca150926b7dd15295f8",
+    "bytes": 35935,
+    "sha256": "f22e1ac2b5fd7a95c772a60189aba217120aa6925ff94fdfc01f6389a58a5051",
     "measured": true
   }
 ]

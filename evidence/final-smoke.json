@@ -1,0 +1,17 @@
+{
+  "intern": {
+    "id": "KASSA-INTERN",
+    "written": 3830,
+    "kept": 0,
+    "tests": 3,
+    "passed": 0
+  },
+  "branch": {
+    "branch": "tieto/approved",
+    "commit": "070e2271276d7a83fdb8a7bcb03d49a1893997ed",
+    "tests": 48,
+    "passed": 48
+  },
+  "deployment": "dpl_5z6WyLt3tXutjc8DvJpNLSjqsbHe",
+  "visualVerified": false
+}

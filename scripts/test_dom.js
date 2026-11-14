@@ -21,7 +21,7 @@ function click(w,selector){const el=w.document.querySelector(selector);assert.ok
   assert.equal(d.querySelectorAll('.pr-row').length,4);assert.match(d.querySelector('.footline').textContent,/19 finished/);
   click(w,'[data-action="open"][data-id="KASSA-CAP"]');await pause();click(w,'[data-action="panel"]');assert.equal(d.querySelectorAll('.code-line').length,6);assert.equal(d.querySelectorAll('.code-line.marked').length,1);
   click(w,'[data-action="return"]');assert.equal(d.querySelectorAll('.pr-row').length,3);
-  click(w,'[data-action="open"][data-id="KASSA-INTERN"]');await pause();assert.equal(d.querySelectorAll('.intern-check .lamp.failed').length,3);click(w,'[data-action="block"]');assert.ok(d.querySelector('.barrier'));assert.match(d.querySelector('.actions').textContent,/Blocked locally/);
+  click(w,'[data-action="open"][data-id="KASSA-INTERN"]');await pause();assert.equal(d.querySelectorAll('.intern-check .lamp.failed').length,3);click(w,'[data-action="risk"]');assert.equal(d.querySelectorAll('.code-line').length,1);click(w,'[data-action="block"]');assert.equal(d.querySelector('.ledger').classList.contains('risk-open'),false);assert.ok(d.querySelector('.barrier'));assert.match(d.querySelector('.actions').textContent,/Blocked locally/);
   key(w,'r');assert.equal(d.querySelectorAll('.pr-row').length,23);for(let i=0;i<5;i++)key(w,' ','Space');assert.match(d.querySelector('.close-frame').textContent,/Every line earns/);
   dom.window.close();
  }

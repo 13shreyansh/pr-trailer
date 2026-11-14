@@ -15,7 +15,7 @@
    s.returned.push(p.id);s.history.push({type:'return',id:p.id});s.opened=null;return s;
   }
   if(action.type==='block'&&p&&p.status==='intern'&&!s.blocked.includes(p.id)){
-   s.blocked.push(p.id);s.history.push({type:'block',id:p.id});return s;
+   s.panel=false;s.blocked.push(p.id);s.history.push({type:'block',id:p.id});return s;
   }
   if(action.type==='undo'){
    const last=s.history.pop();if(!last)return s;

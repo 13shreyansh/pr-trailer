@@ -167,3 +167,11 @@ class NotchPositionRegression(unittest.TestCase):
   block={**dataclasses.asdict(blocks[0]),'lines':blocks[0].lines,'needed':True}
   result={'blocks':[block],'kept':block['lines']}
   self.assertAlmostEqual(risk_position(result,block,'    rounded=raw'),4/7)
+
+class InternExactChangeRegression(unittest.TestCase):
+ def test_each_intern_failure_shows_the_actual_changed_source_line(self):
+  data=json.loads((ROOT/'app/evidence/manifest.json').read_text());intern=next(p for p in data['prs'] if p['status']=='intern')
+  for risk in intern['risk']:
+   self.assertEqual(len(risk['lines']),1)
+   source=(ROOT/'evidence/source/kassa/head-intern'/risk['path']).read_text().splitlines()
+   self.assertEqual(risk['lines'][0],source[risk['start']-1])
