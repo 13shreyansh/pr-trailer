@@ -1,7 +1,8 @@
 {
-  "id": "dpl_EkR2f7TvjKtaiuBTR2ykb1RGJ7zT",
+  "commit": "93be9826c622711f4802c808593901c112c00036",
+  "id": "dpl_E4CzLpN9suG6NJPt5NrPiqtrZLvx",
   "url": "https://pr-trailer.vercel.app",
-  "deploymentUrl": "https://pr-trailer-r3c3narg0-13shreyanshs-projects.vercel.app",
+  "deploymentUrl": "https://pr-trailer-47ben77zh-13shreyanshs-projects.vercel.app",
   "files": [
     {
       "file": "app/review.js",
@@ -20,8 +21,8 @@
     },
     {
       "file": "app/style.css",
-      "sha": "9dbfd1706f835fdc404464a2ec8e8dc42ea43f85",
-      "size": 28168
+      "sha": "8308598381eb63095ed63bedd31613b48664b498",
+      "size": 28324
     },
     {
       "file": "app/app.js",
@@ -402,6 +403,9 @@
       "file": "app/fonts/Archivo-OFL.txt",
       "sha": "35d54efe9577f2057e8bdb5f77ec50e21fd0c09c",
       "size": 4388
+    },
+    {
+      "file": "app/build.json"
     }
   ]
 }

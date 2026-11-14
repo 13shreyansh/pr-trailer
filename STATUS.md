@@ -4,23 +4,11 @@ Acceptance: pushed production commit matches source; every specified deployed sc
 Verification: reset twice, run both full deployed flows, inspect screenshots and fix all taste findings.
 Review: separate Astra spec/build review; final status includes measured results and spec gaps.
 
-Tieto / 2026-11-14 22:52 EET / 5f72715 + uncommitted changes / https://pr-trailer.vercel.app
-
-DONE:
-- Implemented the v2 start, live queue and GitHub workspace actions locally; preserved the trim engine and recorded evidence.
-- Created real Nordbank PRs, reset tooling, deployed-flow Playwright tests and DEMO_SCRIPT.md.
-- Fixed the reviewer's revert vulnerability and mobile Retry bug, with regression coverage.
-
-NUMBERS: dev measured: 20/20 existing Python tests, 9/9 workspace tests, both Node suites pass; held-out measured: rounding 0/1 passing; baseline measured: safety 3/3 passing.
-
-SCREENSHOTS: none. Deployed E2E and visual acceptance remain incomplete.
-
-REVIEW: Separate 6 Astra passed scoped build checks after fixes; deployed spec and taste acceptance remain unverified.
-
-Spec gaps I filled: desktop columns total 1,300 px, so retained their specified widths; unsupported public repositories disclose unavailable tests and show GitHub changed-line counts.
-
-NEXT: Resolve writer ownership, then reconcile duplicate PRs, deploy, run both viewport flows and verify reset twice.
-
-NEEDS DECISION: Keep this session as owner, or stop it and let the other Job 02 session finish?
-
-BLOCKED: Another independent session is editing this folder and created duplicate Nordbank PRs. External writes are paused to avoid overwriting its work. Neither deployment attempt reached production; the URL above is not verified as Job 02.
+Tieto / Job 03 in progress / production source 93be982 / https://pr-trailer.vercel.app
+DONE: sole writer established; duplicate old-repository PRs closed with comment receipts; live v2 product deployed.
+NUMBERS: dev measured 36 Python tests and all Node suites pass; live trim measured 23 PRs, 25 selected review lines.
+SCREENSHOTS: artifacts/e2e/1440-01-inbox.png; artifacts/e2e/reviewer-390-start.png; full-flow capture in progress.
+REVIEW: Astra passed source/build and deployed start/cold/queue; full-flow review pending.
+NEXT: deploy GitHub merge-readiness handling, finish both viewport flows, reset and final review.
+NEEDS DECISION: none
+BLOCKED: none

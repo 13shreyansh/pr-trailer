@@ -69,6 +69,17 @@ def capped_fee(amount_cents):
 
 def reset(saved=None):
  saved=saved or json.loads(OUT.read_text())
+ # Stop and settle the runner before changing the repository it is measuring.
+ import urllib.request
+ try:
+  req=urllib.request.Request('http://127.0.0.1:4322/api/stop',data=b'{}',headers={'Content-Type':'application/json'})
+  with urllib.request.urlopen(req,timeout=10) as response:state=json.load(response)
+  for attempt in range(90):
+   if not (state.get('batch') or {}).get('running') and all(p['status'] not in ('queued','running') for p in state['prs']):break
+   time.sleep(1)
+   with urllib.request.urlopen('http://127.0.0.1:4322/api/status',timeout=10) as response:state=json.load(response)
+  else:raise RuntimeError('Active tests did not stop')
+ except Exception as exc:raise RuntimeError('GitHub unchanged because worker reset failed: '+str(exc)) from exc
  for pr in pages('/repos/'+FULL+'/pulls?state=open'):
   if any(label['name']=='tieto-blocked' for label in pr.get('labels',[])):
    api(f'/repos/{FULL}/issues/{pr["number"]}/labels/tieto-blocked',method='DELETE')
@@ -105,7 +116,10 @@ def reset(saved=None):
  assert api('/repos/'+FULL+'/git/ref/heads/main')['object']['sha']==saved['baseline']
  opened=pages('/repos/'+FULL+'/pulls?state=open')
  assert {p['number'] for p in opened}==set(numbers.values()), 'Unexpected open workspace PRs'
- print(json.dumps({'reset':'complete','repo':FULL,'openPRs':len(numbers),'numbers':numbers}),flush=True)
+ receipt={'reset':'complete','repo':FULL,'openPRs':len(numbers),'numbers':numbers,'baseline':saved['baseline'],'verifiedAt':time.time(),'workerRows':len(state['prs']),'decisionsCleared':True,'measured':True}
+ report=ROOT/'artifacts/e2e/resets.json';report.parent.mkdir(parents=True,exist_ok=True)
+ history=json.loads(report.read_text()) if report.exists() else [];history.append(receipt);report.write_text(json.dumps(history,indent=2)+'\n')
+ print(json.dumps(receipt),flush=True)
 
 if __name__=='__main__':
  parser=argparse.ArgumentParser();parser.add_argument('action',choices=['setup','reset']);args=parser.parse_args()

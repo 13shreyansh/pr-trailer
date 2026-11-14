@@ -17,3 +17,5 @@ evidence/runs/
 var/
 artifacts/e2e/*.webm
 artifacts/e2e/*.zip
+
+test-results/

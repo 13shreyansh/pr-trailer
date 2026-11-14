@@ -31,3 +31,6 @@
 .named-block:last-child:not(:first-child) .block-label{left:auto;right:0}.named-block:last-child:not(:first-child) .block-label.with-leader:before{left:auto;right:2px}
 /* Keep the public-PR input and last-sync caption in separate mobile columns. */
 @media(max-width:600px){.top-shell .top .pr-form{width:calc(100% - 92px)}}
+
+.primary[href]{background:var(--saffron);border:1px solid #B8790A;border-radius:6px;min-height:40px;padding:8px 22px;font-size:16px;font-weight:600;white-space:nowrap}.primary[href]:hover{box-shadow:inset 0 0 0 1px #B8790A}.primary[href]:active{background:#D99310}
+@media(max-width:600px){.actions a.primary{min-height:56px;white-space:normal}}

@@ -1,0 +1,11 @@
+{
+  "ratios": {
+    "aubergine / ground": 13.73,
+    "secondary / ground": 6.28,
+    "aubergine / saffron": 7.05,
+    "hatch-outline / ground": 5.93,
+    "blocked / red-wash": 4.77
+  },
+  "classification": "inferred",
+  "method": "WCAG sRGB relative luminance"
+}

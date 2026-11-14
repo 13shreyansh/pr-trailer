@@ -128,3 +128,15 @@ class BatchInputRegression(unittest.TestCase):
   with tempfile.TemporaryDirectory(dir=ROOT/'var') as tmp,patch.object(module,'pages',return_value=[]),patch.object(module,'set_ref'),patch('urllib.request.urlopen',side_effect=OSError('Worker unavailable')):
    module.OUT=Path(tmp)/'workspace.json'
    with self.assertRaisesRegex(RuntimeError,'worker reset failed'):module.reset({'baseline':'baseline','cases':{}})
+
+class MergeReadinessRegression(unittest.TestCase):
+ def test_finish_waits_for_github_mergeability_after_pushing(self):
+  from product import service
+  with patch.object(service,'api',side_effect=[RuntimeError('GitHub 405: Pull Request is not mergeable'),{'head':{'sha':'candidate'}},{'merged':True,'sha':'merged'}]) as api,patch.object(service.time,'sleep'):
+   result=service.merge_ready(1,'candidate','Requirement')
+   self.assertTrue(result['merged'])
+   self.assertEqual(api.call_count,3)
+ def test_merge_wait_does_not_accept_a_changed_branch(self):
+  from product import service
+  with patch.object(service,'api',side_effect=[RuntimeError('GitHub 405: Not mergeable'),{'head':{'sha':'changed'}}]):
+   with self.assertRaises(ValueError):service.merge_ready(1,'candidate','Requirement')

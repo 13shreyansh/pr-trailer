@@ -298,15 +298,35 @@ def trimmed_commit(p,result,branch):
  return current,commit,check
 
 
+def merge_ready(number,commit,title):
+ # GitHub recalculates mergeability asynchronously after the branch ref changes.
+ for attempt in range(16):
+  try:return api(f'/repos/{FULL}/pulls/{number}/merge',method='PUT',data={'sha':commit,'merge_method':'merge','commit_title':'Finish: '+title})
+  except RuntimeError as exc:
+   if 'GitHub 405:' not in str(exc) or attempt==15:raise
+   current=api(f'/repos/{FULL}/pulls/{number}')
+   if current['head']['sha']!=commit:raise ValueError('The PR changed before merging')
+   time.sleep(.5)
+
+
 def finish(id):
  with WRITE:
-  p,result,pr=measured(id)
-  if p.get('verdict')!='proven' or p.get('readLines') or result['final']['exitCode']!=0:raise ValueError('This PR needs a human check')
-  before,commit,proof=trimmed_commit(p,result,p['branch'])
-  merged=api(f'/repos/{FULL}/pulls/{p["number"]}/merge',method='PUT',data={'sha':commit,'merge_method':'merge','commit_title':'Finish: '+p['title']})
+  with LOCK:p=dict(STATE['prs'].get(id,{}));pending=p.get('_mergeCandidate')
+  if pending:
+   pr=api(f'/repos/{FULL}/pulls/{p["number"]}')
+   if pr['head']['sha']!=pending['commit']:raise ValueError('The PR changed. Run the checks again.')
+   before,commit,proof=pending['before'],pending['commit'],pending['proof']
+   merged={'merged':True,'sha':pr['merge_commit_sha']} if pr.get('merged') else merge_ready(p['number'],commit,p['title'])
+  else:
+   p,result,pr=measured(id)
+   if p.get('verdict')!='proven' or p.get('readLines') or result['final']['exitCode']!=0:raise ValueError('This PR needs a human check')
+   before,commit,proof=trimmed_commit(p,result,p['branch'])
+   with LOCK:STATE['prs'][id]['_mergeCandidate']={'before':before,'commit':commit,'proof':{'tests':proof['tests'],'passed':proof['passed']}};save()
+   merged=merge_ready(p['number'],commit,p['title'])
   if not merged.get('merged'):raise ValueError("Couldn't merge. Check on GitHub, then try again.")
   receipt={'id':id,'number':p['number'],'github':p['github'],'sha':merged['sha'],'before':before,'tests':proof['tests'],'passed':proof['passed'],'at':now()}
-  with LOCK:STATE['prs'][id]['status']='merged';STATE['merged'].append(receipt);save()
+  with LOCK:
+   STATE['prs'][id]['status']='merged';STATE['prs'][id].pop('_mergeCandidate',None);STATE['merged'].append(receipt);save()
   return client()
 
 
