@@ -1,8 +1,8 @@
 {
-  "commit": "d5c46b8eed700b2b9361a3cee690c199c459fc3d",
-  "id": "dpl_3oBwBtAz4tUgKby3FXseUHxezx1E",
+  "commit": "7ad09d9229c1e2d276d9ef73984b27226ee199fe",
+  "id": "dpl_2nETUbuC2gU3PwYiSWJYXyNjg7Zc",
   "url": "https://pr-trailer.vercel.app",
-  "deploymentUrl": "https://pr-trailer-nnu1ez7j5-13shreyanshs-projects.vercel.app",
+  "deploymentUrl": "https://pr-trailer-d21co60jf-13shreyanshs-projects.vercel.app",
   "files": [
     {
       "file": "app/review.js",
@@ -21,13 +21,13 @@
     },
     {
       "file": "app/style.css",
-      "sha": "2d4fcbc5c17f0a1faf1bff9581e29812455e8ed4",
-      "size": 28670
+      "sha": "727599357bf05f8025f4ca5b13b91f64068090a4",
+      "size": 29930
     },
     {
       "file": "app/app.js",
-      "sha": "dad3f00120211b1b2b4d3a5d49571bfc23ea245f",
-      "size": 20221
+      "sha": "30f656d9058b9c324d035fb96e015a72b747be54",
+      "size": 20277
     },
     {
       "file": "app/evidence/KASSA-11.json",

@@ -50,3 +50,5 @@
  .ledger{padding-top:8px}.ledger-nav{height:24px;margin-bottom:8px}.ledger h1{margin-bottom:4px}.ledger .metadata{margin-bottom:8px}
  .ledger .mobile-back{font-size:16px;line-height:22px;padding:4px 0}.risk-panel .code{padding:4px 0}
 }
+.pr-row.current{margin-top:0}.row-state .primary{font-size:16px;line-height:20px;min-height:24px;padding:1px 14px}
+@media(max-width:600px){.pr-row.current{padding-top:6px}}

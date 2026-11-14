@@ -1,0 +1,122 @@
+[
+  {
+    "width": 390,
+    "name": "cap",
+    "proof": {
+      "x": 16,
+      "y": 617.3125,
+      "width": 358,
+      "height": 95.78125
+    },
+    "action": {
+      "x": 0,
+      "y": 743.828125,
+      "width": 390,
+      "height": 156.171875
+    },
+    "scroll": {
+      "width": 390,
+      "height": 900
+    }
+  },
+  {
+    "width": 390,
+    "name": "risk",
+    "proof": {
+      "x": 16,
+      "y": 622.96875,
+      "width": 358,
+      "height": 95.78125
+    },
+    "action": {
+      "x": 0,
+      "y": 743.828125,
+      "width": 390,
+      "height": 156.171875
+    },
+    "scroll": {
+      "width": 390,
+      "height": 900
+    }
+  },
+  {
+    "width": 390,
+    "name": "junior",
+    "proof": {
+      "x": 16,
+      "y": 646.234375,
+      "width": 358,
+      "height": 95.78125
+    },
+    "action": {
+      "x": 0,
+      "y": 827,
+      "width": 390,
+      "height": 73
+    },
+    "scroll": {
+      "width": 390,
+      "height": 900
+    }
+  },
+  {
+    "width": 1440,
+    "name": "cap",
+    "proof": {
+      "x": 240,
+      "y": 481.96875,
+      "width": 960,
+      "height": 75.78125
+    },
+    "action": {
+      "x": 240,
+      "y": 569.75,
+      "width": 960,
+      "height": 72
+    },
+    "scroll": {
+      "width": 1440,
+      "height": 900
+    }
+  },
+  {
+    "width": 1440,
+    "name": "risk",
+    "proof": {
+      "x": 240,
+      "y": 723.15625,
+      "width": 960,
+      "height": 71.78125
+    },
+    "action": {
+      "x": 240,
+      "y": 806.9375,
+      "width": 960,
+      "height": 72
+    },
+    "scroll": {
+      "width": 1440,
+      "height": 900
+    }
+  },
+  {
+    "width": 1440,
+    "name": "junior",
+    "proof": {
+      "x": 240,
+      "y": 531.578125,
+      "width": 960,
+      "height": 75.78125
+    },
+    "action": {
+      "x": 240,
+      "y": 619.359375,
+      "width": 960,
+      "height": 72
+    },
+    "scroll": {
+      "width": 1440,
+      "height": 900
+    }
+  }
+]
