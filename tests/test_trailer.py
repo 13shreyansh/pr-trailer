@@ -35,7 +35,8 @@ class EndToEnd(unittest.TestCase):
         self.assertNotEqual(engine.route(items, danger, [])["tier"], "return")
 
     def test_clean_copy_change_is_light(self):
-        t = engine.build("PR-113", ROOT / "out-test", with_ui=False)
+        import tempfile
+        t = engine.build("PR-113", Path(tempfile.mkdtemp()), with_ui=False)
         self.assertEqual(t["findings"], [])
 
 
