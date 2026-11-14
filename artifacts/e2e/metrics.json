@@ -1,0 +1,22 @@
+{
+  "sourceCommit": "4081abce4f4220f0b107ecb682a9e0be1813eee6",
+  "implementationLines": 5741,
+  "selectedReadLines": 25,
+  "initialPRs": 23,
+  "pythonTests": 42,
+  "nodeSuites": 4,
+  "fullDeployedFlows": 2,
+  "consoleErrors": 0,
+  "baseline": {
+    "tests": 3,
+    "passed": 3,
+    "exitCode": 0
+  },
+  "heldOut": {
+    "tests": 1,
+    "passed": 0,
+    "exitCode": 1
+  },
+  "finalBankChecks": 48,
+  "classification": "measured"
+}

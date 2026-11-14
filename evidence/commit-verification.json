@@ -1,5 +1,5 @@
 {
-  "commit": "e46f8ce27dbf834337a6012cbe119e79a6b2ea5b",
+  "commit": "4081abce4f4220f0b107ecb682a9e0be1813eee6",
   "vercelBaseCommit": "7ad09d9",
   "publication": "Vercel project routing with immutable worker assets",
   "files": {
@@ -19,11 +19,11 @@
       "contentType": "application/javascript; charset=utf-8"
     },
     "style.css": {
-      "sha256": "668624f920d4ad1c6a374b3d6b642b96dfe150126caa25cc5d53c80ddf41f00a",
+      "sha256": "c56b39a1fe95bc4bea9e692e442c0b08e27dbf54c2cf7aee0de0df56b1542c4a",
       "matchesCommittedSource": true,
       "contentType": "text/css"
     }
   },
-  "backendLoadedCommit": "e46f8ce27dbf834337a6012cbe119e79a6b2ea5b",
+  "backendLoadedCommit": "4081abce4f4220f0b107ecb682a9e0be1813eee6",
   "measured": true
 }

@@ -1,0 +1,48 @@
+{
+  "layoutChecks": [
+    {
+      "width": 1440,
+      "proofBottom": 557.75,
+      "actionsTop": 569.75,
+      "measured": true
+    },
+    {
+      "width": 390,
+      "proofBottom": 723.6875,
+      "actionsTop": 772.625,
+      "measured": true
+    }
+  ],
+  "undoBlock": true,
+  "reblock": true,
+  "reverted": true,
+  "retrimmed": true,
+  "remerged": true,
+  "errors": [],
+  "lastMerge": {
+    "id": "KASSA-19",
+    "number": 88,
+    "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/88",
+    "sha": "27cfcda127ced391cfd9abc2bea44a5855b1af5b",
+    "before": "c9ad492ceb39b22909d41b7f822fea01a0c54013",
+    "tests": 48,
+    "passed": 48,
+    "at": "2026-11-14T22:35:10.906272+00:00"
+  },
+  "block": {
+    "id": "KASSA-INTERN",
+    "number": 21,
+    "commentId": 6885264962,
+    "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/21#issuecomment-6885264962",
+    "at": "2026-11-14T22:34:52.519929+00:00"
+  },
+  "measured": true,
+  "sourceCommit": "4081abce4f4220f0b107ecb682a9e0be1813eee6",
+  "githubVerified": true,
+  "commentSnapshot": {
+    "id": 6885264962,
+    "body": "What should this change? Name one thing we can test.\n\n<!-- tieto:block -->",
+    "html_url": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/21#issuecomment-6885264962",
+    "created_at": "2026-11-14T22:34:52Z"
+  }
+}

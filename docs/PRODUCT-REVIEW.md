@@ -1,41 +1,25 @@
-# Job 02 independent review
+# Job 03 independent review
 
-Reviewer: separate 6 Astra agent. Scope: active product source, design v2, independently executed quality checks, then deployed browser evidence when the owner signals readiness. No GitHub mutations or resets were run by this reviewer.
+Reviewer: separate gpt-6-astra. Verdict: PASS on spec fit and build quality for served source `4081abce4f4220f0b107ecb682a9e0be1813eee6`. No unresolved blocking findings.
 
-## Pass 1: spec and source
+## Spec fit
 
-The active implementation has the v2 entry, owned workspace, outside-PR boundary, live queue, sandboxed test runner, real merge/return/block functions, and measured result files. The GitHub broker rejects writes outside `13shreyansh/tieto-nordbank-payments`. Test subprocesses receive a restricted environment and Seatbelt denies broker-file access and network access. The isolated-run regression passed during this review.
+The reviewer inspected all 22 final screenshots from the deployed desktop and 390 px flows. It confirmed the fixed type sizes, 48 px mobile current row, shared bar scale, needed/unchecked groups, single prescribed primary action, risk panel, accurate junior safety wording, blocked barrier, and read-only outside ledger. Proof and the action fit on both viewports.
 
-Three reproducible defects require fixes before acceptance:
+## Build quality
 
-1. **P1, Stop never settles a queued batch.** `product/service.py:measure` returns before the `finally` block when STOP is already set. A mocked queued job left its batch at `running=True`, `completed=0`, `total=1`. Remaining queued jobs therefore prevent the UI from leaving its active-run state.
-2. **P1, Enter can merge from the start screen.** `app/app.js` handles Enter by selecting the first proven row without checking the active view. A JSDOM reproduction loaded a proven row, clicked Tieto to return home, then sent Enter on the body. It requested `/api/finish` even though no Finish button was visible. This violates the explicit keyboard contract.
-3. **P2, editable return note is lost.** `app/app.js:render` retains editor text only while the editor has focus. A JSDOM reproduction edited the note, focused the risky-lines button, and opened the panel. The note reverted to its original value. Polling after blur has the same cause.
+The reviewer independently ran the Python suite: measured 42 passing tests in 7.761 seconds, plus all four Node suites and syntax checks. It reviewed the later narrow stylesheet and publication-helper changes. It independently fetched all four served static files and compared their SHA-256 values with committed source, and verified the worker boot commit. All matched the served source.
 
-The owner accepted these findings and is adding permanent regressions and fixes. This reviewer edits only this document.
+It also independently verified the final desktop action receipts against GitHub: measured 19 merges, 48 passing checks on the final merge, trimmed PR #86, the posted block question, and absence of unchecked files from main. Both complete deployed flows reported zero browser errors in a measured 11.6 minutes. All 24 archived run JSON files were readable.
 
-Two smaller source-level mismatches were also reported. Outside-PR `riskPosition` is the constant `.3`, while the design requires a notch at the actual changed line. The general outside-PR risk note mentions hardware even for unrelated public Python repositories. Position should come from the measured changed block, and hardware wording should remain specific to Reduino.
+Previously flagged queue cancellation, keyboard approval, note persistence, merge propagation, pending-candidate revalidation, revert concurrency, outside-link ownership, mobile type and junior proof-label findings are fixed and covered by regression checks.
 
-The archived alternate implementation was not treated as active source. The current source does not autoplay the workflow. The ledger's recorded-result animation follows the explicit v2 interaction.
+After that review, the owner additionally verified Undo block, re-block, Revert, re-trim and re-merge through the live UI and GitHub. The final merge again passed 48 checks. Two consecutive final resets passed. See `artifacts/e2e/controls-report.json` and `final-resets.log`.
 
-## Pass 2: independent build checks
+## Publication and limits
 
-Measured on the active source before the three fixes:
+The served snapshot uses Vercel project routing over base deployment `7ad09d9`, because the API deployment allowance was exhausted. The worker and tunnel remain supervised on this Mac and must stay running. No billing change was made. The public marker distinguishes the served source from the base deployment.
 
-- `.venv312/bin/python -m unittest discover -s tests -v`: 25 tests passed, 6.943 seconds.
-- `npm test`: both suites passed. These cover review helpers and the clean entry DOM, not the complete live workflow.
-- `node --check app/app.js`, `node --check app/review.js`, `node --check app/api/bridge.js`: passed.
+Removal trials establish block necessity against the fixed tests, not completeness of the requirement. Failed necessity checks can include import or collection failures. Unchecked means extra or untested. Hardware behaviour in the Reduino requests remains a human check.
 
-These passing commands did not cover the three findings above. Each was separately reproduced without live writes.
-
-## Deployed acceptance
-
-Pending the owner's readiness signal. This reviewer has not yet independently inspected deployed screenshots or run deployed read-only browser assertions. Full mutation flow and reset remain the owner's responsibility. `playwright.config.js` names `scripts/e2e.spec.js`; that test file was not present at the initial review checkpoint.
-
-Verdict: changes required. Local tests pass; the three reproduced defects and deployed spec/taste acceptance remain open at this checkpoint.
-
-## Job 03 source checkpoint
-
-Separate gpt-6-astra independently reran the current quality commands on `d5c46b8`: measured 40 Python tests passed in 6.656 seconds; all four Node suites and JavaScript syntax checks passed. It reviewed the bounded GitHub 405/409 retry, rejection of foreign branch updates, revalidation of pending candidates on changed main, and use of the merge's actual first parent for Revert. No source blocker remains at that checkpoint.
-
-The reviewer has also inspected deployed desktop start, cold inbox, active queue, trimmed inbox and outside-PR ledger screenshots. Remaining fee/junior/mobile screenshots, full action receipts and final production commit verification are pending.
+The recording reset deliberately closes generated trimmed PRs and removes its block comments. Receipt reports and screenshots describe the verified pre-reset actions; the workspace is now restored for another real run.
