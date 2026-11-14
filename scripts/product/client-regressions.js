@@ -5,5 +5,6 @@ async function setup(rows){const dom=new JSDOM('<div id="app"></div>',{url:'http
 (async()=>{
  {const {dom,w,calls}=await setup([{...p,id:'clean',kind:'clean',verdict:'proven',readLines:0,risk:[]}]);w.document.body.dispatchEvent(new w.KeyboardEvent('keydown',{key:'Enter',bubbles:true}));await wait();assert.equal(calls.filter(c=>c.url==='/api/finish').length,0,'Enter must never merge from the start screen');dom.window.close();}
  {const{dom,w}=await setup([p]),d=w.document;d.querySelector('[data-action="workspace"]').click();await wait();d.querySelector('[data-action="open"]').click();const note=d.getElementById('agent-note');note.textContent='Edited note survives panel';note.dispatchEvent(new w.Event('input',{bubbles:true}));d.querySelector('[data-action="panel"]').click();assert.equal(d.getElementById('agent-note').textContent,'Edited note survives panel');dom.window.close();}
- console.log('Keyboard and note editor regressions passed.');
+ {const{dom,w}=await setup([{...p,id:'junior',kind:'junior',tests:3,passed:0}]),d=w.document;d.querySelector('[data-action="workspace"]').click();await wait();d.querySelector('[data-action="open"]').click();assert.match(d.querySelector('.proof-copy').textContent,/0 of 3 safety checks pass on this PR/);assert.doesNotMatch(d.querySelector('.proof-copy').textContent,/trimmed PR/);dom.window.close();}
+ console.log('Keyboard, note editor and original safety-proof regressions passed.');
 })().catch(e=>{console.error(e);process.exitCode=1});

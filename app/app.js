@@ -59,7 +59,7 @@
  }
  function lamps(p){
   const grouped=p.tests>48,n=grouped?p.lampFiles:p.tests;
-  return `<span class="lamps" aria-hidden="true">${Array.from({length:n||0},()=>`<i class="lamp ${['queued','running'].includes(p.status)?'running':p.kind==='junior'?'failed':''}"></i>`).join('')}</span><span class="proof-copy">${p.passed} of ${p.tests} tests pass on the trimmed PR.${grouped?' Lamps represent test files.':''}</span>`;
+  return `<span class="lamps" aria-hidden="true">${Array.from({length:n||0},()=>`<i class="lamp ${['queued','running'].includes(p.status)?'running':p.kind==='junior'?'failed':''}"></i>`).join('')}</span><span class="proof-copy">${p.passed} of ${p.tests} ${p.kind==='junior'?'safety checks pass on this PR.':'tests pass on the trimmed PR.'}${grouped?' Lamps represent test files.':''}</span>`;
  }
  function proof(p){return `<div class="ledger-line proof"><dt>Proof</dt><dd>${p.tests===null?`<span>${p.status==='running'?'Trimming…':p.status==='queued'?'Queued':'Not trimmed'}</span>`:lamps(p)}<div class="proof-links">${p.tests!==null?`<a href="/api/proof?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener">Recorded commands & results</a>`:''}<button class="plain" data-action="recheck" ${running()||pending?'disabled':''}>Re-run tests</button></div></dd></div>`;}
  function riskPanel(p){

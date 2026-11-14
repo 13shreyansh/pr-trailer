@@ -1,0 +1,313 @@
+[
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-01",
+    "result": {
+      "id": "KASSA-01",
+      "number": 27,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/27",
+      "sha": "507e607ae8e33f3e7e6ec29d9476d6a89796dc86",
+      "before": "52a95b91d42f8f1413ac3690fb7f7d3221805541",
+      "tests": 5,
+      "passed": 5,
+      "at": "2026-11-14T21:56:54.285950+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-02",
+    "result": {
+      "id": "KASSA-02",
+      "number": 28,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/28",
+      "sha": "99ebc492fc6352a26e965ce31788da0379ab5560",
+      "before": "507e607ae8e33f3e7e6ec29d9476d6a89796dc86",
+      "tests": 7,
+      "passed": 7,
+      "at": "2026-11-14T21:57:03.494667+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-03",
+    "result": {
+      "id": "KASSA-03",
+      "number": 29,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/29",
+      "sha": "12b7cf2a4a60a0894738f72e3fde472a1557a1ee",
+      "before": "99ebc492fc6352a26e965ce31788da0379ab5560",
+      "tests": 9,
+      "passed": 9,
+      "at": "2026-11-14T21:57:12.310567+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-04",
+    "result": {
+      "id": "KASSA-04",
+      "number": 30,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/30",
+      "sha": "7df52374ea215977a74b15fde5fc7f2ae16979ad",
+      "before": "12b7cf2a4a60a0894738f72e3fde472a1557a1ee",
+      "tests": 11,
+      "passed": 11,
+      "at": "2026-11-14T21:57:21.068975+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-05",
+    "result": {
+      "id": "KASSA-05",
+      "number": 31,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/31",
+      "sha": "8c350796c4cefb91ef26313b368d8eb6d9796037",
+      "before": "7df52374ea215977a74b15fde5fc7f2ae16979ad",
+      "tests": 13,
+      "passed": 13,
+      "at": "2026-11-14T21:57:30.511514+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-06",
+    "result": {
+      "id": "KASSA-06",
+      "number": 32,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/32",
+      "sha": "29da1f6a8cf5e899868e1c3ad51b3451e5bd89e2",
+      "before": "8c350796c4cefb91ef26313b368d8eb6d9796037",
+      "tests": 15,
+      "passed": 15,
+      "at": "2026-11-14T21:57:39.397405+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-07",
+    "result": {
+      "id": "KASSA-07",
+      "number": 33,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/33",
+      "sha": "2e5285d177948e8e13b98ff1240cbf88ce1deb26",
+      "before": "29da1f6a8cf5e899868e1c3ad51b3451e5bd89e2",
+      "tests": 18,
+      "passed": 18,
+      "at": "2026-11-14T21:57:48.286494+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-08",
+    "result": {
+      "id": "KASSA-08",
+      "number": 34,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/34",
+      "sha": "2fecc62cede68b50616badb71cb092a2c0f457f2",
+      "before": "2e5285d177948e8e13b98ff1240cbf88ce1deb26",
+      "tests": 21,
+      "passed": 21,
+      "at": "2026-11-14T21:57:56.942403+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-09",
+    "result": {
+      "id": "KASSA-09",
+      "number": 35,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/35",
+      "sha": "ae9f90c4e6f9beaa14e94f75b157d8f2e611bcae",
+      "before": "2fecc62cede68b50616badb71cb092a2c0f457f2",
+      "tests": 23,
+      "passed": 23,
+      "at": "2026-11-14T21:58:06.112077+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-10",
+    "result": {
+      "id": "KASSA-10",
+      "number": 36,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/36",
+      "sha": "e2bed5d39ccaed320afe74cf9ef30727eb6aca48",
+      "before": "ae9f90c4e6f9beaa14e94f75b157d8f2e611bcae",
+      "tests": 26,
+      "passed": 26,
+      "at": "2026-11-14T21:58:14.830496+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-11",
+    "result": {
+      "id": "KASSA-11",
+      "number": 37,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/37",
+      "sha": "382d6e6c26b0d9c2439dfd117e57fdd2109fabe3",
+      "before": "e2bed5d39ccaed320afe74cf9ef30727eb6aca48",
+      "tests": 28,
+      "passed": 28,
+      "at": "2026-11-14T21:58:23.609671+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-12",
+    "result": {
+      "id": "KASSA-12",
+      "number": 38,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/38",
+      "sha": "b5d83851625a7d38995809e61ea730e5284cba16",
+      "before": "382d6e6c26b0d9c2439dfd117e57fdd2109fabe3",
+      "tests": 31,
+      "passed": 31,
+      "at": "2026-11-14T21:58:32.427072+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-13",
+    "result": {
+      "id": "KASSA-13",
+      "number": 39,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/39",
+      "sha": "e3b6e8dcb3cdeadbc5a596f8fcdac6eb84a4ae1f",
+      "before": "b5d83851625a7d38995809e61ea730e5284cba16",
+      "tests": 34,
+      "passed": 34,
+      "at": "2026-11-14T21:58:41.333374+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-14",
+    "result": {
+      "id": "KASSA-14",
+      "number": 40,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/40",
+      "sha": "c5773c1f5c9e156c2cf84d643e2a636f243042d7",
+      "before": "e3b6e8dcb3cdeadbc5a596f8fcdac6eb84a4ae1f",
+      "tests": 37,
+      "passed": 37,
+      "at": "2026-11-14T21:58:50.490379+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-15",
+    "result": {
+      "id": "KASSA-15",
+      "number": 41,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/41",
+      "sha": "8e813dfad3dc4bf66a1e0c6460138cd1289b9157",
+      "before": "c5773c1f5c9e156c2cf84d643e2a636f243042d7",
+      "tests": 39,
+      "passed": 39,
+      "at": "2026-11-14T21:58:59.876204+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-16",
+    "result": {
+      "id": "KASSA-16",
+      "number": 42,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/42",
+      "sha": "7fae6c528490ab79f0186f5a3107d5d0a6f3266f",
+      "before": "8e813dfad3dc4bf66a1e0c6460138cd1289b9157",
+      "tests": 41,
+      "passed": 41,
+      "at": "2026-11-14T21:59:08.538424+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-17",
+    "result": {
+      "id": "KASSA-17",
+      "number": 43,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/43",
+      "sha": "4d7eccf217640db9ad79cf9e37c03a8fb2be65c5",
+      "before": "7fae6c528490ab79f0186f5a3107d5d0a6f3266f",
+      "tests": 44,
+      "passed": 44,
+      "at": "2026-11-14T21:59:16.813052+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-18",
+    "result": {
+      "id": "KASSA-18",
+      "number": 44,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/44",
+      "sha": "131e96b2d3825e808bb785ad72a54f29d1fe4870",
+      "before": "4d7eccf217640db9ad79cf9e37c03a8fb2be65c5",
+      "tests": 46,
+      "passed": 46,
+      "at": "2026-11-14T21:59:25.593328+00:00"
+    }
+  },
+  {
+    "action": "finish",
+    "status": 200,
+    "id": "KASSA-19",
+    "result": {
+      "id": "KASSA-19",
+      "number": 45,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/45",
+      "sha": "5000f18f7c48e0971caba2987f9bc8c4a15816b6",
+      "before": "131e96b2d3825e808bb785ad72a54f29d1fe4870",
+      "tests": 48,
+      "passed": 48,
+      "at": "2026-11-14T21:59:34.391021+00:00"
+    }
+  },
+  {
+    "action": "return",
+    "status": 200,
+    "id": "KASSA-CAP",
+    "result": {
+      "id": "KASSA-CAP",
+      "number": 46,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/46",
+      "original": 20,
+      "sha": "6cf9e76042fbdf826cb5339b3d6e6783a066da1e",
+      "note": "Kept the cap. Removed the retry rewrite and currency cache; nothing tested them. Fix the rounding on line 5 before approval.",
+      "at": "2026-11-14T21:59:52.082516+00:00"
+    }
+  },
+  {
+    "action": "block",
+    "status": 200,
+    "id": "KASSA-INTERN",
+    "result": {
+      "id": "KASSA-INTERN",
+      "number": 21,
+      "commentId": 6884844959,
+      "github": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/21#issuecomment-6884844959",
+      "at": "2026-11-14T21:59:55.241284+00:00"
+    }
+  }
+]

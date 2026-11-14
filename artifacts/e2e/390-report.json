@@ -1,0 +1,16 @@
+{
+  "width": 390,
+  "url": "https://pr-trailer.vercel.app",
+  "errors": [],
+  "verification": {
+    "repo": "13shreyansh/tieto-nordbank-payments",
+    "verifiedMerges": 19,
+    "lastMergeTests": 48,
+    "trimmedPR": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/46",
+    "blockComment": "https://github.com/13shreyansh/tieto-nordbank-payments/pull/21#issuecomment-6884844959",
+    "main": "5000f18f7c48e0971caba2987f9bc8c4a15816b6",
+    "uncheckedFilesAbsent": true,
+    "measured": true
+  },
+  "measured": true
+}
