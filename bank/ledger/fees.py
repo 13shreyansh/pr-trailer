@@ -1,15 +1,17 @@
 """Transfer fees (REQ-PAY-204)."""
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal
 
 INSTANT_RATE = Decimal("0.002")  # 0.2 %
 INSTANT_MIN_CENTS = 50
+FEE_TABLE = {
+    "sepa": lambda cents: 0,
+    "instant": lambda cents: max(round(Decimal(cents) * INSTANT_RATE), INSTANT_MIN_CENTS),
+}
 
 
 def transfer_fee(amount_cents: int, kind: str) -> int:
     """Return the fee in cents for a transfer of the given kind."""
-    if kind == "sepa":
-        return 0
-    if kind == "instant":
-        fee = (Decimal(amount_cents) * INSTANT_RATE).quantize(Decimal("1"), rounding=ROUND_HALF_UP)
-        return max(int(fee), INSTANT_MIN_CENTS)
-    raise ValueError(f"unknown transfer kind {kind}")
+    try:
+        return int(FEE_TABLE[kind](amount_cents))
+    except KeyError:
+        raise ValueError(f"unknown transfer kind {kind}") from None
