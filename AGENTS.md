@@ -56,3 +56,6 @@ Design: DESIGN-DIRECTION.md. Decisions: DECISIONS.md.
 - Every step of the video is done by a real user action on the live site (typing, speaking, uploading, clicking). Videos are recorded by an agent (Manus) actually using the live site, so the full flow must really work end to end.
 - Prove it: an end-to-end browser test (Playwright, headless Chromium) runs the whole video flow on the DEPLOYED URL as a user would, at 1440x900 and 390 px, and saves screenshots. That test is the acceptance check.
 - Sample inputs a tester needs (e.g. a whiteboard photo) live at a separate unlinked /samples path, never inside the product UI.
+## Exact spec and taste gate (Shreyansh, Sat 22:10 — applies to every entry)
+- DESIGN-DIRECTION.md is the exact screen spec written by the Chief: placement, sizes, colours, fonts, copy, states. Follow it exactly; engineering is yours. Where it is silent, pick the plainest consistent option and list it under "Spec gaps I filled" in STATUS.md.
+- Before reporting, loop on the DEPLOYED site until every item in ../kit/TASTE-GATE.md is a yes: build, deploy, run the E2E test, look at every screenshot, fix, repeat. Report each item's yes/no with its screenshot in STATUS.md.

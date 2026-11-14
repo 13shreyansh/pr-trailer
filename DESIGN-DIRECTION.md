@@ -1,4 +1,6 @@
-# Tieto design spec: The Measure
+# Tieto design spec: The Measure (v2, real product, Sat 22:20)
+
+v2 changes from v1: section 4 rewritten (no story mode; every beat is a real feature), start screen, PR-link field, no wall clock, real merges and pushes only on our own bank repo, acceptance 12 replaced. Everything else in v1 stands.
 
 For Codex. DESIGN-FLOOR.md applies underneath. Numbers here are story targets; the build shows only numbers a real test run measured. Product name comes from config.
 
@@ -55,11 +57,11 @@ Both scales are printed on screen (section 6).
 ## 3. Screen anatomy
 
 **Inbox, 1440 × 900** (content 1200, no scroll with 23 PRs):
-1. Top bar, 44 px: product name; "Mon 16 Nov · 09:00"; reviewer initials.
+1. Top bar, 44 px: as in section 4 (product name, workspace, PR-link field, "Synced", "Merging as").
 2. Counter block, 124 px: counter sentence left, "Trim all" right on the same baseline, one sub-line.
 3. Key line, 24 px: two 24 px sample bars with their phrases left; scale caption right.
 4. Rows, 26 px, arrival order (intern PR last). Columns: title 300 · track 624 · count 112 · state 116; gaps 16.
-5. Foot line: "19 finished · Undo last".
+5. Foot line: "19 merged · Revert last merge".
 
 **Opened ledger, 1440 × 900** (content 960, never scrolls):
 1. Top bar: "← Inbox · 4 left".
@@ -71,35 +73,29 @@ Both scales are printed on screen (section 6).
 
 **390 px.** Inbox rows 48 px: title and count, then the bar; the list scrolls; numeral 44 px. Ledger is one screen, bar 32 px; Read these swaps the five lines for the panel with "Back to ledger". Primary fixed at the bottom, 56 px.
 
-## 4. The story, beat by beat
+## 4. Real product, beat by beat (v2, Sat 22:20: replaces the story mode)
 
-Easing `cubic-bezier(0.16,1,0.3,1)`. Reduced motion: 150 ms opacity, counter jumps. No entrance animation.
+Everything below is a real working feature on the live site. There is no story mode, no fixture replay, no frozen clock and no auto-play. The video is recorded by someone actually using the site. Easing `cubic-bezier(0.16,1,0.3,1)`. Reduced motion: 150 ms opacity, counter jumps. No entrance animation.
 
-**Play the story.** `?story=1` loads a stored fixture of measured results: no network, clock frozen at 09:00, waits for fonts, hides the cursor. Space plays the next beat, 1–5 jump to a beat, R restarts. `?story=auto` runs all five on the video timings. No story controls on screen.
+**0. Start screen ("/").** Ground colour, a left-aligned 480 px column in the inbox's grid: product name 28 px 700, then a primary saffron button "Try the demo workspace (Nordbank payments)" (40 px), and under it a 14 px aubergine-2 link "Measure any public GitHub PR". No password fields.
 
-**1. Cold open (0:00).** Every bar hatched end to end; the intern bar is a four-line block at the bottom. "10,214 lines written overnight." Nothing moves. Eye: numeral, then the wall of hatching.
+**Top bar (every screen), 44 px:** product name left; workspace "Nordbank · payments" next to it in aubergine-2; right side: a 360 px inline field "Paste a GitHub PR link" (32 px, 1 px rule border, Enter submits), then 12 px aubergine-2 "Synced 09:12" (last fetch from GitHub), then "Merging as @{account}" (the real GitHub account the workspace writes with). No wall clock, no invented initials. Why: a real tool needs a way in for new work, and judges can paste their own PR.
 
-**2. Wow 1 (0:15).** "Trim all" (T).
-- Rows resolve top to bottom, 90 ms apart: the needed part turns solid (clip-path from the left, 240 ms).
-- At 2.3 s the hatched ends of the 19 proven rows leave together (translateX 32 px, opacity 0, 480 ms). The other four keep their hatching.
-- The numeral counts 10,214 → 96 across the 2.8 s; the words swap to "lines need you." (opacity, 150 ms). Finish replaces "Trim all".
-- Enter ×19: the stub folds into a tick (scaleX to 0 from the left, 160 ms; tick stroke, 160 ms), the row closes (height, 180 ms). A new Enter completes a running fold at once.
-- Eye: numeral, then the column emptying to four rows.
+**1. Inbox on arrival.** The workspace's open agent PRs come from a real repository we own (a Nordic-bank payments repo with its own fast test suite) plus 2–3 real AIDev PRs measured in their own repos. PRs not yet trimmed are hatched end to end with the state "Not trimmed". Counter: "{n} lines written by agents in {p} open PRs." Sub-line: "None trimmed yet." Rows show the PR number after the title in aubergine-2 ("#482"). Outside PRs (AIDev and ones added by link) sit below a 1 px rule labelled 12 px aubergine-2 "Outside this workspace", with "owner/repo #91" after the title.
 
-**3. Wow 2 (0:45).** Open "Cap instant-transfer fees" (O).
-- Its bar grows into the ledger bar (transform, 360 ms); other rows fade (160 ms).
-- First open only, skippable: "Retry rewrite · 610" lifts out (translateY −20 px, opacity 0, 320 ms), the lamps sweep once (600 ms) and stay lit; 500 ms later "Currency cache · 318" does the same. The gap closes (width, 400 ms), leaving "The cap · 212", a fifth of the width. Both blocks appear as chips in the Extra line.
-- N or the notch opens the panel (grid row 0fr→1fr, 240 ms): six lines, the rounding line marked.
-- "Send back trimmed" (S): the bar leaves left (translateX −48 px, opacity, 320 ms); in the inbox its row closes and the numeral drops by 6.
-- Eye: the lifting block, the lamps, the marked line.
+**2. Wow 1: "Trim all" (T).** Really runs the trim on every unmeasured PR: removes each block, re-runs that PR's tests, classifies every line. Rows resolve as their real runs finish (needed part turns solid, clip-path from the left, 240 ms). Only rows actually running show stripes at 40 % with "Trimming…"; waiting rows say "Queued". The sub-line shows real progress, "Trimming 7 of 23 · 212 tests run", and "Trim all" becomes a quiet text button "Stop". When the run starts, the counter words become "lines still to check." and the numeral counts down as real results land; at the end the words swap to "lines need you." (opacity, 150 ms). When every run is done, the proven rows' hatched ends leave together (translateX 32 px, opacity 0, 480 ms), the Trim-all slot becomes quiet 14 px text "Trimmed 09:12 · Run again", and the only saffron button is Finish on the current proven row, with its hint always visible beside it: "Merges 212 of 1,140 lines into main". If a full live run takes longer than 20 s, the video speeds it up in editing; the product never fakes it. Finish ×19 behaves as in v1: Enter folds each proven row into a tick and really merges the solid part into the bank repo (our own repo). On AIDev PRs from other people's repos, Finish is replaced by "Download trimmed patch" and nothing is pushed there.
 
-**4. Wow 3 (1:20).** Open the intern PR: hatched end to end. Three breaks open in turn (gap 0→8 px, 200 ms, 250 ms apart) as three lamps turn red. "Block and ask what they meant" (B): stripes and outline turn red (colour, 240 ms), the barrier closes (scaleY, 200 ms), the sent message replaces the button. Eye: the Asked line, then the barrier.
+**3. Wow 2: open "Cap instant-transfer fees" (O).** Its bar grows into the ledger bar (transform, 360 ms). The first time a PR's ledger opens, its extra blocks lift out one by one as their recorded test results show (translateY −20 px, opacity 0, 320 ms, 500 ms apart), the lamps show the real per-test results, and the gap closes (width, 400 ms). "Re-run tests" (a quiet text button in the Proof line) runs them again live. N or the notch opens the risky-lines panel. "Send back trimmed" (S) really pushes a trimmed branch to the bank repo and opens a new PR there with the editable note as its description; the inbox row closes and the numeral drops.
 
-**5. Close (1:50).** Story mode only: crossfade (300 ms) to the closing line, centred, 40 px.
+**4. Wow 3: the intern PR.** A real PR in the bank repo by a first-week junior's agent (the UI never says "intern"), opened from a ticket that says "Make our company the best in the world. Make no mistakes.", touching login, pricing and a database migration. Its ledger shows the real failing checks (three breaks, three red lamps). "Block and ask what they meant" (B) really posts the message on that PR in our bank repo and marks it blocked.
+
+**5. Add a PR.** Pasting a link into the top-bar field and pressing Enter fetches the PR and adds its row under "Outside this workspace", hatched and "Trimming…" while it runs in our sandbox. Errors inline under the field, 12 px: "Not a public PR link." If the repo's tests can't run here, the row says "Can't run this repo's tests here" and only shows lines written. Why: judges can try their own PR, which proves nothing is staged.
+
+**Close.** The closing line is not a screen in the product. It goes on the video's last frame in editing.
 
 ## 5. Components
 
-**PR bar row.** Title 14 px 500, one line. Count "1,140", then "212 of 1,140" after trim. State: saffron Finish (24 px) on the current proven row only; otherwise "Proven", "Needs you · 6", or red "Blocked". Current row on orchid-wash. Click opens; O opens the first row that needs you. Loading: stripes at 40 % opacity, "Trimming…". Error: "Couldn't run tests · Retry". Empty: "Nothing to sign. New agent PRs appear here, measured."
+**PR bar row.** Title 14 px 500, one line. Count "1,140", then "212 of 1,140" after trim. State: saffron Finish (24 px) on the current proven row only; otherwise "Proven", "Needs you · 6", or red "Blocked". Current row on orchid-wash. Click opens; O opens the first row that needs you. Loading: stripes at 40 % opacity, "Trimming…". Error: "Couldn't run tests · Retry". Empty: "Nothing to sign. New agent PRs appear here."
 
 **Counter.** One sentence: numeral 64 px, words 20 px, same baseline. Always the sum of Read-these lines in PRs still in the inbox.
 
@@ -119,8 +115,9 @@ Easing `cubic-bezier(0.16,1,0.3,1)`. Reduced motion: 150 ms opacity, counter jum
 
 ## 6. Copy
 
-- Counter: "{n} lines written overnight." → "{n} lines need you." Sub-line: "23 PRs from agents. None checked yet." → "19 of 23 proven. 4 need you."
-- Key line: "The ask needs this" · "Nothing checks this".
+- Counter: "{n} lines written by agents since yesterday." → "{n} lines need you." Sub-line: "{p} PRs. None checked yet." → "{a} of {p} proven. {b} need you."
+- Key line: "Needed: a test breaks without it" · "Unchecked: every test passes without it".
+- Key hints: 12 px aubergine-2 beside each button ("Trim all  T", "Finish  Enter"). In the video, the first use of each action is a visible mouse click.
 - Scale: "Full width is {1,200} lines. Longer PRs wrap. Under {12} lines is drawn at 6 px." Ledger: "Full width is the {n} lines this PR wrote."
 - Buttons: "Trim all" · "Finish" · "Send back trimmed" · "Block and ask what they meant".
 - Finish hint: "Merges {kept} of {written} lines."
@@ -132,7 +129,7 @@ Easing `cubic-bezier(0.16,1,0.3,1)`. Reduced motion: 150 ms opacity, counter jum
 - Bug note: "Rounds half a cent down, so a fee can pass the cap by 1 cent."
 - Sent back: "Kept the cap. Removed the retry rewrite and currency cache; nothing tested them. Fix the rounding on line {n}."
 - Blocked: Asked adds "This can't be checked. No test can tell when it's done." Extra: "Nothing is provably needed." Read these: "3 changes break production.", one line each ("Drops a column that payments reads."). Sent: "Asked the author: what should this change? Name one thing we can test."
-- Close: "Every line earns its place, or it doesn't ship."
+- Close (video end frame only): "Every line earns its place, or it doesn't ship."
 
 ## 7. Don't
 
@@ -158,7 +155,7 @@ Easing `cubic-bezier(0.16,1,0.3,1)`. Reduced motion: 150 ms opacity, counter jum
 1. 1440 × 900 cold open: 23 rows, all hatched, intern bar on four lines, "Trim all" the only saffron, no scroll.
 2. After trim: 19 solid stubs, 4 rows with hatching, exactly one saffron Finish, both key phrases and the scale caption visible.
 3. Any single-line bar's width ÷ its line count = 0.52 px (±1 px), or 6 px under 12 lines.
-4. After Finish ×19: four rows and "19 finished · Undo last".
+4. After Finish ×19: four rows and "19 merged · Revert last merge".
 5. Fee-cap ledger: block counts sum to the PR total; after the replay one solid block a fifth wide, two chips in Extra, all lamps lit.
 6. Panel open: six mono lines, one on saffron-wash with its note; Proof and the primary visible without scrolling.
 7. Intern ledger: no solid part, three breaks, three red lamps; after Block, a red bar with barrier and the sent message.
@@ -166,4 +163,6 @@ Easing `cubic-bezier(0.16,1,0.3,1)`. Reduced motion: 150 ms opacity, counter jum
 9. 390 px: no horizontal scroll, primary fixed at the bottom, caption reads "600 lines".
 10. Text contrast at least 4.5:1; hatch outline at least 3:1.
 11. Only Archivo and JetBrains Mono load; counts align in their column.
-12. `?story=1`: Space five times gives the same five frames on every run.
+12. A Playwright headless test on the DEPLOYED URL does the whole flow as a user at 1440 × 900 and 390 px: demo workspace → Trim all (real runs) → Finish on every proven PR → open the fee-cap PR → panel → Send back trimmed (a new trimmed PR exists in the bank repo) → open the intern PR → Block (the message exists on that PR) → Add a PR with a public PR link. Screenshots saved in artifacts/e2e/, no console errors.
+13. No `?story` parameter, fixture replay, frozen clock or auto-play exists anywhere in the code.
+14. A reset script restores the demo workspace (reopens the PRs, removes the trimmed PRs and messages) so the flow can be recorded again.

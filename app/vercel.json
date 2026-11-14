@@ -1,46 +1,5 @@
 {
-  "functions": {
-    "api/trim.py": {
-      "maxDuration": 300,
-      "includeFiles": "runtime/**"
-    },
-    "api/finish.py": {
-      "maxDuration": 60,
-      "includeFiles": "runtime/**"
-    }
-  },
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        }
-      ]
-    },
-    {
-      "source": "/runtime/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
-        }
-      ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/trim",
-      "destination": "/api/trim.py"
-    },
-    {
-      "source": "/api/finish",
-      "destination": "/api/finish.py"
-    }
-  ]
+  "functions": {"api/bridge.js": {"maxDuration": 60}},
+  "headers": [{"source":"/(.*)","headers":[{"key":"X-Content-Type-Options","value":"nosniff"},{"key":"Referrer-Policy","value":"strict-origin-when-cross-origin"}]}],
+  "rewrites": [{"source":"/api/:endpoint","destination":"/api/bridge?endpoint=:endpoint"},{"source":"/workspace/:path*","destination":"/index.html"}]
 }

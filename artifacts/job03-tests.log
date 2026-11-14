@@ -1,0 +1,41 @@
+test_finish_materializes_a_real_git_branch_and_rejects_unsafe_prs (test_measure.BranchRegressions.test_finish_materializes_a_real_git_branch_and_rejects_unsafe_prs) ... ok
+test_whole_file_group_counts_only_actual_delta (test_measure.CountingRegressions.test_whole_file_group_counts_only_actual_delta) ... ok
+test_removal_revisits_blocks_after_other_blocks_are_deleted (test_measure.FixedPointRegression.test_removal_revisits_blocks_after_other_blocks_are_deleted) ... ok
+test_each_intern_failure_shows_the_actual_changed_source_line (test_measure.InternExactChangeRegression.test_each_intern_failure_shows_the_actual_changed_source_line) ... ok
+test_all_recorded_counts_and_controls (test_measure.MeasureTests.test_all_recorded_counts_and_controls) ... ok
+test_cap_heldout_is_a_real_rounding_failure (test_measure.MeasureTests.test_cap_heldout_is_a_real_rounding_failure) ... ok
+test_deletions_and_multiple_hunks_preserve_offsets (test_measure.MeasureTests.test_deletions_and_multiple_hunks_preserve_offsets) ... ok
+test_intern_three_independent_failures_and_clean_reset (test_measure.MeasureTests.test_intern_three_independent_failures_and_clean_reset) ... ok
+test_mask_regression_keeps_iban_length (test_measure.MeasureTests.test_mask_regression_keeps_iban_length) ... ok
+test_no_network_dependencies_in_story_assets (test_measure.MeasureTests.test_no_network_dependencies_in_story_assets) ... ok
+test_oracle_is_refreshed_before_repeat_run (test_measure.MeasureTests.test_oracle_is_refreshed_before_repeat_run) ... ok
+test_real_remove_and_retest_and_patch (test_measure.MeasureTests.test_real_remove_and_retest_and_patch) ... ok
+test_runtime_rejects_non_allowlisted_input (test_measure.MeasureTests.test_runtime_rejects_non_allowlisted_input) ... ok
+test_notch_tracks_marked_changed_line_after_import_change (test_measure.NotchPositionRegression.test_notch_tracks_marked_changed_line_after_import_change) ... ok
+test_cap_pr_introduces_rounding_regression_against_green_baseline (test_measure.RoundingIntroductionRegression.test_cap_pr_introduces_rounding_regression_against_green_baseline) ... ok
+test_child_checks_keep_parent_vendor_import_paths (test_measure.ServerlessDependencyRegression.test_child_checks_keep_parent_vendor_import_paths) ... ok
+test_all_ids_are_validated_before_any_queue_mutation (test_product.BatchInputRegression.test_all_ids_are_validated_before_any_queue_mutation) ... ok
+test_reset_does_not_suppress_worker_failure (test_product.BatchInputRegression.test_reset_does_not_suppress_worker_failure) ... ok
+test_connected_tunnel_can_publish_without_local_dns_resolution (test_product.EvidenceRegressions.test_connected_tunnel_can_publish_without_local_dns_resolution) ... Public worker routing published.
+Worker tunnel reconnecting after exit 0
+ok
+test_notch_uses_changed_source_position_instead_of_a_constant (test_product.EvidenceRegressions.test_notch_uses_changed_source_position_instead_of_a_constant) ... ok
+test_public_library_does_not_get_an_invented_hardware_warning (test_product.EvidenceRegressions.test_public_library_does_not_get_an_invented_hardware_warning) ... ok
+test_external_repository_is_never_writable (test_product.GitHubBoundaryTests.test_external_repository_is_never_writable) ... ok
+test_new_reference_creation_handles_github_422 (test_product.GitHubBoundaryTests.test_new_reference_creation_handles_github_422) ... ok
+test_owned_repository_settings_are_writable (test_product.GitHubBoundaryTests.test_owned_repository_settings_are_writable) ... ok
+test_public_pr_parser_rejects_credential_and_redirect_hosts (test_product.GitHubBoundaryTests.test_public_pr_parser_rejects_credential_and_redirect_hosts) ... ok
+test_stop_accounts_for_queued_jobs_and_finishes_batch (test_product.QueueRegressionTests.test_stop_accounts_for_queued_jobs_and_finishes_batch) ... ok
+test_ordinary_revert_does_not_force_overwrite_concurrent_main (test_product.RefUpdateRegression.test_ordinary_revert_does_not_force_overwrite_concurrent_main) ... ok
+test_public_code_cannot_read_broker_or_use_network (test_product.SandboxTests.test_public_code_cannot_read_broker_or_use_network) ... ok
+test_test_code_cannot_change_the_measured_source (test_product.SourceIsolationRegression.test_test_code_cannot_change_the_measured_source) ... ok
+test_completely_unchecked_public_change_requires_human_review (test_product.UncheckedAskRegression.test_completely_unchecked_public_change_requires_human_review) ... ok
+test_clean_copy_change_is_light (test_trailer.EndToEnd.test_clean_copy_change_is_light) ... ok
+test_unverified_findings_never_block (test_trailer.EndToEnd.test_unverified_findings_never_block) ... ok
+test_hallucinated_quote_is_dropped (test_trailer.Grounding.test_hallucinated_quote_is_dropped) ... ok
+test_predicates (test_trailer.SqlShape.test_predicates) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 7.869s
+
+OK

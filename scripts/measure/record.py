@@ -1,4 +1,4 @@
-"""Produce the UI's measured fixture from executable removal trials."""
+"""Produce the UI's measured catalog from executable removal trials."""
 import difflib
 import json
 from pathlib import Path
@@ -117,6 +117,6 @@ if __name__=='__main__':
     report=json.loads((ROOT/'evidence/runs'/f"{row['id']}.json").read_text())
     row['lampFiles']=len(set('.'.join(c['name'].split('.')[:2]) for c in report['final']['cases']))
     row['seconds']=sum(x['seconds'] for x in report['runs'])
-  fixture={'product':'Tieto','clock':'Mon 16 Nov · 09:00','owner':'Shreyansh','initials':'S','measurement':'Measured locally from recorded removal trials. Added + removed implementation lines; oracle tests held fixed. Synthetic bank and public AIDev PRs.','prs':rows,'totals':{'written':sum(r['written'] for r in rows),'needYou':sum(r.get('readLines',0) for r in rows),'proven':sum(r['status']=='proven' for r in rows),'prs':len(rows)}}
-  (OUT/'fixture.js').write_text('globalThis.TIETO_FIXTURE = '+json.dumps(fixture,ensure_ascii=False)+';\n');(OUT/'evidence/manifest.json').write_text(json.dumps(fixture,indent=2));print(fixture['totals'])
+  catalog={'product':'Tieto','measurement':'Measured locally from recorded removal trials. Added + removed implementation lines; oracle tests held fixed. Synthetic bank and public AIDev PRs.','prs':rows,'totals':{'written':sum(r['written'] for r in rows),'needYou':sum(r.get('readLines',0) for r in rows),'proven':sum(r['status']=='proven' for r in rows),'prs':len(rows)}}
+  (OUT/'evidence/manifest.json').write_text(json.dumps(catalog,indent=2));print(catalog['totals'])
  else: raise SystemExit('Run bank, 9, 24, then assemble')

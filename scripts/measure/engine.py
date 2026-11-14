@@ -65,14 +65,15 @@ def materialize(base, work, blocks, selected):
             target.write_text(''.join(lines))
 
 
-def run_check(work, tests, log_dir, label, python=None, timeout=45):
+def run_check(work, tests, log_dir, label, python=None, timeout=45, command_prefix=(), env_overrides=None):
     python = python or PYTHON
     log_dir.mkdir(parents=True, exist_ok=True)
     report = log_dir / (label + '.xml')
-    command = [python, '-B', '-m', 'pytest', '-q', '-p', 'no:cacheprovider', '--junitxml=' + str(report.resolve()), *tests]
+    command = [*command_prefix, python, '-B', '-m', 'pytest', '-q', '-p', 'no:cacheprovider', '--junitxml=' + str(report.resolve()), *tests]
     started = time.monotonic()
     env = {k: os.environ[k] for k in ('PATH', 'HOME', 'SYSTEMROOT', 'TMPDIR') if k in os.environ}
     env.update(PYTHONPATH=os.pathsep.join([str(work / 'src'), str(work), *sys.path]), PYTHONDONTWRITEBYTECODE='1')
+    env.update(env_overrides or {})
     try:
         proc = subprocess.run(command, cwd=work, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=timeout)
         output, code = proc.stdout, proc.returncode
@@ -88,7 +89,16 @@ def run_check(work, tests, log_dir, label, python=None, timeout=45):
     return result
 
 
-def trim(base, head, work, paths, tests, logs, whole_paths=()):
+def trim(base, head, work, paths, tests, logs, whole_paths=(), runner=None, on_check=None, cancelled=None):
+    def check(work, tests, logs, label):
+        if cancelled and cancelled():
+            raise InterruptedError("Trim stopped")
+        result = (runner or run_check)(work, tests, logs, label)
+        if on_check:
+            on_check(result)
+        if cancelled and cancelled():
+            raise InterruptedError("Trim stopped")
+        return result
     shutil.copytree(base, work, dirs_exist_ok=True, ignore=shutil.ignore_patterns('__pycache__', '.git', '.pytest_cache'))
     blocks = []
     for path in paths:
@@ -96,7 +106,7 @@ def trim(base, head, work, paths, tests, logs, whole_paths=()):
         blocks.extend(blocks_for(path, a.read_text() if a.exists() else '', b.read_text() if b.exists() else '', path in whole_paths))
     active = {b.id for b in blocks}
     materialize(base, work, blocks, active)
-    runs = [run_check(work, tests, logs, 'head')]
+    runs = [check(work, tests, logs, 'head')]
     if runs[0]['exitCode'] != 0 or not runs[0]['tests']:
         raise RuntimeError('Head oracle must pass nonempty tests: ' + str(logs) + '\n' + runs[0]['output'][:2000])
     # Greedy deletion to a fixed point. The final kept set is 1-minimal at this block granularity.
@@ -111,7 +121,7 @@ def trim(base, head, work, paths, tests, logs, whole_paths=()):
                 continue
             selected = active - {block.id}
             materialize(base, work, blocks, selected)
-            run = run_check(work, tests, logs, f'trial-{len(runs):03d}')
+            run = check(work, tests, logs, f'trial-{len(runs):03d}')
             run['removedBlock'] = block.id
             runs.append(run)
             last_pass.append(run)
@@ -120,7 +130,7 @@ def trim(base, head, work, paths, tests, logs, whole_paths=()):
                 removed.add(block.id)
                 changed = True
     materialize(base, work, blocks, active)
-    final = run_check(work, tests, logs, 'trimmed')
+    final = check(work, tests, logs, 'trimmed')
     runs.append(final)
     if final['exitCode'] or final['tests'] != runs[0]['tests']:
         raise RuntimeError('Final trimmed result changed the oracle')

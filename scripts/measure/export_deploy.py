@@ -1,10 +1,10 @@
 import pathlib,json,hashlib,base64,sys
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 root=ROOT/'app'
-top={'index.html','style.css','app.js','review.js','fixture.js','vercel.json','requirements.txt','.python-version'}
+top={'index.html','style.css','app.js','review.js','vercel.json','requirements.txt','.python-version'}
 def allowed(p):
  rel=p.relative_to(root)
- return p.is_file() and '__pycache__' not in p.parts and (str(rel) in top or rel.parts[0] in ('fonts','evidence','patches','runtime') or str(rel) in ('api/trim.py','api/finish.py'))
+ return p.is_file() and '__pycache__' not in p.parts and (str(rel) in top or rel.parts[0] in ('fonts','evidence','patches','runtime') or str(rel) in ('api/trim.py','api/finish.py','api/workspace.py'))
 if len(sys.argv)==1:
  files=[]
  for p in sorted(root.rglob('*')):

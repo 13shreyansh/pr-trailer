@@ -11,3 +11,10 @@
 - Build: the real half-cent counterexample is 200.5 cents rounded to 200 instead of policy-required 201. The hard €5 ceiling still holds; the earlier suggested over-cap explanation was incorrect.
 - Build: Finish builds and tests a downloadable Git branch in the synthetic bank. Send back prepares a real minimal patch and a draft note. No GitHub merge, comment or message is sent.
 - Build: normal Trim all executes allowlisted source snapshots. Story mode uses the recorded fixture and makes no check API calls.
+- Sat 22:43: job 02 running as NEW session 01a1dbcb-fbee-76b2-9484-96cc316b4dea (resume of job01 failed: active writer).
+
+- Job 03 (Sat 23:33): sole owner reconciles all inherited work. Active implementation is `product/` with `app/app.js`; the alternate implementation is archived under ignored `var/alternate-v2/`.
+- Job 03: keep the 21 managed PRs in `13shreyansh/tieto-nordbank-payments` (initial #1-21), with real fetched GitHub sources and tests. Close both duplicate sets in `13shreyansh/nordbank-payments` (#1-42), each with a short redirect comment; exact receipts are in `evidence/reconciliation-job03.json`.
+- Job 03 supersedes the older Build entries about export-only Finish, draft-only comments, and recorded UI modes. Finish now tests the minimal candidate on current main, pushes it to the owned request branch and merges that real PR. Return opens a real trimmed PR. Block posts a real question on the owned PR. Public repositories are read-only and compatible Python tests run in an OS sandbox.
+- Job 03: the retained bank cap PR has a measured cap-guard defect: 500.5 cents rounds down for the guard, then rounds up to 501 for the returned fee. A separate held-out test fails while the request suite passes. The older job01 rounding evidence is retained as historical evidence, not replayed in the active product.
+- Spec gap: the desktop columns sum to 1,300 px including gaps while the content width is specified as 1,200 px. Preserve the exact 624 px measurement track and line scale; inspect actual viewport bounds before adjusting the remaining columns. Mobile top-bar content uses two rows to fit the PR field and real account.

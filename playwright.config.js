@@ -1,0 +1,1 @@
+module.exports={testDir:'./scripts/product',testMatch:'e2e.spec.js',workers:1,timeout:900000,use:{headless:true,actionTimeout:30000},reporter:[['list'],['json',{outputFile:'artifacts/e2e/results.json'}]]};

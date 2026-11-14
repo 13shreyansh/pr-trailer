@@ -1,1 +1,12 @@
-{"name":"tieto-measure","private":true,"scripts":{"test":"node scripts/test_review.js && node scripts/test_dom.js"},"devDependencies":{"jsdom":"27.0.0"}}
+{
+  "name": "tieto-measure",
+  "private": true,
+  "scripts": {
+    "test": "node scripts/test_review.js && node scripts/test_dom.js && node scripts/product/client-regressions.js",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "jsdom": "27.0.0"
+  }
+}
