@@ -2,7 +2,7 @@
   "name": "tieto-measure",
   "private": true,
   "scripts": {
-    "test": "node scripts/test_review.js && node scripts/test_dom.js && node scripts/product/client-regressions.js",
+    "test": "node scripts/test_review.js && node scripts/test_dom.js && node scripts/product/client-regressions.js && node scripts/product/bridge-regressions.js",
     "test:e2e": "playwright test"
   },
   "devDependencies": {
