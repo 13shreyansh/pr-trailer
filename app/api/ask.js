@@ -94,6 +94,10 @@ async function gemini(pr, question, history) {
 }
 
 async function handler(req, res) {
+  if (req.method === "GET") {
+    // Health check, no secrets: is the model configured, and which prompt version is live?
+    return send(res, 200, { model_configured: Boolean(process.env.GEMINI_API_KEY), model: MODEL, prompt: process.env.PROMPT_VERSION || PROMPTS.DEFAULT });
+  }
   if (req.method !== "POST") return send(res, 405, { error: "POST only" });
   let body;
   try { body = await readBody(req); } catch { return send(res, 400, { error: "bad JSON" }); }

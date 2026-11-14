@@ -4,14 +4,16 @@ Junction 2026 · Tieto challenge "Earned Trust in AI Code" · team The CS Guy ·
 
 Every agent-written PR ships with a **trailer**: evidence per requirement ID (test runs, a captioned UI video, a sequence diagram), what the AI checked, **what it refused to decide and why**, a merge-danger note (one-way vs two-way door, blast radius), and a sign-off card for a named human. The AI never approves. Only reproduced problems can block.
 
-- **Live app: https://pr-trailer.vercel.app** (approver inbox, impact map, the lines to read, evidence, ask-about-this-PR chat, approve/deny)
+- **Live app: https://pr-trailer.vercel.app**: the story of one agent sprint at a made-up bank, narrowed from 290 changed lines to the 66 a person must read; then per PR the outcome, how to look at it (video, numbers, diagram or audio, with the rule that picked it), the impact map, the lines to read, sandbox evidence, a graded ask-about-this-PR assistant, and approve or deny with a reason
+- What "it works" means and how it is checked: [docs/EVAL_SPEC.md](docs/EVAL_SPEC.md); the assistant's evals and hill-climbing ledger: [docs/CHAT_EVAL.md](docs/CHAT_EVAL.md)
+- Video shot list and 5-minute pitch: [docs/PITCH.md](docs/PITCH.md)
 - Concept card: [docs/CONCEPT.md](docs/CONCEPT.md)
 - Measured results: [docs/RESULTS.md](docs/RESULTS.md)
 - Lessons log and decisions: [docs/LESSONS.md](docs/LESSONS.md)
 
 ## The web app (app/)
 
-`python3 app/build_data.py` turns the trailers into `app/data.json`; `node app/dev.js` serves it locally on :4321 with the `/api/ask` function. Vercel deploys `app/` from `main` (root directory `app`, no build). Set `GEMINI_API_KEY` in the Vercel project for LLM answers; without it the chat answers from the trailer itself.
+`python3 bench/effort.py && python3 app/build_data.py` turns the trailers and benchmarks into `app/data.json` (the agent-decisions summary is cached in `app/llm/decisions.json`; refresh it with `python3 app/llm_decisions.py`); `node app/dev.js` serves it locally on :4321 with the `/api/ask` function. Vercel deploys `app/` from `main` (root directory `app`, no build). Set `GEMINI_API_KEY` in the Vercel project for LLM answers; without it the chat answers from the trailer itself.
 
 ## Run it
 
