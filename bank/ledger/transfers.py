@@ -4,7 +4,7 @@ from .auth import require_owner
 from .fees import transfer_fee
 from .iban import is_valid_iban
 
-DAILY_LIMIT_CENTS = {"basic": 1_000_000, "premium": 2_000_000}  # €10k / €20k
+DAILY_LIMIT_CENTS = {"basic": 1_000_000, "premium": 2_500_000}  # €10k / €25k (REQ-PAY-210 AC1)
 
 
 class TransferError(Exception):
@@ -12,9 +12,10 @@ class TransferError(Exception):
 
 
 def daily_total(db, account_id: str, day: str) -> int:
+    # Only settled transfers count; this lets the query use the (from_account, status) index.
     row = db.execute(
         "SELECT COALESCE(SUM(amount_cents), 0) FROM transfers "
-        "WHERE from_account = ? AND created_day = ? AND status IN ('pending', 'booked')",
+        "WHERE from_account = ? AND created_day = ? AND status = 'booked'",
         (account_id, day),
     ).fetchone()
     return row[0]
