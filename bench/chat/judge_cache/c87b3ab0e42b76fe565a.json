@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately identifies all uncovered lines (ledger/api.py:34, ledger/metrics.py:24-25, and ledger/transfers.py:36) and correctly describes what code runs on each line based on the context and cited lines."}

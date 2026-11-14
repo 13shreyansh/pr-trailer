@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "Line ledger/transfers.py:13 is not the added comment (it is blank), and line ledger/transfers.py:16 is 'row = db.execute(', not the WHERE clause that excludes pending transfers."}

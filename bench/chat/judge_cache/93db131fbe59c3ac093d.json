@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "All claims about the failed acceptance test and the differential test are supported by the PR context and diff, and all cited lines match."}

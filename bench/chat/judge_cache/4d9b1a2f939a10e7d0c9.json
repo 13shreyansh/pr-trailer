@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The citation ledger/transfers.py:16 does not match the claim; line 16 is 'row = db.execute(', whereas the modification to 'status = booked' is on line 18."}

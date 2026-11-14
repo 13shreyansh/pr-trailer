@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response is fully grounded in the PR context, accurately referencing the regressed test, the broken requirement, the dangling column usage in ledger/statements.py:7, and the destructive migration."}

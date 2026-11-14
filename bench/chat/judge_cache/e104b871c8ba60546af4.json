@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The diff includes the full implementation of `to_cents`, which directly determines how user-entered amounts like '19.99' are parsed."}

@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The context explicitly lists 'concurrency between simultaneous requests' under not_checked and lists no proven problems; claiming definitively that the lockout is not safe is an unsupported claim absent from the context."}

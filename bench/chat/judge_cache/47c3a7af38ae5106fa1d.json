@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately cites the regressed acceptance test, the specific failure evidence, and the diff line causing the regression, all fully supported by the PR context."}

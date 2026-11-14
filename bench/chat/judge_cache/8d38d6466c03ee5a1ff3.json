@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately reflects the proven authorization problem, cites the requirement to call require_owner, correctly identifies the cited line and file, and notes the lack of an acceptance test for AC1 based on the PR context."}

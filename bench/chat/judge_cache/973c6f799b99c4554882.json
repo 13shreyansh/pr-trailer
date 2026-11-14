@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response is fully grounded in the PR context, correctly identifying the one-way door risk, the destructive migration at migrations/002_drop_memo.sql:1, and the open question with @sara.data."}

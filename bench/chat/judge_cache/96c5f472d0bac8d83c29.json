@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response accurately identifies all lines that never ran in any test from the PR context and correctly describes the code at each cited line."}

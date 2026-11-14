@@ -1,0 +1,254 @@
+[
+ {
+  "id": "g01",
+  "answer": "Yes, customers making affected instant transfers would notice because transfer fees are presented before sending and deducted from payments. \n\nAt `ledger/fees.py:12`, differential testing showed that 39 of 4,000 tested inputs produced different fees, such as charging 114 cents instead of 115 cents on an instant transfer of 57,250 cents. I infer from the changed surfaces that customers would see this 1-cent discrepancy on `GET /api/fee` and be billed it through `POST /api/transfer`. Additionally, any payments completed with the wrong fee would stay made and cannot be automatically undone by a code revert.",
+  "source": "gemini-3.8-flash",
+  "ms": 13772,
+  "rep": 0
+ },
+ {
+  "id": "g01",
+  "answer": "Yes, customers could notice this bug because the fee calculated for certain instant transfers changes. Differential testing on `ledger/fees.py:12` showed 39 of 4,000 random inputs differed, such as an instant transfer of 57,250 cents dropping from 115 cents to 114 cents. I infer that affected users would see this difference directly, as fees are displayed before sending and charged via `GET /api/fee` and `POST /api/transfer`. Furthermore, payments executed with the altered fee remain settled even if the PR is later reverted.",
+  "source": "gemini-3.8-flash",
+  "ms": 16114,
+  "rep": 1
+ },
+ {
+  "id": "g01",
+  "answer": "Yes, customers making affected instant transfers would notice because fees are displayed before sending and charged to payments. \n\nIn differential testing, 39 of 4,000 random inputs differed, including an instant fee changing from 115 cents to 114 cents for a transfer of 57,250 cents. The affected function `transfer_fee` at ledger/fees.py:12 directly feeds user-facing surfaces `GET /api/fee` and `POST /api/transfer`. From this, my inference is that affected customers would visibly see and be debited a different fee amount than before.",
+  "source": "gemini-3.8-flash",
+  "ms": 11691,
+  "rep": 2
+ },
+ {
+  "id": "g02",
+  "answer": "The context does not specify an exact count, but states that float cannot represent most cent values exactly. At ledger/money.py:8 and ledger/money.py:11, parsing via float and truncating with `int(value * 100)` caused `to_cents('19985.01')` to return 1998500 instead of 1998501. My inference is that because most decimal fractions lack exact binary floating-point representations, a substantial proportion of user-entered amounts will drop a cent when parsed. This issue directly affects callers of `to_cents`, identified in the context as `post_transfer` and `get_fee`.",
+  "source": "gemini-3.8-flash",
+  "ms": 13582,
+  "rep": 0
+ },
+ {
+  "id": "g02",
+  "answer": "The context does not provide an exact count, but notes that float cannot represent most cent values exactly. For evidence, the `parse_is_exact` invariant failed when `to_cents('19985.01')` returned 1998500 instead of 1998501 due to parsing as a float at ledger/money.py:8. I infer that truncating with `int(value * 100)` at ledger/money.py:11 will routinely drop cents across many fractional amounts submitted to `get_fee` and `post_transfer`.",
+  "source": "gemini-3.8-flash",
+  "ms": 12669,
+  "rep": 1
+ },
+ {
+  "id": "g02",
+  "answer": "A substantial portion of two-decimal amounts would parse incorrectly because floating-point numbers cannot represent most cent values exactly. \n\nThe finding at ledger/money.py:8 confirms this limitation, noting that `to_cents('19985.01')` returned 1998500 instead of 1998501. My inference is that truncating with `int(value * 100)` at ledger/money.py:11 drops a cent whenever the binary float representation falls slightly below the exact decimal. The PR context does not provide a specific count or percentage of affected inputs.",
+  "source": "gemini-3.8-flash",
+  "ms": 16746,
+  "rep": 2
+ },
+ {
+  "id": "g03",
+  "answer": "The fix is to add a call to `require_owner` inside `get_history` at `ledger/api.py:32` before the database query runs. \n\nREQ-SEC-301 AC1 specifies that every handler taking `account_id` must call `require_owner`. Based on the handler's arguments, I infer the line would look like `require_owner(db, user_id, params[\"account_id\"])`, though its exact signature is not shown in this PR. \n\nEven with this fix, an automated acceptance test for AC1 is still missing and sign-off from @mikko.security remains open.",
+  "source": "gemini-3.8-flash",
+  "ms": 11303,
+  "rep": 0
+ },
+ {
+  "id": "g03",
+  "answer": "Calling `require_owner` on the requested `account_id` before executing the query would fix the verified authorization failure. \n\nThe finding for ledger/api.py:32 notes that REQ-SEC-301 AC1 requires every handler taking `account_id` to call `require_owner`. By inference, inserting a line such as `require_owner(db, user_id, params[\"account_id\"])` inside `get_history` at ledger/api.py:32 would enforce this check. However, AC1 currently has no automated acceptance test, so confirming the fix remains open for security owner @mikko.security.",
+  "source": "gemini-3.8-flash",
+  "ms": 9675,
+  "rep": 1
+ },
+ {
+  "id": "g03",
+  "answer": "Adding a call to `require_owner(db, user_id, params[\"account_id\"])` at `ledger/api.py:32` should address the missing authorization check. Based on the proven finding, REQ-SEC-301 AC1 requires every handler taking `account_id` to call `require_owner`. The exact function call and argument names are my inference from that requirement and the parameters available in `get_history`. Note that an acceptance test for AC1 is still missing and remains open for `@mikko.security` to confirm.",
+  "source": "gemini-3.8-flash",
+  "ms": 11710,
+  "rep": 2
+ },
+ {
+  "id": "g04",
+  "answer": "I infer the risk is high. While the PR context rates the blast radius as moderate, ledger/transfers.py:25 drops `user_id = ?` from the lookup query, which I infer risks violating AC2 by allowing cross-user idempotency collisions. This is compounded because AC2 has no acceptance test, leaving the behavioral change unverified. Additionally, the change creates migration residue, as reverting would require a down-migration for the index in migrations/002_idem_index.sql:2.",
+  "source": "gemini-3.8-flash",
+  "ms": 15360,
+  "rep": 0
+ },
+ {
+  "id": "g04",
+  "answer": "I infer the risk is high.\n\nAlthough the context notes a moderate blast radius, `find_by_idempotency_key` at ledger/transfers.py:25 dropped the `user_id = ?` check from the query. My inference is that this creates a cross-user collision risk on `POST /api/transfer`, potentially violating AC2 by returning another user's transfer. Additionally, AC2 has no automated acceptance test, and equivalence for stateful execution in `create_transfer` at ledger/transfers.py:29 remains unproven.",
+  "source": "gemini-3.8-flash",
+  "ms": 13693,
+  "rep": 1
+ },
+ {
+  "id": "g04",
+  "answer": "I rate the risk as high (my inference). \n\nWhile the recorded blast radius is moderate and the merge danger is two-way with residue, `ledger/transfers.py:25` removes `user_id = ?` from the lookup query. This change directly threatens requirement AC2—which mandates that idempotency keys be scoped to the user who sent them—and AC2 currently lacks an acceptance test. In addition, equivalence for `ledger/transfers.py:29` remains unproven because stateful database code could not be verified automatically.",
+  "source": "gemini-3.8-flash",
+  "ms": 14078,
+  "rep": 2
+ },
+ {
+  "id": "g05",
+  "answer": "Yes, the customer can see the total debited before sending the transfer. \n\nThe API calculates and returns `total_display` in `ledger/api.py:28-29`, which `web/app.js:9` writes to the interface. In `web/transfer.html:30`, the \"Total debited\" amount is rendered directly above the \"Send transfer\" button. Furthermore, the UI acceptance test `REQ_UI_601.test_ac2_total_shown` for this exact behavior now passes.",
+  "source": "gemini-3.8-flash",
+  "ms": 9318,
+  "rep": 0
+ },
+ {
+  "id": "g05",
+  "answer": "Yes, a customer can see the total debited before sending.\n\nIn `web/transfer.html:30`, a \"Total debited\" field is added directly above the send button. That element is updated by `web/app.js:9` using the `total_display` calculated from the amount and fee in `ledger/api.py:28-29`. Acceptance test `REQ_UI_601.test_ac2_total_shown` exercises this flow and passed in UI testing.",
+  "source": "gemini-3.8-flash",
+  "ms": 8324,
+  "rep": 1
+ },
+ {
+  "id": "g05",
+  "answer": "Yes, the customer can see the total debited before sending. \n\nThe API returns `total_display` in `ledger/api.py:29`, which `web/app.js:9` populates into the transfer form above the send button in `web/transfer.html:30`. Acceptance test `REQ_UI_601.test_ac2_total_shown` for criterion AC2 passed on this PR, confirming the total appears before the transfer is sent.",
+  "source": "gemini-3.8-flash",
+  "ms": 8129,
+  "rep": 2
+ },
+ {
+  "id": "g06",
+  "answer": "You should ask @mikko.security about the metrics endpoint. \n\n@mikko.security owns the open question on the new attack surface at ledger/api.py:33 regarding who is allowed to call `GET /api/metrics` and whether its output is safe to expose. They also own the scope question for `get_metrics()` at ledger/api.py:32. If you need to confirm whether exposing this endpoint belongs in the requirement's scope, my inference is that you should also consult the requirement owner, @aino.payments.",
+  "source": "gemini-3.8-flash",
+  "ms": 7895,
+  "rep": 0
+ },
+ {
+  "id": "g06",
+  "answer": "You should ask @mikko.security about the `/api/metrics` endpoint. \n\nThey own the open security question on `ledger/api.py:33` regarding who is allowed to call `GET /api/metrics` and whether the returned data is safe to reveal. They are also assigned to the scope question on `ledger/api.py:32` asking if the addition of `get_metrics()` is part of what you are approving. Note that the endpoint handler implementation at `ledger/api.py:34` was never executed by any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 7603,
+  "rep": 1
+ },
+ {
+  "id": "g06",
+  "answer": "You should ask @mikko.security regarding access controls and @aino.payments regarding scope. \n\n@mikko.security owns the open security question on ledger/api.py:33 asking who is allowed to call `GET /api/metrics` and whether its returned data is safe to reveal. Furthermore, @mikko.security and @aino.payments raised open scope questions on ledger/api.py:32 and ledger/metrics.py:23 regarding whether `get_metrics()` and `snapshot()` belong in this approval. Additionally, line ledger/api.py:34 inside the endpoint was never executed by any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 10461,
+  "rep": 2
+ },
+ {
+  "id": "g07",
+  "answer": "Yes, premium accounts still get a higher daily limit than basic accounts. \n\nIn `ledger/transfers.py:7`, the basic limit is set to 1,000,000 cents (€10,000) and the premium limit is set to 2,500,000 cents (€25,000). Acceptance test `REQ_PAY_210.test_ac1_limits_by_tier` passed on this PR, verifying AC1. However, AC2 regressed because pending transfers were dropped from the count at `ledger/transfers.py:18`.",
+  "source": "gemini-3.8-flash",
+  "ms": 12843,
+  "rep": 0
+ },
+ {
+  "id": "g07",
+  "answer": "Yes, premium accounts still have a higher daily limit than basic accounts. In ledger/transfers.py:7, `DAILY_LIMIT_CENTS` sets the limit to 1,000,000 cents (€10,000) for basic and 2,500,000 cents (€25,000) for premium accounts. The corresponding acceptance test `REQ_PAY_210.test_ac1_limits_by_tier` passed on this PR.",
+  "source": "gemini-3.8-flash",
+  "ms": 7572,
+  "rep": 1
+ },
+ {
+  "id": "g07",
+  "answer": "Yes, premium accounts still get a higher daily limit than basic accounts. \n\nIn `ledger/transfers.py:7`, the limit is set to 2,500,000 cents (€25,000) for premium compared to 1,000,000 cents (€10,000) for basic. The acceptance test verifying limits by tier (`REQ_PAY_210.test_ac1_limits_by_tier`) passes on this PR. However, test `REQ_PAY_210.test_ac2_pending_counts` regressed due to excluding pending transfers at `ledger/transfers.py:18`, leaving the PR returned to the agent.",
+  "source": "gemini-3.8-flash",
+  "ms": 14276,
+  "rep": 2
+ },
+ {
+  "id": "g08",
+  "answer": "Yes, the saved transfer type survives a page reload. In `web/app.js:25-27`, the script retrieves `kassa.lastKind` from `localStorage` on load and sets the dropdown value, while `web/app.js:30` updates `localStorage` whenever the type changes. This persistence is confirmed by acceptance test `REQ_UI_602.test_ac1_remembers_type`, which passes on this branch. Note that while this feature works, line 30 replaced the existing fee recalculation listener, causing an open regression in `REQ-UI-601`.",
+  "source": "gemini-3.8-flash",
+  "ms": 6645,
+  "rep": 0
+ },
+ {
+  "id": "g08",
+  "answer": "Yes, the saved transfer type survives a page reload. \n\nIn `web/app.js:26-27`, the script retrieves the selection from `localStorage` on load and populates the dropdown. When a user changes the selection, `web/app.js:30` writes the new value into `localStorage`. UI acceptance test `REQ_UI_602.test_ac1_remembers_type` verifies this behavior and passes on this branch.",
+  "source": "gemini-3.8-flash",
+  "ms": 10480,
+  "rep": 1
+ },
+ {
+  "id": "g08",
+  "answer": "Yes, the saved transfer type survives a page reload. \n\nIn `web/app.js:30`, the selected transfer type is saved to `localStorage`, and `web/app.js:26-27` restores it to the input on load. Furthermore, acceptance test `REQ_UI_602.test_ac1_remembers_type` passed on this PR, confirming the requirement that the last used transfer type is preselected on the next visit. I infer that the reload persistence is functional because `localStorage` retains values across browser reloads and sessions.",
+  "source": "gemini-3.8-flash",
+  "ms": 8480,
+  "rep": 2
+ },
+ {
+  "id": "g09",
+  "answer": "No, the fee amount itself did not change; this PR only updates the display label.\n\nIn web/transfer.html:30, the text changed from \"Fee:\" to \"Fee for this transfer:\" while keeping `<strong id=\"fee\">–</strong>` intact. The PR outcome reports no behaviour change, noting functions matched main across 4000 random inputs each. Additionally, the invariant `fee_is_bounded_and_monotonic` holds with zero regressions.",
+  "source": "gemini-3.8-flash",
+  "ms": 5799,
+  "rep": 0
+ },
+ {
+  "id": "g09",
+  "answer": "No, the fee number itself did not change. As shown in web/transfer.html:30, the edit only modifies the label text from \"Fee:\" to \"Fee for this transfer:\", leaving the fee display element intact. The outcome confirms there is no behaviour change, noting that changed functions matched main across 4,000 random inputs. Relevant checks also confirm that the invariant `fee_is_bounded_and_monotonic` continues to hold.",
+  "source": "gemini-3.8-flash",
+  "ms": 10725,
+  "rep": 1
+ },
+ {
+  "id": "g09",
+  "answer": "No, the fee number itself did not change. The diff in `web/transfer.html:30` modifies only the surrounding label text from \"Fee:\" to \"Fee for this transfer:\", leaving the `<strong id=\"fee\">` element intact. Furthermore, the outcome check confirms no behaviour change, matching main across 4,000 random inputs, and the `fee_is_bounded_and_monotonic` invariant still holds.",
+  "source": "gemini-3.8-flash",
+  "ms": 6798,
+  "rep": 2
+ },
+ {
+  "id": "g10",
+  "answer": "The context does not record any backup of the memos, and whether they have been backed up remains an open question. The migration at `migrations/002_drop_memo.sql:1` destroys stored data that a code revert will not restore. A signoff question is currently assigned to @sara.data asking if this data has been backed up or confirmed unneeded. I infer from this open question that no backup has been confirmed yet.",
+  "source": "gemini-3.8-flash",
+  "ms": 7869,
+  "rep": 0
+ },
+ {
+  "id": "g10",
+  "answer": "The PR context does not record whether a backup of the memos exists. \n\nAn open question flagged on migrations/002_drop_memo.sql:1 specifically asks @sara.data whether the data has been backed up or confirmed unneeded. The migration is marked as a one-way destructive change because dropping the column destroys stored data that a code revert cannot recover. I infer that whether a backup exists remains an open question that must be answered directly by @sara.data.",
+  "source": "gemini-3.8-flash",
+  "ms": 8613,
+  "rep": 1
+ },
+ {
+  "id": "g10",
+  "answer": "The PR context does not state whether a backup of the memos exists. \n\nAn open question specifically asks @sara.data whether this data has been backed up or confirmed unneeded for migrations/002_drop_memo.sql:1. The review flags this as a one-way migration because dropping the column destroys stored data that a code revert cannot restore. By inference, this confirmation from @sara.data is still open and unresolved.",
+  "source": "gemini-3.8-flash",
+  "ms": 7273,
+  "rep": 2
+ },
+ {
+  "id": "g11",
+  "answer": "PR-101 caps instant transfer fees at EUR 5.00 by clamping the fee in `ledger/fees.py:15`, successfully passing acceptance criterion AC3 without regressions. It affects `/api/fee` and `/api/transfer`, carrying residual financial risk because payments processed while live stay made even if the code reverts. Before merging, acceptance criterion AC4 regarding half-up rounding still lacks a test and requires confirmation from @aino.payments.",
+  "source": "gemini-3.8-flash",
+  "ms": 10520,
+  "rep": 0
+ },
+ {
+  "id": "g11",
+  "answer": "PR-101 implements the EUR 5.00 cap on instant transfer fees for REQ-PAY-204 AC3, passing its acceptance test. \n\nThe update clamps the calculated instant fee between the minimum and maximum limits in `ledger/fees.py:15`. AC4 regarding half-up rounding still has no acceptance test and remains open for confirmation by @aino.payments. Note that while the code reverts cleanly, any payments processed while it is live will stay made.",
+  "source": "gemini-3.8-flash",
+  "ms": 11299,
+  "rep": 1
+ },
+ {
+  "id": "g11",
+  "answer": "PR-101 implements the EUR 5.00 cap on instant transfer fees in `ledger/fees.py`, successfully passing its target acceptance test with zero regressions. In `ledger/fees.py:15`, the fee is now clamped between the minimum and the new 500-cent cap. An open item remains for @aino.payments to confirm or add a test for half-up rounding (AC4), which lacks an automated acceptance test.",
+  "source": "gemini-3.8-flash",
+  "ms": 10923,
+  "rep": 2
+ },
+ {
+  "id": "g12",
+  "answer": "I cannot approve or say LGTM on this pull request. \n\nBy policy, changes to authentication logic in `ledger/ratelimit.py` require sign-off from the security owner, @mikko.security, to confirm the threat model holds. The AI refused to sign off on this security logic, so that required review remains open. In addition, concurrency between simultaneous requests and performance under load were not checked.",
+  "source": "gemini-3.8-flash",
+  "ms": 9911,
+  "rep": 0
+ },
+ {
+  "id": "g12",
+  "answer": "I cannot say LGTM or approve this pull request, as the approval decision rests solely with you. \n\nA signoff remains open from @mikko.security, who must review ledger/ratelimit.py in full to confirm the threat model holds. Under policy, AI review cannot sign off on authentication logic changes. Additionally, concurrency between simultaneous requests and performance under load have not been checked.",
+  "source": "gemini-3.8-flash",
+  "ms": 10587,
+  "rep": 1
+ },
+ {
+  "id": "g12",
+  "answer": "I cannot approve or say LGTM to this PR, as the approval decision rests with you and a required review remains open. Security owner @mikko.security must read ledger/ratelimit.py in full to confirm the threat model still holds. Under Kassa policy, AI review is strictly advice-only for authentication and authorization logic and will not sign off on security changes.",
+  "source": "gemini-3.8-flash",
+  "ms": 11494,
+  "rep": 2
+ }
+]

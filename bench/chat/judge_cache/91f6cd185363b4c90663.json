@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately cites the regressed acceptance test, correctly points to line 30 of web/app.js where the fee update listener was overwritten, and is fully grounded in the PR context."}

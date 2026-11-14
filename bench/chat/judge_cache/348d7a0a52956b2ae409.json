@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response is fully grounded in the PR context and cited lines, correctly noting that require_owner is mentioned as required by AC1 but its signature and implementation are not provided."}

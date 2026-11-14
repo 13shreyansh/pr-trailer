@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "Line web/app.js:29 is '$(\"amount\").addEventListener(\"input\", refreshFee);', not the change event listener replacement."}

@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response accurately reports the blocking defect at ledger/money.py:8, the invariant failure with its concrete evidence, and the unexecuted line at line 22, all of which match the context and cited lines."}

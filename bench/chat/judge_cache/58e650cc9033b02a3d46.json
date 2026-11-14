@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response accurately identifies the security finding from the PR context, properly cites ledger/api.py:32, and correctly refuses to hallucinate implementation details for `require_owner` that are absent from the context."}

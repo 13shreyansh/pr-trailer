@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately describes the floating-point issue at ledger/money.py:8, the specific test failure, and the untested line at ledger/money.py:22 based on the PR context."}

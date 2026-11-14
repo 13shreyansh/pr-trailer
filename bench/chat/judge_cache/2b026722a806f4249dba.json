@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately states which acceptance criteria are tested versus untested based on the PR context and correctly cites the code at ledger/transfers.py:25."}

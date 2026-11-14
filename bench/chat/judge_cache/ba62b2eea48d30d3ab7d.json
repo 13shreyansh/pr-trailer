@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The inference regarding race conditions on in-memory state tracking is absent from the PR context; reasonable claims not supported by the context fail groundedness."}

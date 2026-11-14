@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The citation `ledger/fees.py:16` points to `raise ValueError(...)` rather than the return statement clamping the fee."}

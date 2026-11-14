@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response accurately identifies the failing tests (the acceptance test REQ_PAY_204.test_ac3_instant_cap and the differential test on transfer_fee) and their failure reasons, with all claims and citations supported by the PR context and diff."}

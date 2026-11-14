@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The destructive migration at migrations/002_drop_memo.sql:1 is an unverified refusal with severity 'warn', not one of the two verified blocking issues."}

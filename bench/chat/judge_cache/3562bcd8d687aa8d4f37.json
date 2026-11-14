@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately identifies the regressed acceptance test and correctly cites web/app.js:30 where the change listener replaced the call to refreshFee."}

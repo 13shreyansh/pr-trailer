@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately states that only AC1 is tested (via REQ_PAY_230.test_ac1_retry_debits_once) and that AC2 has no acceptance test."}

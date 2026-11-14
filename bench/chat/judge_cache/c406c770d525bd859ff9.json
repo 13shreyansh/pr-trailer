@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response is completely grounded in the PR context, correctly identifying the broken acceptance test, the error in ledger/statements.py, and the destructive migration risk."}

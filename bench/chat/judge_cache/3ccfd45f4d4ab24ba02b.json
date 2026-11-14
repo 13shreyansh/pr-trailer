@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately identifies the failing tests (the differential test and REQ_PAY_204.test_ac3_instant_cap) and their causes using only facts and diff evidence provided in the PR context. All citations match the code."}

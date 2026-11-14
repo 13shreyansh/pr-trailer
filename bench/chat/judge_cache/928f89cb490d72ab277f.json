@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer is fully grounded in the PR context and diff, correctly stating that the exact count is not given while accurately referencing the documented invariant failure, line citations, and callers."}

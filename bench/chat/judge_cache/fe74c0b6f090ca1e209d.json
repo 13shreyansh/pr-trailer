@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response accurately reports that performance under heavy load was not checked according to the signoff, and correctly cites the migration adding the index."}

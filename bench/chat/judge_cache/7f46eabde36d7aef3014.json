@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response is grounded in the PR context, correctly citing the verified authorization finding at ledger/api.py:32 and the probe details."}

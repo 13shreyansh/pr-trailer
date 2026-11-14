@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The claims regarding differential testing results, the affected function, its callers/surfaces, and fee behavior are all supported by the context, and the citation to ledger/fees.py:12 accurately matches the context."}

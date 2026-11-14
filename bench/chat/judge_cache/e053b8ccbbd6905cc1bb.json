@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer is fully grounded in the PR context. All claims about the one-way migration, the inability of a code revert to restore data, and the active read in ledger/statements.py:7 match the provided findings and citations."}

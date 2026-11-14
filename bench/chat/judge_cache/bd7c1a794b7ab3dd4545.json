@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response accurately describes the authorization vulnerability and probe results supported by the PR context, with a correct citation to ledger/api.py:32."}

@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "All statements regarding the unmasked IBAN leak in ledger/transfers.py:22 and the uncovered line at ledger/transfers.py:46 are fully supported by the PR context and cited lines."}

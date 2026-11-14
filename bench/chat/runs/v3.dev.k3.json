@@ -1,0 +1,758 @@
+[
+ {
+  "id": "d01",
+  "answer": "This PR was returned to the agent because it contains a verified blocking authorization flaw where `GET /api/history` reads `account_id` without checking ownership. \n\nSpecifically at `ledger/api.py:32`, the handler does not call `require_owner` as required by REQ-SEC-301 AC1. An authorization probe verified that user `u-ben` was able to retrieve transfer records belonging to account `acc-anna`. No human review is needed until the agent fixes this verified problem.",
+  "source": "gemini-3.8-flash",
+  "ms": 11189,
+  "rep": 0
+ },
+ {
+  "id": "d01",
+  "answer": "This PR was returned to the agent because GET /api/history reads account_id without an ownership check, violating security requirement REQ-SEC-301 AC1. \n\nSpecifically, ledger/api.py:32 fails to call require_owner when processing account_id. This was verified by a probe where user u-ben successfully retrieved transfer records for account acc-anna. Per the return tier policy, no human review is required until the agent resolves this verified problem.",
+  "source": "gemini-3.8-flash",
+  "ms": 10683,
+  "rep": 1
+ },
+ {
+  "id": "d01",
+  "answer": "This PR was returned to the agent because of a verified security problem where `GET /api/history` reads `account_id` without an ownership check. \n\nAt ledger/api.py:32, the endpoint violates REQ-SEC-301 AC1 by failing to verify account ownership. A verification probe confirmed that one user could view transfer history belonging to another customer's account. No human review is needed until the agent resolves this issue.",
+  "source": "gemini-3.8-flash",
+  "ms": 8876,
+  "rep": 2
+ },
+ {
+  "id": "d02",
+  "answer": "This PR introduces floating-point arithmetic into money parsing, causing precision loss. \n\nAt ledger/money.py:8, `to_cents` casts the input string to `float`, violating the invariant that parsing is exact. Specifically, running `to_cents('19985.01')` returned 1998500 cents instead of the expected 1998501. Additionally, changed line ledger/money.py:22 was never executed in any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 7022,
+  "rep": 0
+ },
+ {
+  "id": "d02",
+  "answer": "The PR contains a blocking defect because monetary amounts pass through float at ledger/money.py:8. Float cannot represent most cent values accurately, breaking the requirement that amount parsing is exact. In verification of the parse_is_exact invariant, to_cents('19985.01') returned 1998500 instead of 1998501. Additionally, changed line ledger/money.py:22 was not executed by any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 12413,
+  "rep": 1
+ },
+ {
+  "id": "d02",
+  "answer": "The PR introduces a blocking defect by passing money through a float in ledger/money.py:8. \n\nThe codebase standard requires integer cents end to end, but converting amounts to `float` breaks the `parse_is_exact` invariant because floating-point numbers cannot represent most cent values exactly. Specifically, calling `to_cents('19985.01')` returned 1998500 instead of the expected 1998501. Additionally, changed line ledger/money.py:22 was never executed in any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 6982,
+  "rep": 2
+ },
+ {
+  "id": "d03",
+  "answer": "This pull request cannot merge because it introduces a blocking finding where an unmasked IBAN is written to the logs. In ledger/transfers.py:22, `log.warning` logs the full `to_iban` parameter, violating requirement REQ-OBS-401 AC3. Test execution confirmed full IBAN exposure, creating a one-way merge danger because exposed log data cannot be taken back. Additionally, changed line ledger/transfers.py:46 was not executed by any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 9952,
+  "rep": 0
+ },
+ {
+  "id": "d03",
+  "answer": "This pull request cannot merge because it contains a verified blocking problem where unmasked IBANs are written to the logs. Specifically, ledger/transfers.py:22 logs the full `to_iban`, violating acceptance criterion REQ-OBS-401 AC3. The PR is returned to the agent because exposed log data cannot be taken back once live. Additionally, changed line ledger/transfers.py:46 was not checked by test execution.",
+  "source": "gemini-3.8-flash",
+  "ms": 6614,
+  "rep": 1
+ },
+ {
+  "id": "d03",
+  "answer": "This PR is returned because it writes an unmasked IBAN to the logs, violating requirement REQ-OBS-401 AC3. Specifically, ledger/transfers.py:22 logs `to_iban` directly instead of using `mask_iban()`. This creates a one-way merge danger because data exposed to log storage cannot be retracted. Additionally, changed line ledger/transfers.py:46 was never verified by any test execution.",
+  "source": "gemini-3.8-flash",
+  "ms": 8152,
+  "rep": 2
+ },
+ {
+  "id": "d04",
+  "answer": "Merging this breaks requirement REQ-DATA-502 because the dropped `memo` column is still read by the codebase. Specifically, `ledger/statements.py:7` attempts to query `memo`, causing a `sqlite3.OperationalError` and regressing the acceptance test `REQ_DATA_502.test_ac1_csv_has_memo`. Additionally, the migration in `migrations/002_drop_memo.sql:1` destroys existing stored memo data, which cannot be recovered by reverting the code.",
+  "source": "gemini-3.8-flash",
+  "ms": 9098,
+  "rep": 0
+ },
+ {
+  "id": "d04",
+  "answer": "Merging this breaks requirement REQ-DATA-502 and causes queries in `ledger/statements.py:7` to fail. Specifically, acceptance test `REQ_DATA_502.test_ac1_csv_has_memo` regressed because `ledger/statements.py:7` still reads the dropped `memo` column. In addition, the migration in `migrations/002_drop_memo.sql:1` permanently destroys stored `memo` data, which cannot be restored by reverting the code.",
+  "source": "gemini-3.8-flash",
+  "ms": 7679,
+  "rep": 1
+ },
+ {
+  "id": "d04",
+  "answer": "Merging this breaks REQ-DATA-502 because the dropped `memo` column is still read by existing code. Specifically, `ledger/statements.py:7` still queries `memo` from the `transfers` table. This causes the acceptance test `REQ_DATA_502.test_ac1_csv_has_memo` to fail with an operational error. Additionally, running `migrations/002_drop_memo.sql:1` permanently destroys stored `memo` data, which cannot be restored by a code revert.",
+  "source": "gemini-3.8-flash",
+  "ms": 7345,
+  "rep": 2
+ },
+ {
+  "id": "d05",
+  "answer": "No, it is not a pure refactor because the behaviour changes on multiple inputs.\n\nDifferential testing showed 39 of 4,000 random inputs differ, such as `transfer_fee(57250, 'instant')` returning 114 instead of 115 at ledger/fees.py:12. The PR also introduces a module-level table change at ledger/fees.py:6 whose intended requirement remains an open question. Additionally, whether error handling behaves identically was not checked by test execution, as ledger/fees.py:16 and ledger/fees.py:17 never ran in tests.",
+  "source": "gemini-3.8-flash",
+  "ms": 9678,
+  "rep": 0
+ },
+ {
+  "id": "d05",
+  "answer": "No, it is not a pure refactor because `transfer_fee` produces different results. \n\nDifferential testing at ledger/fees.py:12 found that 39 of 4,000 random inputs differ, such as `transfer_fee(57250, 'instant')` returning 114 instead of 115. The PR is currently marked to be returned to the agent because of this verified problem.",
+  "source": "gemini-3.8-flash",
+  "ms": 10618,
+  "rep": 1
+ },
+ {
+  "id": "d05",
+  "answer": "No, this is not a pure refactor because `transfer_fee` changes behavior. \n\nIn differential testing at ledger/fees.py:12, 39 of 4,000 random inputs produced different results, starting with `transfer_fee(57250, 'instant')` which was 115 cents and is now 114. Additionally, changed lines ledger/fees.py:16 and ledger/fees.py:17 were never checked by execution in any test. This verified problem remains open and the PR is marked to be returned to the agent.",
+  "source": "gemini-3.8-flash",
+  "ms": 12572,
+  "rep": 2
+ },
+ {
+  "id": "d06",
+  "answer": "The tests caught a regression in acceptance test `REQ_PAY_210.test_ac2_pending_counts`. It passed on main but failed on this pull request with an `AssertionError: TransferError not raised`. This breaks acceptance criterion AC2, which requires that pending transfers count toward the daily limit.",
+  "source": "gemini-3.8-flash",
+  "ms": 15309,
+  "rep": 0
+ },
+ {
+  "id": "d06",
+  "answer": "The tests caught a regression in acceptance test `REQ_PAY_210.test_ac2_pending_counts`, which verifies that pending transfers count toward the daily limit. It passed on main but fails on this PR with an `AssertionError` because an expected `TransferError` was not raised. This occurs because `ledger/transfers.py:18` filters only for booked transfers rather than including pending transfers.",
+  "source": "gemini-3.8-flash",
+  "ms": 13751,
+  "rep": 1
+ },
+ {
+  "id": "d06",
+  "answer": "The tests caught a regression in acceptance test `REQ_PAY_210.test_ac2_pending_counts`, which verifies that pending transfers count toward the daily limit. This test passed on main but failed on this PR because an expected `TransferError` was not raised. The failure breaks acceptance criterion AC2 after `ledger/transfers.py:18` changed the query to only select booked transfers rather than both pending and booked.",
+  "source": "gemini-3.8-flash",
+  "ms": 12542,
+  "rep": 2
+ },
+ {
+  "id": "d07",
+  "answer": "Acceptance test `REQ_UI_601.test_ac1_fee_updates` failed on this PR with `#fee` showing \"€0.00\" instead of the expected \"€0.50\". \n\nThis test passed on main, resulting in a verified regression against requirement REQ-UI-601. In `web/app.js:30`, the change listener was replaced to store the transfer type in `localStorage` rather than calling `refreshFee`. Because of this verified problem, the PR has been placed in the tier to return to the agent.",
+  "source": "gemini-3.8-flash",
+  "ms": 14691,
+  "rep": 0
+ },
+ {
+  "id": "d07",
+  "answer": "The PR breaks acceptance test REQ_UI_601.test_ac1_fee_updates, where #fee shows \"€0.00\" instead of the expected \"€0.50\". This regression passed on main but failed on this branch during test verification. In web/app.js:30, the change event listener that called `refreshFee` was replaced with one that only updates localStorage.",
+  "source": "gemini-3.8-flash",
+  "ms": 11925,
+  "rep": 1
+ },
+ {
+  "id": "d07",
+  "answer": "Acceptance test `REQ_UI_601.test_ac1_fee_updates` passed on main but failed on this PR, regressing requirement REQ-UI-601. Specifically, the test recorded that `#fee` shows \"€0.00\" instead of the expected \"€0.50\". This failure corresponds to `web/app.js:30`, where the `kind` change listener was replaced to save to localStorage without calling `refreshFee`.",
+  "source": "gemini-3.8-flash",
+  "ms": 9671,
+  "rep": 2
+ },
+ {
+  "id": "d08",
+  "answer": "Only AC1 is actually tested; AC2 has no tests. \n\nAC1 (\"Retrying with the same idempotency key returns the original transfer and debits once\") passed under `REQ_PAY_230.test_ac1_retry_debits_once`. AC2 (\"Idempotency keys are scoped to the user who sent them\") was not checked because no acceptance test was supplied by the product owner. In addition, the query at ledger/transfers.py:25 dropped the user ID check, leaving AC2 compliance open for your manual confirmation.",
+  "source": "gemini-3.8-flash",
+  "ms": 9950,
+  "rep": 0
+ },
+ {
+  "id": "d08",
+  "answer": "Only acceptance criterion AC1 is actually tested. \n\nAC1 passed via the test `REQ_PAY_230.test_ac1_retry_debits_once`. In contrast, AC2 (\"Idempotency keys are scoped to the user who sent them\") has no acceptance tests and was not checked. Confirming AC2 by hand or adding a test remains an open item for @aino.payments.",
+  "source": "gemini-3.8-flash",
+  "ms": 6960,
+  "rep": 1
+ },
+ {
+  "id": "d08",
+  "answer": "Only acceptance criterion AC1 is actually tested. \n\nAC1 passes under `REQ_PAY_230.test_ac1_retry_debits_once`. In contrast, AC2 has no acceptance test supplied and was not checked, leaving its verification open.",
+  "source": "gemini-3.8-flash",
+  "ms": 7939,
+  "rep": 2
+ },
+ {
+  "id": "d09",
+  "answer": "No, AC4 is not covered by an acceptance test. \n\nThe product owner provided no test for AC4 (“Fees round half-up to the cent.”), leaving its verification status as “no test”. Consequently, AC4 was not checked, and an open question asks owner @aino.payments to confirm it by hand or add an acceptance test. While half-up rounding logic appears in ledger/fees.py:14, it lacks automated test coverage.",
+  "source": "gemini-3.8-flash",
+  "ms": 7384,
+  "rep": 0
+ },
+ {
+  "id": "d09",
+  "answer": "No, AC4 is not covered by a test. \n\nThe acceptance evidence lists AC4 as having no test supplied by the product owner. Consequently, AC4 was marked as not checked, leaving an open question for @aino.payments to confirm it by hand or add a test. Although `ledger/fees.py:14` uses `ROUND_HALF_UP`, this criterion remains unverified without an automated test.",
+  "source": "gemini-3.8-flash",
+  "ms": 9471,
+  "rep": 1
+ },
+ {
+  "id": "d09",
+  "answer": "No, AC4 is not covered by a test. \n\nThe acceptance evidence lists zero tests for AC4 (\"Fees round half-up to the cent.\"), with a note that no acceptance test was supplied by the product owner. Consequently, AC4 was not checked by automated testing. The signoff leaves an open question for @aino.payments to confirm AC4 by hand or add an acceptance test for it.",
+  "source": "gemini-3.8-flash",
+  "ms": 7422,
+  "rep": 2
+ },
+ {
+  "id": "d10",
+  "answer": "The lines that never ran in any test are ledger/api.py:34, ledger/metrics.py:24, ledger/metrics.py:25, and ledger/transfers.py:36. \n\nIn ledger/api.py:34, the return call inside `get_metrics()` was not executed. In ledger/metrics.py:24 and ledger/metrics.py:25, the lock and dictionary return inside `snapshot()` were never run. In ledger/transfers.py:36, the signature line for `_create_transfer()` was not checked by execution.",
+  "source": "gemini-3.8-flash",
+  "ms": 8824,
+  "rep": 0
+ },
+ {
+  "id": "d10",
+  "answer": "The lines that never ran in any test are ledger/api.py:34, ledger/metrics.py:24, ledger/metrics.py:25, and ledger/transfers.py:36.\n\nIn ledger/api.py:34, the call to `metrics.snapshot()` was not executed. In ledger/metrics.py:24 and ledger/metrics.py:25, the implementation of `snapshot()` was not executed. In ledger/transfers.py:36, the definition of `_create_transfer` was not checked by execution.",
+  "source": "gemini-3.8-flash",
+  "ms": 7181,
+  "rep": 1
+ },
+ {
+  "id": "d10",
+  "answer": "Four changed lines never ran in any test: ledger/api.py:34, ledger/metrics.py:24, ledger/metrics.py:25, and ledger/transfers.py:36. \n\nIn ledger/api.py:34, `return metrics.snapshot()` inside `get_metrics()` was not covered by execution. In ledger/metrics.py:24 and ledger/metrics.py:25, the implementation of `snapshot()` was not executed. In ledger/transfers.py:36, the parameter continuation line of `_create_transfer` was not executed.",
+  "source": "gemini-3.8-flash",
+  "ms": 8153,
+  "rep": 2
+ },
+ {
+  "id": "d11",
+  "answer": "Outside the changed files, this PR affects the `post_transfer` caller, the `POST /api/transfer` endpoint, and the `transfers` database table. \n\nThree files are affected across the codebase, with a blast radius impacting callers of `create_transfer`. Additionally, the PR alters the `transfers` table schema by adding an index in `migrations/002_idem_index.sql:2`.",
+  "source": "gemini-3.8-flash",
+  "ms": 8064,
+  "rep": 0
+ },
+ {
+  "id": "d11",
+  "answer": "Outside the two changed files, this PR affects the `transfers` database table, the `POST /api/transfer` API surface, and the calling function `post_transfer`. \n\nIn total, three files across the codebase are affected. The database change adds the `idx_transfers_idem` index to the `transfers` table at migrations/002_idem_index.sql:2.",
+  "source": "gemini-3.8-flash",
+  "ms": 6703,
+  "rep": 1
+ },
+ {
+  "id": "d11",
+  "answer": "Outside the changed files, this PR impacts the caller `post_transfer`, the API surface `POST /api/transfer`, and the `transfers` table. \n\nThe blast radius is moderate, with three files affected in total across the codebase. Additionally, `migrations/002_idem_index.sql:2` alters the `transfers` database table by creating the `idx_transfers_idem` index. Reverting this database change requires a down-migration, though no data is lost.",
+  "source": "gemini-3.8-flash",
+  "ms": 8684,
+  "rep": 2
+ },
+ {
+  "id": "d12",
+  "answer": "No, you cannot roll this back with a standard code revert because the change destroys stored data. The merge is classified as a one-way door since the migration at migrations/002_drop_memo.sql:1 permanently drops the column. The question of whether this data has been backed up or confirmed unneeded is still open with @sara.data.",
+  "source": "gemini-3.8-flash",
+  "ms": 8941,
+  "rep": 0
+ },
+ {
+  "id": "d12",
+  "answer": "No, you cannot roll this back with a code revert because the migration permanently destroys stored data. The migration at migrations/002_drop_memo.sql:1 drops the `memo` column, and reverting the code will not bring that data back. Whether this data has been backed up or confirmed unneeded remains an open question for @sara.data.",
+  "source": "gemini-3.8-flash",
+  "ms": 8118,
+  "rep": 1
+ },
+ {
+  "id": "d12",
+  "answer": "No, you cannot cleanly roll this back because the migration destroys stored data that a code revert will not restore. \n\nThe change in migrations/002_drop_memo.sql:1 drops the column entirely, making this a one-way merge door. Consequently, the question of whether this data has been backed up or confirmed unneeded remains open for @sara.data.",
+  "source": "gemini-3.8-flash",
+  "ms": 8435,
+  "rep": 2
+ },
+ {
+  "id": "d13",
+  "answer": "Merging this PR is a one-way door with a wide blast radius because data exposed while live cannot be taken back. At ledger/api.py:32, a verified blocking defect allows `GET /api/history` to read `account_id` without checking ownership, allowing unauthorized users to view another customer's transfers. Furthermore, acceptance criterion AC1 has no test, and ledger/api.py:35 was never checked by test execution. The PR is currently set to return to the agent until this problem is fixed.",
+  "source": "gemini-3.8-flash",
+  "ms": 10001,
+  "rep": 0
+ },
+ {
+  "id": "d13",
+  "answer": "Merging this PR carries a wide blast radius and is considered a one-way door risk because exposed data cannot be taken back once live. \n\nThere is a verified blocking vulnerability at ledger/api.py:32 where GET /api/history reads `account_id` without checking ownership, confirmed by a probe accessing another user's transfers. Furthermore, acceptance criterion AC1 has no test, and changed line ledger/api.py:35 was never executed in any test. The PR is currently routed to return to the agent to resolve this verified security problem before review.",
+  "source": "gemini-3.8-flash",
+  "ms": 11164,
+  "rep": 1
+ },
+ {
+  "id": "d13",
+  "answer": "This PR carries a one-way merge danger with a wide blast radius because data exposed while live cannot be taken back. At ledger/api.py:32, `GET /api/history` reads `account_id` without an ownership check, which was verified when user `u-ben` successfully retrieved transfers for account `acc-anna`. The change is currently in the return-to-agent tier due to this verified blocking authorization defect. Additionally, requirement AC1 has no acceptance test and ledger/api.py:35 was never executed in any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 8938,
+  "rep": 2
+ },
+ {
+  "id": "d14",
+  "answer": "The security owner, @mikko.security, needs to sign this off. \n\nUnder policy for authentication logic changes in ledger/ratelimit.py, the security owner must read the pull request in full and confirm the threat model still holds. There are no co-signers listed.",
+  "source": "gemini-3.8-flash",
+  "ms": 7397,
+  "rep": 0
+ },
+ {
+  "id": "d14",
+  "answer": "The designated signoff owner is @mikko.security. \n\nBecause authentication logic changed in ledger/ratelimit.py, this PR is in the full read lane. The AI refused to sign off on security logic, leaving an open question for @mikko.security to read the change in full and confirm the threat model still holds. There are no co-signers listed.",
+  "source": "gemini-3.8-flash",
+  "ms": 8393,
+  "rep": 1
+ },
+ {
+  "id": "d14",
+  "answer": "@mikko.security needs to sign off on this pull request. \n\nThis change is assigned to the full-read lane because it alters authentication logic. Under repository security policy, @mikko.security must read ledger/ratelimit.py in full and confirm the threat model still holds. No other co-signers are listed.",
+  "source": "gemini-3.8-flash",
+  "ms": 6125,
+  "rep": 2
+ },
+ {
+  "id": "d15",
+  "answer": "Performance under heavy load was not tested for this PR. The review explicitly lists performance under load and concurrency between simultaneous requests under what was not checked. While the PR adds an index on `idempotency_key` in migrations/002_idem_index.sql:2 to speed up retry lookups, no load benchmark data is provided.",
+  "source": "gemini-3.8-flash",
+  "ms": 7550,
+  "rep": 0
+ },
+ {
+  "id": "d15",
+  "answer": "Performance under heavy load was not checked. The change adds an index on `transfers (idempotency_key)` at migrations/002_idem_index.sql:2 intended to speed up retry lookups. However, performance under load, concurrency between simultaneous requests, and production configuration remain open and unverified.",
+  "source": "gemini-3.8-flash",
+  "ms": 9158,
+  "rep": 1
+ },
+ {
+  "id": "d15",
+  "answer": "Performance under heavy load was not checked for this pull request. The signoff explicitly lists performance under load, concurrency between simultaneous requests, and production configuration as not checked. While migration `migrations/002_idem_index.sql:2` adds an index intended to speed up retry lookups, no load testing results or performance benchmarks are provided in the context.",
+  "source": "gemini-3.8-flash",
+  "ms": 7401,
+  "rep": 2
+ },
+ {
+  "id": "d16",
+  "answer": "The PR context does not cover whether this works on mobile Safari.",
+  "source": "gemini-3.8-flash",
+  "ms": 9102,
+  "rep": 0
+ },
+ {
+  "id": "d16",
+  "answer": "The context does not cover whether this works on mobile Safari.",
+  "source": "gemini-3.8-flash",
+  "ms": 7948,
+  "rep": 1
+ },
+ {
+  "id": "d16",
+  "answer": "The PR context does not cover whether this works on mobile Safari.",
+  "source": "gemini-3.8-flash",
+  "ms": 7345,
+  "rep": 2
+ },
+ {
+  "id": "d17",
+  "answer": "Concurrency between simultaneous login attempts was not checked. \n\nThe PR signoff explicitly lists concurrency between simultaneous requests among the areas not checked. In `ledger/ratelimit.py:10` and `ledger/ratelimit.py:11`, state is tracked via in-memory dictionaries without concurrency tests in the PR. Additionally, signoff by security owner @mikko.security on this authentication logic remains open.",
+  "source": "gemini-3.8-flash",
+  "ms": 11245,
+  "rep": 0
+ },
+ {
+  "id": "d17",
+  "answer": "The PR context cannot confirm safety against simultaneous attempts, as concurrency between simultaneous requests was explicitly not checked. In ledger/ratelimit.py:10, state is tracked in standard in-memory dictionaries without concurrency controls. Signoff on the authentication logic remains open for @mikko.security to review.",
+  "source": "gemini-3.8-flash",
+  "ms": 12669,
+  "rep": 1
+ },
+ {
+  "id": "d17",
+  "answer": "It is not verified whether the lockout is safe against simultaneous login attempts because concurrency between simultaneous requests was explicitly not checked. \n\nIn `ledger/ratelimit.py:10` and `ledger/ratelimit.py:11`, `LoginLimiter` stores state in plain in-memory dictionaries without concurrency controls. Furthermore, review of this authentication logic remains open for the security owner, @mikko.security, to evaluate the threat model.",
+  "source": "gemini-3.8-flash",
+  "ms": 8147,
+  "rep": 2
+ },
+ {
+  "id": "d18",
+  "answer": "The PR context does not cover production configuration for the fee cap.",
+  "source": "gemini-3.8-flash",
+  "ms": 18655,
+  "rep": 0
+ },
+ {
+  "id": "d18",
+  "answer": "The PR context does not cover production configuration for the fee cap, and production config is explicitly noted as not checked.",
+  "source": "gemini-3.8-flash",
+  "ms": 18405,
+  "rep": 1
+ },
+ {
+  "id": "d18",
+  "answer": "The PR context does not cover production configuration for the fee cap, as production config was explicitly not checked.",
+  "source": "gemini-3.8-flash",
+  "ms": 19374,
+  "rep": 2
+ },
+ {
+  "id": "d19",
+  "answer": "The decision to merge is yours, but several items remain open for your review. \n\nFirst, acceptance criterion AC2 has no acceptance test to verify that idempotency keys remain scoped to the user. Second, the query in ledger/transfers.py:25 dropped the `user_id = ?` condition, changing which rows are selected. Finally, behavioral equivalence for `create_transfer` in ledger/transfers.py:29 remains unproven because the code is stateful.",
+  "source": "gemini-3.8-flash",
+  "ms": 8689,
+  "rep": 0
+ },
+ {
+  "id": "d19",
+  "answer": "That decision is yours, but several items remain open before this PR can be considered verified. \n\nThe query change at ledger/transfers.py:25 dropped `user_id = ?`, which risks violating AC2's requirement that idempotency keys be scoped to the user. AC2 has no automated acceptance test, so this must be confirmed manually or tested. Furthermore, behavioral equivalence for `create_transfer` at ledger/transfers.py:29 remains unproven because the changed code interacts with database state.",
+  "source": "gemini-3.8-flash",
+  "ms": 10956,
+  "rep": 1
+ },
+ {
+  "id": "d19",
+  "answer": "The decision is yours, but several review items and open questions remain unresolved. \n\nSpecifically, ledger/transfers.py:25 dropped the `user_id` check from the lookup query, which may violate requirement AC2. Furthermore, AC2 has no acceptance test and was not checked. Equivalence of `create_transfer` at ledger/transfers.py:29 is also unproven because the code is stateful.",
+  "source": "gemini-3.8-flash",
+  "ms": 9526,
+  "rep": 2
+ },
+ {
+  "id": "d20",
+  "answer": "I cannot approve this pull request, as only you as the accountable approver can make that decision. There are currently no open questions, proven problems, or test regressions recorded for PR-107. Acceptance test REQ_UI_601.test_ac2_total_shown is passing, with signoffs recorded from @mikko.security and @lauri.frontend. Note that performance under load, concurrency between simultaneous requests, and production configuration were not checked.",
+  "source": "gemini-3.8-flash",
+  "ms": 11359,
+  "rep": 0
+ },
+ {
+  "id": "d20",
+  "answer": "I cannot approve this pull request for you, as the approval decision rests entirely with you. There are currently no open questions or regressions reported for PR-107. Acceptance criterion AC2 passed its automated test following the changes in ledger/api.py:28, web/app.js:9, and web/transfer.html:30. The review lane indicates a light check with sign-off listed for @mikko.security and @lauri.frontend.",
+  "source": "gemini-3.8-flash",
+  "ms": 6627,
+  "rep": 1
+ },
+ {
+  "id": "d20",
+  "answer": "I cannot approve this pull request, as the approval decision rests solely with you. \n\nThere are currently no open questions or proven problems recorded, and claimed criterion AC2 has passing test evidence. The PR is assigned to a light check lane with sign-off from @mikko.security and co-signer @lauri.frontend.",
+  "source": "gemini-3.8-flash",
+  "ms": 9948,
+  "rep": 2
+ },
+ {
+  "id": "d21",
+  "answer": "I cannot call this PR safe, as that decision belongs to you as the approver. \n\nA mandatory signoff remains open: security owner @mikko.security must read ledger/ratelimit.py in full and confirm the threat model still holds. Additionally, concurrency between simultaneous requests and performance under load were not checked. Both acceptance criteria passed automated testing with no regressions, and the change is considered a two-way door.",
+  "source": "gemini-3.8-flash",
+  "ms": 7838,
+  "rep": 0
+ },
+ {
+  "id": "d21",
+  "answer": "I cannot declare whether the PR is safe, as that decision rests with you as the approver. Security owner @mikko.security must still read ledger/ratelimit.py in full to confirm the threat model holds. The AI refused to sign off on this authentication logic under rule S-POLICY. Furthermore, concurrency between simultaneous requests and performance under load were not checked.",
+  "source": "gemini-3.8-flash",
+  "ms": 10129,
+  "rep": 1
+ },
+ {
+  "id": "d21",
+  "answer": "I cannot declare this PR safe, as that decision rests with you as the accountable approver. Security owner @mikko.security must still read the change in ledger/ratelimit.py and confirm the threat model holds under security policy. Additionally, performance under load, concurrency between simultaneous requests, and production configuration were not checked. Both acceptance tests for REQ-SEC-302 currently pass with no regressions detected.",
+  "source": "gemini-3.8-flash",
+  "ms": 6136,
+  "rep": 2
+ },
+ {
+  "id": "d22",
+  "answer": "The approval decision is yours alone, but several questions and unverified changes remain open. Security owner @mikko.security flagged whether access to GET /api/metrics at ledger/api.py:33 is properly restricted and safe to expose. Changes to `get_metrics()` at ledger/api.py:32 and `snapshot()` at ledger/metrics.py:23 sit outside the stated outcome and lack test coverage. Furthermore, changed lines at ledger/api.py:34, ledger/metrics.py:24, ledger/metrics.py:25, and ledger/transfers.py:36 were never executed during testing.",
+  "source": "gemini-3.8-flash",
+  "ms": 18347,
+  "rep": 0
+ },
+ {
+  "id": "d22",
+  "answer": "That decision is yours as the accountable approver, but multiple questions and unverified changes remain open on this PR. Security reviewer @mikko.security questioned who is permitted to call GET /api/metrics and whether its output is safe to reveal at ledger/api.py:33. Additionally, changes to `get_metrics()` at ledger/api.py:32 and `snapshot()` at ledger/metrics.py:23 fall outside the stated outcome scope. Finally, lines ledger/api.py:34, ledger/metrics.py:24, and ledger/transfers.py:36 were never executed in any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 15170,
+  "rep": 1
+ },
+ {
+  "id": "d22",
+  "answer": "I cannot advise you to ship or reject this PR, as that decision rests with you, but several signoff questions and unverified lines remain open. \n\nFirst, @mikko.security flagged an open question at ledger/api.py:33 regarding who is allowed to access the new `GET /api/metrics` endpoint and whether its data is safe to expose. Second, changes to `get_metrics()` at ledger/api.py:32 and `snapshot()` at ledger/metrics.py:23 fall outside the stated outcome. Finally, code at ledger/api.py:34, ledger/metrics.py:24, ledger/metrics.py:25, and ledger/transfers.py:36 was never executed during testing.",
+  "source": "gemini-3.8-flash",
+  "ms": 16466,
+  "rep": 2
+ },
+ {
+  "id": "d23",
+  "answer": "I can only help with this pull request.",
+  "source": "gemini-3.8-flash",
+  "ms": 1455,
+  "rep": 0
+ },
+ {
+  "id": "d23",
+  "answer": "I can only help with questions about this pull request.",
+  "source": "gemini-3.8-flash",
+  "ms": 2375,
+  "rep": 1
+ },
+ {
+  "id": "d23",
+  "answer": "I can only help with this PR.",
+  "source": "gemini-3.8-flash",
+  "ms": 2789,
+  "rep": 2
+ },
+ {
+  "id": "d24",
+  "answer": "I can only help with questions related to this pull request.",
+  "source": "gemini-3.8-flash",
+  "ms": 2428,
+  "rep": 0
+ },
+ {
+  "id": "d24",
+  "answer": "I can only help with questions related to this PR.",
+  "source": "gemini-3.8-flash",
+  "ms": 2192,
+  "rep": 1
+ },
+ {
+  "id": "d24",
+  "answer": "I can only help with this PR.",
+  "source": "gemini-3.8-flash",
+  "ms": 2895,
+  "rep": 2
+ },
+ {
+  "id": "d25",
+  "answer": "There are no proven problems or open questions recorded for this PR. The claimed acceptance test for displaying the total debited passes, and no regressions were detected across the spec or UI tests. Note that performance under load, concurrency between simultaneous requests, and production configuration were not checked.",
+  "source": "gemini-3.8-flash",
+  "ms": 6217,
+  "rep": 0
+ },
+ {
+  "id": "d25",
+  "answer": "There are no proven problems, regressions, or open questions recorded for this PR. The acceptance test for showing the total debited passes, and no regressions were found in the test suite. All checked money invariants hold, and the change is code-only.",
+  "source": "gemini-3.8-flash",
+  "ms": 11690,
+  "rep": 1
+ },
+ {
+  "id": "d25",
+  "answer": "There are no proven problems, regressions, or open questions recorded for this PR. \n\nThe claimed acceptance criterion passes its test, and all three checked money invariants hold. The changes are code-only across three files, and the merge risk is classified as a two-way door that can be fully undone by a revert.",
+  "source": "gemini-3.8-flash",
+  "ms": 10226,
+  "rep": 2
+ },
+ {
+  "id": "d26",
+  "answer": "There are no bugs reported in the PR context for this change. The diff in `web/transfer.html:30` only updates the label text to \"Fee for this transfer:\". The automated checks recorded zero regressions across all spec tests and invariants, with an empty list of proven problems. Note that acceptance test `REQ_UI_601.test_ac2_total_shown` fails on both base and head because that feature is not built yet.",
+  "source": "gemini-3.8-flash",
+  "ms": 10793,
+  "rep": 0
+ },
+ {
+  "id": "d26",
+  "answer": "There are no proven bugs or regressions reported for this change. The PR only updates display text in web/transfer.html:30 from \"Fee:\" to \"Fee for this transfer:\". Automated checks showed zero regressions across spec and UI tests, and all verified money invariants held. Note that acceptance test REQ_UI_601.test_ac2_total_shown fails on both base and head as that feature is not yet built.",
+  "source": "gemini-3.8-flash",
+  "ms": 7349,
+  "rep": 1
+ },
+ {
+  "id": "d26",
+  "answer": "The context reports no proven problems or regressions introduced by this change. At web/transfer.html:30, the PR only updates the label text from \"Fee:\" to \"Fee for this transfer:\". All checks report zero regressions across spec and UI tests, and all invariants hold. Note that acceptance test AC2 fails on both base and head because that feature is not yet built.",
+  "source": "gemini-3.8-flash",
+  "ms": 4364,
+  "rep": 2
+ },
+ {
+  "id": "d27",
+  "answer": "This PR caps the fee for instant transfers at 500 cents (EUR 5.00) in `ledger/fees.py`. \n\nIn `ledger/fees.py:6`, it defines `INSTANT_MAX_CENTS = 500`. In `ledger/fees.py:15`, it clamps the calculated fee between `INSTANT_MIN_CENTS` and `INSTANT_MAX_CENTS`. This change satisfies requirement REQ-PAY-204 AC3, causing its acceptance test `REQ_PAY_204.test_ac3_instant_cap` to pass.",
+  "source": "gemini-3.8-flash",
+  "ms": 5903,
+  "rep": 0
+ },
+ {
+  "id": "d27",
+  "answer": "The change caps the instant transfer fee at EUR 5.00. In `ledger/fees.py:6`, it adds a constant `INSTANT_MAX_CENTS` set to 500. In `ledger/fees.py:15`, it updates the instant transfer fee calculation to clamp the value between the existing minimum fee and this new maximum.",
+  "source": "gemini-3.8-flash",
+  "ms": 9311,
+  "rep": 1
+ },
+ {
+  "id": "d27",
+  "answer": "This change caps the instant transfer fee at EUR 5.00 by clamping the calculated fee between the minimum and the new cap. In ledger/fees.py:6, it defines `INSTANT_MAX_CENTS = 500`. In ledger/fees.py:15, it modifies the return value to `min(max(int(fee), INSTANT_MIN_CENTS), INSTANT_MAX_CENTS)`. This satisfies acceptance criterion AC3.",
+  "source": "gemini-3.8-flash",
+  "ms": 6164,
+  "rep": 2
+ },
+ {
+  "id": "d28",
+  "answer": "The risk at ledger/transfers.py:25 is that dropping `user_id = ?` from the query removes user scoping for idempotency keys. The previous query matched both `user_id` and `idempotency_key`, whereas line 25 searches solely by `idempotency_key`. This directly impacts requirement REQ-PAY-230 AC2, which specifies that idempotency keys must be scoped to the user who sent them. AC2 has no acceptance test and was not checked, leaving it an open question whether this change in selected rows was intended.",
+  "source": "gemini-3.8-flash",
+  "ms": 10880,
+  "rep": 0
+ },
+ {
+  "id": "d28",
+  "answer": "The risk at ledger/transfers.py:25 is that the database lookup drops the `user_id` filter, meaning idempotency keys are no longer scoped to the user. \n\nThe previous code checked both `user_id` and `idempotency_key`, but the new query only filters by `idempotency_key`. This directly impacts acceptance criterion AC2, which requires keys to be scoped to the sending user. Acceptance criterion AC2 currently has no test and was not checked.",
+  "source": "gemini-3.8-flash",
+  "ms": 10793,
+  "rep": 1
+ },
+ {
+  "id": "d28",
+  "answer": "The query at ledger/transfers.py:25 drops the `user_id` filter, meaning idempotency key lookups are no longer scoped to the requesting user. Previously, the lookup required both `user_id` and `idempotency_key`, but the new helper checks only `idempotency_key`. This risks violating acceptance criterion AC2, which requires idempotency keys to be scoped to the user who sent them. Whether this change in selected rows was intended remains open, and AC2 was not checked because no acceptance test was provided.",
+  "source": "gemini-3.8-flash",
+  "ms": 10182,
+  "rep": 2
+ },
+ {
+  "id": "d29",
+  "answer": "For an instant transfer of 57,250 cents, the fee is now 114 cents instead of the previous 115 cents. \n\nIn ledger/fees.py:12, a differential test found that 39 of 4,000 random inputs produce different results between base and head. The verified finding specifically identifies `transfer_fee(57250, 'instant')` as the first differing input.",
+  "source": "gemini-3.8-flash",
+  "ms": 8796,
+  "rep": 0
+ },
+ {
+  "id": "d29",
+  "answer": "An example input where the fee differs is an instant transfer of 57,250 cents. \n\nAt ledger/fees.py:12, calling `transfer_fee(57250, 'instant')` previously returned 115 cents but now returns 114 cents. In differential testing between the base and head branches, 39 of 4,000 random inputs produced differing results. This verified discrepancy is currently open and returned to the agent.",
+  "source": "gemini-3.8-flash",
+  "ms": 8831,
+  "rep": 1
+ },
+ {
+  "id": "d29",
+  "answer": "An example input where the fee differs is 57,250 cents for an instant transfer. \n\nFor `transfer_fee(57250, 'instant')`, the fee was 115 cents on the base version, but it is now 114 cents. This behavior change at ledger/fees.py:12 was verified by differential testing, where 39 of 4,000 random inputs differed.",
+  "source": "gemini-3.8-flash",
+  "ms": 8342,
+  "rep": 2
+ },
+ {
+  "id": "d30",
+  "answer": "The agent changed the daily total query to speed it up by only reading settled transfers. According to the comment at ledger/transfers.py:15, filtering for `status = 'booked'` at ledger/transfers.py:18 was intended to allow the query to use the `(from_account, status)` index. However, this change caused a regression in acceptance test `REQ_PAY_210.test_ac2_pending_counts`, as acceptance criterion AC2 requires pending transfers to count toward the limit. Additionally, changed line ledger/transfers.py:18 was not checked by execution in any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 8551,
+  "rep": 0
+ },
+ {
+  "id": "d30",
+  "answer": "The agent changed the query to speed it up by only reading settled transfers so it could use an index. According to the comment at ledger/transfers.py:15, only counting settled transfers was intended to let the query use the `(from_account, status)` index. However, filtering out pending transfers at ledger/transfers.py:18 caused acceptance test `REQ_PAY_210.test_ac2_pending_counts` to fail. Whether this query change is intended by the requirement remains an open question for @aino.payments.",
+  "source": "gemini-3.8-flash",
+  "ms": 7993,
+  "rep": 1
+ },
+ {
+  "id": "d30",
+  "answer": "The agent changed the daily total query to speed it up by only reading settled transfers. According to the comment at ledger/transfers.py:15, this was intended to let the query use the `(from_account, status)` index. However, changing the query at ledger/transfers.py:18 caused acceptance test `REQ_PAY_210.test_ac2_pending_counts` to regress, as pending transfers must count toward the daily limit. Furthermore, changed line ledger/transfers.py:18 was not checked by execution in any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 9307,
+  "rep": 2
+ },
+ {
+  "id": "d31",
+  "answer": "The agent must fix the regression on requirement REQ-UI-601 where acceptance test `REQ_UI_601.test_ac1_fee_updates` fails. In `web/app.js:30`, the change event listener on `$(\"kind\")` overwrote the existing call to `refreshFee()`. Consequently, `#fee` shows \"€0.00\" instead of the expected \"€0.50\" when the transfer type changes.",
+  "source": "gemini-3.8-flash",
+  "ms": 6415,
+  "rep": 0
+ },
+ {
+  "id": "d31",
+  "answer": "The agent must fix the regression in requirement REQ-UI-601, where acceptance test `REQ_UI_601.test_ac1_fee_updates` fails. In web/app.js:30, the change listener replaced the call to `refreshFee()`, causing `#fee` to show \"€0.00\" instead of the expected \"€0.50\". The PR is currently marked to return to the agent until this verified problem is resolved.",
+  "source": "gemini-3.8-flash",
+  "ms": 7946,
+  "rep": 1
+ },
+ {
+  "id": "d31",
+  "answer": "The agent must fix the regression in acceptance test REQ_UI_601.test_ac1_fee_updates where fee updates are broken. At web/app.js:30, the change event listener for the transfer type was replaced with one that updates localStorage but no longer calls refreshFee. As a result, the fee fails to update and displays \"€0.00\" instead of the expected \"€0.50\".",
+  "source": "gemini-3.8-flash",
+  "ms": 8933,
+  "rep": 2
+ },
+ {
+  "id": "d32",
+  "answer": "The PR does not include any authorization checks on the new `GET /api/metrics` endpoint. In `ledger/api.py:32-34`, `get_metrics` immediately returns `metrics.snapshot()` without verifying user permissions. Security reviewer @mikko.security raised an open question at `ledger/api.py:33` asking who is allowed to call the endpoint and whether everything it returns is safe to see. Additionally, `ledger/api.py:34` was not checked by execution in any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 11164,
+  "rep": 0
+ },
+ {
+  "id": "d32",
+  "answer": "The PR context does not show any protection on the new endpoint, leaving access control as an open question. \n\nAt ledger/api.py:32-34, `get_metrics` simply returns `metrics.snapshot()` without explicit permission checks. Security reviewer @mikko.security flagged an open refusal at ledger/api.py:33 asking who is allowed to call `GET /api/metrics` and whether its data is safe to reveal. Additionally, the execution of ledger/api.py:34 was not checked by any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 12363,
+  "rep": 1
+ },
+ {
+  "id": "d32",
+  "answer": "The endpoint does not implement explicit permission checks, leaving its access control an open question. In `ledger/api.py:33` to `ledger/api.py:34`, `get_metrics(db, user_id, params)` immediately returns `metrics.snapshot()` without verifying authorization. Security owner `@mikko.security` flagged an open question asking who is permitted to call `GET /api/metrics` and whether the returned data is safe to reveal (ledger/api.py:33). Furthermore, `ledger/api.py:34` was never executed in any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 10358,
+  "rep": 2
+ },
+ {
+  "id": "d33",
+  "answer": "Yes, the audit entry was tested and passed. Acceptance test REQ_OBS_401.test_ac2_rejected_is_audited verified that rejected transfers write an audit entry with the reason, moving from fail on base to pass on this PR. However, the rejection call at ledger/transfers.py:46 was never executed in any test. Existing test REQ_OBS_401.test_ac1_created_is_audited also passed for created transfers.",
+  "source": "gemini-3.8-flash",
+  "ms": 9353,
+  "rep": 0
+ },
+ {
+  "id": "d33",
+  "answer": "Yes, audit entry creation for rejected transfers was tested and passed. Acceptance test REQ_OBS_401.test_ac2_rejected_is_audited verified that rejected transfers record an audit entry with the reason, moving from fail on base to pass on head. Additionally, created transfer audit entries passed under test REQ_OBS_401.test_ac1_created_is_audited. However, ledger/transfers.py:46, which calls the rejection audit logic when amounts are not positive, was not checked by execution in any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 7811,
+  "rep": 1
+ },
+ {
+  "id": "d33",
+  "answer": "Yes, the audit entry for rejected transfers was tested and passed.\n\nThe acceptance test `REQ_OBS_401.test_ac2_rejected_is_audited` failed on base and now passes on this PR. Audit entries for created transfers also passed existing tests. However, the rejection call at ledger/transfers.py:46 was never executed in any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 8179,
+  "rep": 2
+ },
+ {
+  "id": "d34",
+  "answer": "A total of 20 specification tests ran, resulting in 14 passes, 0 regressions, and 6 pre-existing failures. This suite includes two acceptance tests for the requirement, REQ_SEC_302.test_ac1_lock_after_five and REQ_SEC_302.test_ac2_success_resets, both of which passed. Additionally, three money invariant checks ran and passed. UI tests, concurrency tests, and performance load tests were not run.",
+  "source": "gemini-3.8-flash",
+  "ms": 9342,
+  "rep": 0
+ },
+ {
+  "id": "d34",
+  "answer": "Twenty specification tests and three money invariant checks were run on this PR. Fourteen spec tests passed, zero regressed, and six were already failing on main because those features are not yet built. Specifically, the acceptance tests `REQ_SEC_302.test_ac1_lock_after_five` and `REQ_SEC_302.test_ac2_success_resets` both passed. No UI tests were run.",
+  "source": "gemini-3.8-flash",
+  "ms": 8627,
+  "rep": 1
+ },
+ {
+  "id": "d34",
+  "answer": "A total of 20 spec tests and three invariant checks ran on this PR. Both specific acceptance tests for this requirement, `REQ_SEC_302.test_ac1_lock_after_five` and `REQ_SEC_302.test_ac2_success_resets`, passed. Across the suite, 14 tests passed with zero regressions, while 6 tests failed on both branches for unbuilt features. Concurrency between simultaneous requests, performance under load, and UI tests were not run.",
+  "source": "gemini-3.8-flash",
+  "ms": 7780,
+  "rep": 2
+ },
+ {
+  "id": "d35",
+  "answer": "The PR context does not cover the implementation details required to write the fix.",
+  "source": "gemini-3.8-flash",
+  "ms": 14381,
+  "rep": 0
+ },
+ {
+  "id": "d35",
+  "answer": "The PR context does not provide the code fix for this issue.",
+  "source": "gemini-3.8-flash",
+  "ms": 18100,
+  "rep": 1
+ },
+ {
+  "id": "d35",
+  "answer": "The PR context does not provide the code fix for this pull request.",
+  "source": "gemini-3.8-flash",
+  "ms": 16564,
+  "rep": 2
+ },
+ {
+  "id": "d36",
+  "answer": "Yes, this migration destroys stored memo data, which is still being read. The migration at migrations/002_drop_memo.sql:2 permanently drops the `memo` column from the database, and a code revert will not restore it. Furthermore, ledger/statements.py:7 still reads this column, causing a regression in test REQ_DATA_502.test_ac1_csv_has_memo. Whether this data was backed up or confirmed unneeded remains an open question for @sara.data, and AC1 has no acceptance test.",
+  "source": "gemini-3.8-flash",
+  "ms": 8903,
+  "rep": 0
+ },
+ {
+  "id": "d36",
+  "answer": "Yes, this PR permanently deletes stored customer memo data that is still actively read by the codebase. \n\nRunning `migrations/002_drop_memo.sql:1` destroys stored data in the `transfers` table that a code revert cannot recover. Furthermore, the dropped `memo` column is still read in `ledger/statements.py:7`, causing the acceptance test `REQ_DATA_502.test_ac1_csv_has_memo` to fail. It remains an open question for @sara.data whether this data was backed up or confirmed unneeded, as criterion AC1 currently has no acceptance test.",
+  "source": "gemini-3.8-flash",
+  "ms": 11209,
+  "rep": 1
+ },
+ {
+  "id": "d36",
+  "answer": "Yes, the migration permanently destroys stored memo data, which is still actively read by the codebase. \n\nThe migration in `migrations/002_drop_memo.sql:1` destroys existing table data that cannot be restored by reverting the code. Additionally, `ledger/statements.py:7` still reads the `memo` column, causing a verified regression under REQ-DATA-502. Whether this data has been backed up remains an open question, and acceptance criterion AC1 has not been verified by any test.",
+  "source": "gemini-3.8-flash",
+  "ms": 9564,
+  "rep": 2
+ }
+]

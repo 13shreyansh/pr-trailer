@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer is fully grounded in the PR context, accurately citing the differential test failure for transfer_fee(57250, 'instant') and the correct line."}

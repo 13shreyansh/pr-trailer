@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately cites the hardcoded constant and clamping logic in ledger/fees.py, correctly notes that production config was listed as not checked in the PR signoff, and clearly labels its takeaway as an inference."}

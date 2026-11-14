@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The citation web/transfer.html:31 points to the send button rather than the line where the label was added (line 30), and web/app.js:10 points to a closing brace rather than the update line."}

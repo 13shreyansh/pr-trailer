@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately states that the PR context does not provide the exact one-line fix, correctly notes the requirement to call require_owner at ledger/api.py:32, and all citations match the context."}

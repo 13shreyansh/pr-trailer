@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The claim that the third affected file contains `post_transfer` and that `post_transfer` serves `POST /api/transfer` is an inference not supported by the PR context."}

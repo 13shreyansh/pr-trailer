@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The citation `ledger/transfers.py:13` does not point to the added comment, as line 13 is empty in the cited code."}

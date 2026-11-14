@@ -2,6 +2,7 @@
 // Answers questions about one PR, grounded only in that PR's trailer (diff, evidence, findings, questions).
 // Uses Gemini when GEMINI_API_KEY is set; otherwise answers from the trailer with simple rules.
 const CONTEXT = require("./_context.json");
+const PROMPTS = require("./_prompt.js");
 
 const MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 
@@ -23,7 +24,20 @@ function send(res, code, obj) {
   res.end(JSON.stringify(obj));
 }
 
-function compact(pr) {
+function numbered(unified) {
+  // Prefix every diff line with its line number in the PR's version of the file (removed lines get "-").
+  let head = null;
+  return unified.split("\n").map((l) => {
+    const m = l.match(/^@@ -\d+(?:,\d+)? \+(\d+)/);
+    if (m) { head = Number(m[1]); return l; }
+    if (head === null || l.startsWith("---") || l.startsWith("+++")) return l;
+    if (l.startsWith("-")) return `    - ${l.slice(1)}`;
+    const n = String(head++).padStart(4);
+    return `${n} ${l.startsWith("+") ? "+" : " "} ${l.slice(1)}`;
+  }).join("\n");
+}
+
+function compact(pr, opts = {}) {
   return {
     pr: { id: pr.id, title: pr.title, agent_description: pr.description },
     requirement: pr.requirement,
@@ -38,7 +52,7 @@ function compact(pr) {
     notes: pr.notes,
     spots_to_review: pr.spots,
     size: pr.stats,
-    diff: pr.diff.map((d) => ({ path: d.path, status: d.status, unified: (d.unified || "").slice(0, 6000) })),
+    diff: pr.diff.map((d) => ({ path: d.path, status: d.status, [opts.numbered ? "lines (number = line in the PR version; - = removed)" : "unified"]: (opts.numbered ? numbered(d.unified || "") : d.unified || "").slice(0, 7000) })),
   };
 }
 
@@ -61,20 +75,10 @@ function fallback(pr, q) {
 async function gemini(pr, question, history) {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return null;
-  const prompt = [
-    "You help the accountable approver of an AI-written pull request in a banking codebase.",
-    "Answer ONLY from the PR context below (diff, evidence, findings, open questions). Quote file:line when you point at code.",
-    "If the context does not cover something, say plainly that it was not checked; never invent tests or behaviour.",
-    "Do not approve or reject the PR yourself; the human decides. Answer in plain English, at most 120 words, no headings.",
-    "",
-    "PR CONTEXT (JSON):",
-    JSON.stringify(compact(pr)),
-    "",
-    "CONVERSATION SO FAR:",
-    ...(history || []).slice(-6).map((h) => `${h.role === "user" ? "Approver" : "Assistant"}: ${String(h.text).slice(0, 1200)}`),
-    `Approver: ${question}`,
-    "Assistant:",
-  ].join("\n");
+  const version = process.env.PROMPT_VERSION || PROMPTS.DEFAULT;
+  const hist = (history || []).slice(-6).map((h) => `${h.role === "user" ? "Approver" : "Assistant"}: ${String(h.text).slice(0, 1200)}`);
+  const P = PROMPTS.V[version];
+  const prompt = P.build(compact(pr, P), hist, question);
   const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "x-goog-api-key": key },
@@ -88,7 +92,7 @@ async function gemini(pr, question, history) {
   return text || null;
 }
 
-module.exports = async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== "POST") return send(res, 405, { error: "POST only" });
   let body;
   try { body = await readBody(req); } catch { return send(res, 400, { error: "bad JSON" }); }
@@ -103,3 +107,7 @@ module.exports = async function handler(req, res) {
   }
   return send(res, 200, { answer: fallback(pr, question), source: "trailer" });
 };
+
+module.exports = handler;
+module.exports.fallback = fallback;
+module.exports.compact = compact;

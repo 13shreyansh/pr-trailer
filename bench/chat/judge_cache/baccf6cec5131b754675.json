@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately summarizes the one-way merge risk, wide blast radius, and verified authorization defect at ledger/api.py:32 based directly on the PR context."}

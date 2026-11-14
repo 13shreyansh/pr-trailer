@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The citation web/app.js:29 points to '$(\"amount\").addEventListener(\"input\", refreshFee);', not the replacement of the change event listener on '$(\"kind\")'."}

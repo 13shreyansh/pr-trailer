@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The cited line web/transfer.html:28 points to '<option value=\"instant\">Instant (0.2 %, min \u20ac0.50)</option>' rather than the line updating the fee label text."}

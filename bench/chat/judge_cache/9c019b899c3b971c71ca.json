@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The explanation accurately cites the verified finding at ledger/api.py:32, the authorization probe results, and the lane reason for returning the PR to the agent."}

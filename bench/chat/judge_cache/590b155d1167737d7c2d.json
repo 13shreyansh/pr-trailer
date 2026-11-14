@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response is fully grounded in the PR context and accurately cites the failing acceptance test, the differential test failure details, and the corresponding file and line."}

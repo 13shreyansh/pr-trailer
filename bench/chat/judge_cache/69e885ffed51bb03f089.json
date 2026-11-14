@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response accurately identifies the blocking finding regarding unmasked IBAN logging, cites the correct line, and notes the uncovered line, all fully supported by the PR context."}

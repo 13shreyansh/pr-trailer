@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately identifies the regressed test, cites the correct line where refreshFee was overwritten, and reflects the findings and lane status directly from the PR context."}

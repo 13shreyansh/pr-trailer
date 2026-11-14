@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The citation ledger/api.py:30 points to an empty line rather than the code returning 'total_display' (which is on line 29)."}

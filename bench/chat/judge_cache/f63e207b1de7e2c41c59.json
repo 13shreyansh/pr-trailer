@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "All claims regarding regressed tests, query failures, destructive migration consequences, and unchecked items are fully supported by the PR context and citations match."}

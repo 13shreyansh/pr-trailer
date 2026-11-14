@@ -1,0 +1,21 @@
+{
+ "n": 36,
+ "human_fail": 9,
+ "tpr": 0.889,
+ "tnr": 0.963,
+ "agreement": 0.944,
+ "disagreements": [
+  {
+   "id": "d17",
+   "human": true,
+   "judge": false,
+   "critique": "The claim that the test suite 'only validated sequential acceptance tests' is absent from the context; the context only notes that concurrency between simultaneous requests was not checked."
+  },
+  {
+   "id": "d19",
+   "human": false,
+   "judge": true,
+   "critique": "The response is fully grounded in the PR context and accurately references the findings, unchecked areas, and cited lines."
+  }
+ ]
+}

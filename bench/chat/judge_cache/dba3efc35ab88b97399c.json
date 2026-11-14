@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The claim that the query change at `ledger/transfers.py:18` causes the regression in `REQ_PAY_210.test_ac2_pending_counts` is not supported by the context, which records no file or line for the regression and explicitly states line 18 never ran in any test."}

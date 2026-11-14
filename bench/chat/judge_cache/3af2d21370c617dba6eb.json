@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer correctly states that the PR context does not provide an exact one-line fix, and accurately cites the requirement from the proven problem at ledger/api.py:32."}

@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response accurately identifies the blocking float defect at ledger/money.py:8, the broken invariant with exact evidence, the uncovered line at line 22, and the lane recommendation. All claims and citations match the PR context."}

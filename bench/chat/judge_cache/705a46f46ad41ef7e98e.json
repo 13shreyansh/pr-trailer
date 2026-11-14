@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "Line citation ledger/api.py:32 points to '@route(\"GET\", \"/api/metrics\")' rather than 'get_metrics()', and ledger/api.py:33 points to 'def get_metrics(db, user_id, params):' rather than the endpoint definition."}

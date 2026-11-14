@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer correctly states that 19.99 was not specifically checked in the PR context and accurately cites the invariant failure and lines in ledger/money.py."}

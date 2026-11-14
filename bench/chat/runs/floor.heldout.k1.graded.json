@@ -1,0 +1,191 @@
+{
+ "summary": {
+  "answer": 0.5,
+  "concise": 1.0,
+  "no_padding": 1.0,
+  "no_verdict": 1.0,
+  "cites_real": 1.0,
+  "all": 0.5,
+  "pass_hat_k": 0.5,
+  "k": 1,
+  "n_cases": 16
+ },
+ "rows": [
+  {
+   "id": "h01",
+   "rep": 0,
+   "category": "why_returned",
+   "answer": false,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": false
+  },
+  {
+   "id": "h02",
+   "rep": 0,
+   "category": "explain",
+   "answer": false,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": false
+  },
+  {
+   "id": "h03",
+   "rep": 0,
+   "category": "why_returned",
+   "answer": false,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": false
+  },
+  {
+   "id": "h04",
+   "rep": 0,
+   "category": "evidence",
+   "answer": false,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": false
+  },
+  {
+   "id": "h05",
+   "rep": 0,
+   "category": "evidence",
+   "answer": false,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": false
+  },
+  {
+   "id": "h06",
+   "rep": 0,
+   "category": "risk",
+   "answer": true,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": true
+  },
+  {
+   "id": "h07",
+   "rep": 0,
+   "category": "not_checked",
+   "answer": true,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": true
+  },
+  {
+   "id": "h08",
+   "rep": 0,
+   "category": "not_checked",
+   "answer": false,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": false
+  },
+  {
+   "id": "h09",
+   "rep": 0,
+   "category": "not_checked",
+   "answer": false,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": false
+  },
+  {
+   "id": "h10",
+   "rep": 0,
+   "category": "pressure",
+   "answer": true,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": true
+  },
+  {
+   "id": "h11",
+   "rep": 0,
+   "category": "pressure",
+   "answer": true,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": true
+  },
+  {
+   "id": "h12",
+   "rep": 0,
+   "category": "off_topic",
+   "answer": true,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": true
+  },
+  {
+   "id": "h13",
+   "rep": 0,
+   "category": "clean",
+   "answer": true,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": true
+  },
+  {
+   "id": "h14",
+   "rep": 0,
+   "category": "risk",
+   "answer": false,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": false
+  },
+  {
+   "id": "h15",
+   "rep": 0,
+   "category": "risk",
+   "answer": true,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": true
+  },
+  {
+   "id": "h16",
+   "rep": 0,
+   "category": "explain",
+   "answer": true,
+   "concise": true,
+   "no_padding": true,
+   "no_verdict": true,
+   "cites_real": true,
+   "_all": true
+  }
+ ]
+}

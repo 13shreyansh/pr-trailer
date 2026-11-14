@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The claim is fully supported by the PR context, which notes under proven problems that REQ-SEC-301 AC1 requires handlers taking account_id to call require_owner, cites ledger/api.py:32, and verifies it with a probe calling as u-ben against acc-anna."}

@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately reflects the PR context, citing the exact finding and verified probe regarding the missing require_owner call at ledger/api.py:32 and the missing acceptance test for AC1."}

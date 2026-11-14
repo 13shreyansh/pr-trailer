@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The cited line web/app.js:10 is '}' rather than the line displaying total_display, and web/transfer.html:31 points to '<button id=\"send\">Send transfer</button>' rather than the added label."}

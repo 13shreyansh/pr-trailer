@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The citation `ledger/transfers.py:27` points to an empty line rather than `create_transfer` or its caller."}

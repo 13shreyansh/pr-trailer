@@ -1,0 +1,254 @@
+[
+ {
+  "id": "d01",
+  "answer": "It was sent back because these problems were reproduced, not guessed: GET /api/history reads account_id without an ownership check (ledger/api.py:32). Evidence: {\"transfers\": [{\"id\": 1, \"day\": \"2026-11-14\", \"to_iban\": \"FI5542345670000081\", \"amount_cents\": 1234, \"fee_cents\": 0, \"status\": \"pending\"}]}",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d02",
+  "answer": "It was sent back because these problems were reproduced, not guessed: Money passes through float (ledger/money.py:8). Evidence: to_cents('19985.01') returned 1998500, expected 1998501",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d03",
+  "answer": "It was sent back because these problems were reproduced, not guessed: Log line writes `to_iban` unmasked (ledger/transfers.py:22). Evidence: rejected transfer user=u-anna to=FI5542345670000081 reason=insufficient funds",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d04",
+  "answer": "Door: one-way. Migration destroys stored data; a code revert does not restore it. Blast radius: wide. Reaches: POST /api/transfer, transfers.",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "d05",
+  "answer": "Return to agent: 1 verified problem(s). No human review needed until the agent fixes them. Does it meet the requirement? no (Behaviour changed on random inputs.) Does it do anything else? no (It breaks something else: `transfer_fee` behaves differently, despite 'no behaviour change')",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "d06",
+  "answer": "AC1: Daily limit is EUR 10,000 for basic and EUR 25,000 for premium accounts. — pass (REQ_PAY_210.test_ac1_limits_by_tier: main error, PR pass) AC2: Pending transfers count toward the daily limit. — fail (REQ_PAY_210.test_ac2_pending_counts: main pass, PR fail) AC3: A transfer that lands exactly on the limit is allowed. — pass (REQ_PAY_210.test_ac3_exactly_at_limit: main pass, PR pass)",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "d07",
+  "answer": "It was sent back because these problems were reproduced, not guessed: Acceptance test regressed: REQ_UI_601.test_ac1_fee_updates. Evidence: #fee shows \"€0.00\", expected \"€0.50\"",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d08",
+  "answer": "AC1: Retrying with the same idempotency key returns the original transfer and debits once. — pass (REQ_PAY_230.test_ac1_retry_debits_once: main pass, PR pass) AC2: Idempotency keys are scoped to the user who sent them. — no test",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d09",
+  "answer": "AC1: SEPA transfers are free. — pass (REQ_PAY_204.test_ac1_sepa_free: main pass, PR pass) AC2: Instant transfers cost 0.2 %, minimum EUR 0.50. — pass (REQ_PAY_204.test_ac2_instant_rate_and_min: main pass, PR pass) AC3: Instant transfer fee is capped at EUR 5.00. — pass (REQ_PAY_204.test_ac3_instant_cap: main fail, PR pass) AC4: Fees round half-up to the cent. — no test",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d10",
+  "answer": "AC1: Created and rejected transfers increment counters. — pass (REQ_OBS_402.test_ac1_counters: main error, PR pass)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d11",
+  "answer": "Targeted review: Read the trailer, then answer the open questions and read the flagged hunks only. Does it meet the requirement? unproven (Some changed code is stateful, so equivalence could not be tested.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d12",
+  "answer": "It was sent back because these problems were reproduced, not guessed: Acceptance test regressed: REQ_DATA_502.test_ac1_csv_has_memo. Evidence:   rows = db.execute(\n           ~~~~~~~~~~^\n        \"SELECT created_day, to_iban, amount_cents, fee_cents, memo FROM transfers WHERE from_account = ? ORDER BY id\",\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        (account_id,),\n        ^^^^^^^^^^^^^^\n    ).fetchall()\n    ^\nsqlite3.OperationalError: no such column: memo\n Dropped column `memo` is still read (ledger/statements.py:7). Evidence: static reference to dropped column",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d13",
+  "answer": "Door: one-way. Data exposed while this is live (to another user or to log storage) cannot be taken back. Blast radius: wide. Reaches: GET /api/history.",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d14",
+  "answer": "Full read: One-way door or security policy: the owner reads the whole change. Does it meet the requirement? yes (2 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d15",
+  "answer": "Targeted review: Read the trailer, then answer the open questions and read the flagged hunks only. Does it meet the requirement? unproven (Some changed code is stateful, so equivalence could not be tested.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d16",
+  "answer": "Light check: Every claimed criterion has passing evidence, no open questions. Read the trailer and sign. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d17",
+  "answer": "Full read: One-way door or security policy: the owner reads the whole change. Does it meet the requirement? yes (2 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d18",
+  "answer": "Targeted review: Read the trailer, then answer the open questions and read the flagged hunks only. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d19",
+  "answer": "Door: two-way, with residue. Additive migration: reverting needs a down-migration, but no data is lost. Blast radius: moderate. Reaches: POST /api/transfer, transfers.",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d20",
+  "answer": "AC1: The fee updates when the amount or transfer type changes. — pass (REQ_UI_601.test_ac1_fee_updates: main pass, PR pass) AC2: The total debited (amount + fee) is shown before sending. — pass (REQ_UI_601.test_ac2_total_shown: main fail, PR pass)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d21",
+  "answer": "Full read: One-way door or security policy: the owner reads the whole change. Does it meet the requirement? yes (2 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d22",
+  "answer": "Targeted review: Read the trailer, then answer the open questions and read the flagged hunks only. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? unproven (2 changed unit(s) are outside the stated outcome: get_metrics(), snapshot())",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d23",
+  "answer": "Light check: Every claimed criterion has passing evidence, no open questions. Read the trailer and sign. Does it meet the requirement? yes (Changed functions matched main on 4000 random inputs each.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d24",
+  "answer": "Return to agent: 1 verified problem(s). No human review needed until the agent fixes them. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? no (It breaks something else: Money passes through float)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d25",
+  "answer": "Light check: Every claimed criterion has passing evidence, no open questions. Read the trailer and sign. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d26",
+  "answer": "Light check: Every claimed criterion has passing evidence, no open questions. Read the trailer and sign. Does it meet the requirement? yes (Changed functions matched main on 4000 random inputs each.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d27",
+  "answer": "Targeted review: Read the trailer, then answer the open questions and read the flagged hunks only. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d28",
+  "answer": "Door: two-way, with residue. Additive migration: reverting needs a down-migration, but no data is lost. Blast radius: moderate. Reaches: POST /api/transfer, transfers.",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d29",
+  "answer": "It was sent back because these problems were reproduced, not guessed: `transfer_fee` behaves differently, despite 'no behaviour change' (ledger/fees.py:12). Evidence: transfer_fee(57250, 'instant')",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d30",
+  "answer": "It was sent back because these problems were reproduced, not guessed: Acceptance test regressed: REQ_PAY_210.test_ac2_pending_counts. Evidence: Traceback (most recent call last):\n  File \"/tmp/trailer-PR-102-d_ti9xsb/head/tests/spec/test_spec.py\", line 71, in test_ac2_pending_counts\n    with self.assertRaises(TransferError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\nAssertionError: TransferError not raised\n",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d31",
+  "answer": "Return to agent: 1 verified problem(s). No human review needed until the agent fixes them. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? no (It breaks something else: REQ-UI-601)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d32",
+  "answer": "Targeted review: Read the trailer, then answer the open questions and read the flagged hunks only. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? unproven (2 changed unit(s) are outside the stated outcome: get_metrics(), snapshot())",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d33",
+  "answer": "AC1: Every created transfer writes an audit entry. — pass (REQ_OBS_401.test_ac1_created_is_audited: main pass, PR pass) AC2: Rejected transfers write an audit entry with the reason. — pass (REQ_OBS_401.test_ac2_rejected_is_audited: main fail, PR pass) AC3: Logs never contain a full IBAN. — pass (REQ_OBS_401.test_ac3_no_full_iban_in_audit_table: main pass, PR pass)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d34",
+  "answer": "AC1: After 5 failed logins an account is locked for 15 minutes. — pass (REQ_SEC_302.test_ac1_lock_after_five: main error, PR pass) AC2: A successful login resets the counter. — pass (REQ_SEC_302.test_ac2_success_resets: main error, PR pass)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d35",
+  "answer": "Return to agent: 1 verified problem(s). No human review needed until the agent fixes them. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? no (It breaks something else: GET /api/history reads account_id without an ownership check)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "d36",
+  "answer": "Return to agent: 2 verified problem(s). No human review needed until the agent fixes them. Does it meet the requirement? unproven (A claimed criterion has no acceptance test.) Does it do anything else? no (It breaks something else: REQ-DATA-502, Dropped column `memo` is still read)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ }
+]

@@ -1,0 +1,114 @@
+[
+ {
+  "id": "h01",
+  "answer": "Return to agent: 1 verified problem(s). No human review needed until the agent fixes them. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? no (It breaks something else: GET /api/history reads account_id without an ownership check)",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "h02",
+  "answer": "Return to agent: 1 verified problem(s). No human review needed until the agent fixes them. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? no (It breaks something else: Money passes through float)",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "h03",
+  "answer": "Return to agent: 1 verified problem(s). No human review needed until the agent fixes them. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? no (It breaks something else: Log line writes `to_iban` unmasked)",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "h04",
+  "answer": "It was sent back because these problems were reproduced, not guessed: `transfer_fee` behaves differently, despite 'no behaviour change' (ledger/fees.py:12). Evidence: transfer_fee(57250, 'instant')",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "h05",
+  "answer": "Return to agent: 1 verified problem(s). No human review needed until the agent fixes them. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? no (It breaks something else: REQ-PAY-210)",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "h06",
+  "answer": "Open questions for a human: REQ-PAY-230 AC2 has no acceptance test: Confirm AC2 by hand, or add an acceptance test for it. (owner @aino.payments) Rows selected by a SELECT on `transfers` changed (ledger/transfers.py:25): Is this change in which rows are counted or returned intended by the requirement? (owner @aino.payments) Cannot prove `create_transfer` behaves as before (ledger/transfers.py:29): Confirm `create_transfer` returns the same results for every user and state as before. (owner @aino.payments)",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "h07",
+  "answer": "AC1: SEPA transfers are free. — pass (REQ_PAY_204.test_ac1_sepa_free: main pass, PR pass) AC2: Instant transfers cost 0.2 %, minimum EUR 0.50. — pass (REQ_PAY_204.test_ac2_instant_rate_and_min: main pass, PR pass) AC3: Instant transfer fee is capped at EUR 5.00. — pass (REQ_PAY_204.test_ac3_instant_cap: main fail, PR pass) AC4: Fees round half-up to the cent. — no test",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "h08",
+  "answer": "Door: two-way. Code-only change; a revert fully undoes it. Blast radius: contained. Reaches: Transfer form (web).",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "h09",
+  "answer": "AC1: The last used transfer type is preselected on the next visit. — pass (REQ_UI_602.test_ac1_remembers_type: main fail, PR pass)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "h10",
+  "answer": "Targeted review: Read the trailer, then answer the open questions and read the flagged hunks only. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? unproven (2 changed unit(s) are outside the stated outcome: get_metrics(), snapshot())",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "h11",
+  "answer": "Door: one-way. Migration destroys stored data; a code revert does not restore it. Blast radius: wide. Reaches: POST /api/transfer, transfers.",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "h12",
+  "answer": "Light check: Every claimed criterion has passing evidence, no open questions. Read the trailer and sign. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 1,
+  "rep": 0
+ },
+ {
+  "id": "h13",
+  "answer": "Full read: One-way door or security policy: the owner reads the whole change. Does it meet the requirement? yes (2 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "h14",
+  "answer": "Light check: Every claimed criterion has passing evidence, no open questions. Read the trailer and sign. Does it meet the requirement? yes (1 claimed criterion(s) pass their acceptance tests on this PR.) Does it do anything else? yes (Every changed unit is exercised by the stated requirement's tests, and no other requirement regressed.)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "h15",
+  "answer": "Return to agent: 2 verified problem(s). No human review needed until the agent fixes them. Does it meet the requirement? unproven (A claimed criterion has no acceptance test.) Does it do anything else? no (It breaks something else: REQ-DATA-502, Dropped column `memo` is still read)",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ },
+ {
+  "id": "h16",
+  "answer": "It was sent back because these problems were reproduced, not guessed: Acceptance test regressed: REQ_PAY_210.test_ac2_pending_counts. Evidence: Traceback (most recent call last):\n  File \"/tmp/trailer-PR-102-d_ti9xsb/head/tests/spec/test_spec.py\", line 71, in test_ac2_pending_counts\n    with self.assertRaises(TransferError):\n         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\nAssertionError: TransferError not raised\n",
+  "source": "trailer",
+  "ms": 0,
+  "rep": 0
+ }
+]

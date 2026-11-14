@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The explanation accurately identifies the dropped SQL filter at ledger/transfers.py:25, connects it to the unverified AC2 requirement from the context, and cites the correct line."}

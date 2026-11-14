@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The evidence of regression, the affected requirement, and the cited line in web/app.js are all fully supported by the PR context and cited lines."}

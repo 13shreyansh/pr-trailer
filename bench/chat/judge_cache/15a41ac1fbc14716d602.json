@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "Line migrations/002_drop_memo.sql:1 is a SQL comment, not the statement that destroys stored data."}

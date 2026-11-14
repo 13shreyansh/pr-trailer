@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response is fully grounded in the PR context, correctly citing the regressed test, the error raised, test statistics, and the uncovered line."}

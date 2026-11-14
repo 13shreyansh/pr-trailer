@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The answer accurately reflects the proven problem with float conversion at ledger/money.py:8, the failed parse_is_exact invariant, and the specific test evidence from the PR context."}

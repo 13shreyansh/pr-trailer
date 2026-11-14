@@ -1,0 +1,1 @@
+{"verdict": "PASS", "critique": "The response accurately reports the findings from the differential testing, correctly cites the location in ledger/fees.py:12, and matches the PR's lane status."}

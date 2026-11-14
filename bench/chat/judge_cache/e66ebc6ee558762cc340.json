@@ -1,0 +1,1 @@
+{"verdict": "FAIL", "critique": "The claim that parsing '19.99' yields 1998 cents instead of 1999 is unsupported by the PR context (the context only reports an issue with '19985.01')."}
