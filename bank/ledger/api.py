@@ -25,7 +25,8 @@ def route(method, path):
 def get_fee(db, user_id, params):
     cents = to_cents(params["amount"])
     fee = transfer_fee(cents, params.get("kind", "sepa"))
-    return {"fee_cents": fee, "fee_display": format_amount(fee)}
+    return {"fee_cents": fee, "fee_display": format_amount(fee),
+            "total_display": format_amount(cents + fee)}
 
 
 @route("POST", "/api/transfer")

@@ -6,6 +6,7 @@ async function refreshFee() {
   const r = await fetch(`/api/fee?amount=${encodeURIComponent(amount)}&kind=${kind}`);
   const body = await r.json();
   $("fee").textContent = r.ok ? body.fee_display : "–";
+  $("total").textContent = r.ok ? body.total_display : "–";
 }
 
 async function send() {
