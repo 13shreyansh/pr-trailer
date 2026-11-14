@@ -1,4 +1,6 @@
 """Outgoing transfers (REQ-PAY-201, REQ-PAY-210, REQ-PAY-230)."""
+import logging
+
 from . import audit
 from .auth import require_owner
 from .fees import transfer_fee
@@ -7,8 +9,18 @@ from .iban import is_valid_iban
 DAILY_LIMIT_CENTS = {"basic": 1_000_000, "premium": 2_000_000}  # €10k / €20k
 
 
+log = logging.getLogger("kassa.transfers")
+
+
 class TransferError(Exception):
     pass
+
+
+def _reject(db, user_id, to_iban, reason):
+    """REQ-OBS-401 AC2: every rejected transfer is audited with its reason."""
+    audit.record(db, "transfer.rejected", user_id, iban=to_iban, reason=reason)
+    log.warning("rejected transfer user=%s to=%s reason=%s", user_id, to_iban, reason)
+    raise TransferError(reason)
 
 
 def daily_total(db, account_id: str, day: str) -> int:
@@ -31,17 +43,17 @@ def create_transfer(db, user_id, account_id, to_iban, amount_cents, kind="sepa",
         if prior:
             return prior[0]
     if amount_cents <= 0:
-        raise TransferError("amount must be positive")
+        _reject(db, user_id, to_iban, "amount must be positive")
     if not is_valid_iban(to_iban):
-        raise TransferError("invalid IBAN")
+        _reject(db, user_id, to_iban, "invalid IBAN")
     balance, overdraft, tier = db.execute(
         "SELECT balance_cents, overdraft_cents, tier FROM accounts WHERE id = ?", (account_id,)
     ).fetchone()
     fee = transfer_fee(amount_cents, kind)
     if amount_cents + fee > balance + overdraft:
-        raise TransferError("insufficient funds")
+        _reject(db, user_id, to_iban, "insufficient funds")
     if daily_total(db, account_id, day) + amount_cents > DAILY_LIMIT_CENTS[tier]:
-        raise TransferError("daily limit exceeded")
+        _reject(db, user_id, to_iban, "daily limit exceeded")
     db.execute(
         "UPDATE accounts SET balance_cents = balance_cents - ? WHERE id = ?",
         (amount_cents + fee, account_id),
