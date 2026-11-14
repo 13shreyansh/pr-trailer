@@ -162,16 +162,138 @@ def build_pr(t):
     }
 
 
+def base_tree():
+    files = {}
+    for g in CODE_GLOBS:
+        for p in sorted(BANK.glob(g)):
+            if p.name != "__init__.py":
+                files[str(p.relative_to(BANK))] = p.read_text()
+    return files
+
+
+def run_module(src, calls):
+    """Execute a self-contained module (fees.py / money.py import only decimal) and call functions on sample inputs."""
+    ns = {}
+    exec(compile(src, "<pr>", "exec"), ns)
+    out = []
+    for fn, args in calls:
+        try:
+            out.append(repr(ns[fn](*args)))
+        except Exception as e:  # noqa: BLE001
+            out.append(f"error: {type(e).__name__}")
+    return out
+
+
+SAMPLES = {
+    "ledger/fees.py": [("transfer_fee", (a, "instant")) for a in (10_000, 25_000, 57_250, 75_250, 250_000, 400_000)]
+                      + [("transfer_fee", (57_250, "sepa"))],
+    "ledger/money.py": [("to_cents", (x,)) for x in ("19.99", "0.29", "12,34", "19985.01")]
+                       + [("format_amount", (123456,))],
+}
+
+
+def before_after(pid, files):
+    """Inputs where main and this PR give different answers, computed by running both versions of the code."""
+    base = base_tree()
+    tables = []
+    for path, calls in SAMPLES.items():
+        if path in files and files[path] != base.get(path):
+            a, b = run_module(base[path], calls), run_module(files[path], calls)
+            rows = [{"call": f"{fn}({', '.join(repr(x) for x in args)})", "main": x, "pr": y, "differs": x != y}
+                    for (fn, args), x, y in zip(calls, a, b)]
+            tables.append({"file": path, "rows": rows})
+    return tables
+
+
+def sandbox_card(t):
+    c = t["checked"]
+    st = c.get("spec_tests") or {}
+    items = [f"{st.get('total', 0)} acceptance tests ran on main and on this PR in a throwaway copy of the repo ({st.get('seconds', 0)} s): "
+             f"{st.get('regressions', 0)} broke, {st.get('pass', 0)} pass, {st.get('already_failing', 0)} fail on both (features not built yet)"]
+    if c.get("ui_tests"):
+        u = c["ui_tests"]
+        items.append(f"UI tests in a real browser (Chromium), with a recorded video: {u if isinstance(u, str) else json.dumps(u)}")
+    inv = c.get("invariants") or []
+    if inv:
+        items.append(f"{sum(1 for i in inv if i['ok'])} of {len(inv)} money invariants hold: " + ", ".join(i["id"].replace("_", " ") for i in inv))
+    rules = c.get("rules") or []
+    if rules:
+        items.append("Checks run on the diff: " + ", ".join(rules))
+    return {"items": items, "regressions": st.get("regressions", 0)}
+
+
+def formats(p, tables):
+    """Pick how a human should look at this change, and say which rule picked it."""
+    out = []
+    tier = p["decision"]["tier"]
+    ui = [d["path"] for d in p["diff"] if d["path"].startswith("web/")]
+    if p.get("media"):
+        out.append({"kind": "video", "title": "Watch the screen",
+                    "rule": f"It changes what customers see ({', '.join(ui)}). A recording of the real page before and after says more than the diff."})
+    if tables and any(r["differs"] for tb in tables for r in tb["rows"]):
+        out.append({"kind": "table", "title": "Compare the numbers",
+                    "rule": "It changes how money is calculated. We ran main and this PR on the same amounts; the rows that differ are what customers would feel."})
+    elif tables:
+        out.append({"kind": "table", "title": "Compare the numbers",
+                    "rule": "It touches money code. We ran main and this PR on the same amounts to show nothing moved that should not."})
+    d = p["danger"]
+    if p.get("sequence") and (d.get("callers") or len(d.get("changed_functions", [])) > 1):
+        out.append({"kind": "diagram", "title": "Follow the call path",
+                    "rule": f"It changes code that other code calls ({', '.join((d.get('callers') or d.get('changed_functions'))[:3])}). A diagram shows the path a request takes through it."})
+    qs = [s for s in p["spots"] if s["kind"] == "refusal"]
+    if qs and tier != "return":
+        out.append({"kind": "audio", "title": "Listen to the briefing",
+                    "rule": f"It has {len(qs)} question{'s' if len(qs) != 1 else ''} only a person can answer. A short spoken briefing lets the owner think about them away from the screen."})
+    if tier == "return":
+        out.append({"kind": "fixlist", "title": "Nothing for you yet",
+                    "rule": "A problem was reproduced, so the agent gets a fix list first. You review the fixed version."})
+    elif p["stats"]["lines_to_read"]:
+        out.append({"kind": "read", "title": f"Read {p['stats']['lines_to_read']} lines",
+                    "rule": "Only the lines tied to an open question or an unproven claim. The rest is covered by the evidence above."})
+    return out
+
+
+def briefing(p):
+    """Spoken briefing, built only from trailer fields (no model writes it)."""
+    o = p["outcome"]
+    words = {"yes": "yes", "no": "no", "unproven": "not proven"}
+    parts = [f"{p['id']}. {p['title']}. Written by the agent {(p.get('author') or '').replace('agent:', '')}.",
+             f"It is meant to do this: {p['requirement']['intent']}",
+             f"Does it do that? {words.get(o['does_it']['verdict'], o['does_it']['verdict'])}. {o['does_it']['why']}",
+             f"Does it do anything else? {'no' if o['nothing_else']['verdict'] == 'yes' else 'possibly'}. {o['nothing_else']['why']}"]
+    qs = [s for s in p["spots"] if s["kind"] == "refusal"]
+    if qs:
+        parts.append(f"There {'is one question' if len(qs) == 1 else f'are {len(qs)} questions'} for you.")
+        for i, q in enumerate(qs, 1):
+            parts.append(f"Question {i}: {q['what']}. {q['why']}")
+    parts.append(f"Can it be undone? {p['danger']['door']}. {' '.join(p['danger'].get('reasons') or [])}")
+    parts.append(f"Lane: {p['decision']['label']}. The decision is yours.")
+    return " ".join(x.strip() for x in parts if x.strip())
+
+
 def main():
     if (APP / "media").exists():
         shutil.rmtree(APP / "media")
-    prs = [build_pr(json.loads(f.read_text())) for f in sorted(OUT.glob("PR-*/trailer.json"))]
+    prs = []
+    decisions = json.loads((APP / "llm" / "decisions.json").read_text())["decisions"] if (APP / "llm" / "decisions.json").exists() else {}
+    for f in sorted(OUT.glob("PR-*/trailer.json")):
+        t = json.loads(f.read_text())
+        p = build_pr(t)
+        files = head_tree(p["id"])[1]
+        p["tables"] = before_after(p["id"], files)
+        p["sandbox"] = sandbox_card(t)
+        p["formats"] = formats(p, p["tables"])
+        p["briefing"] = briefing(p)
+        p["agent_decisions"] = decisions.get(p["id"])
+        prs.append(p)
     bench = json.loads((OUT / "bench.json").read_text())
     ai = OUT / "ai_compare.json"
     data = {"prs": prs, "bench": {"samples": bench["samples"]["summary"], "rows": bench["samples"]["rows"],
                                   "mutants": bench.get("mutants", {}).get("summary"), "heldout": bench.get("heldout", {}).get("summary"),
                                   "baselines": bench.get("baselines"), "assumptions": bench.get("assumptions")},
-            "ai": json.loads(ai.read_text()) if ai.exists() else None}
+            "ai": json.loads(ai.read_text()) if ai.exists() else None,
+            "effort": json.loads((OUT / "effort.json").read_text()) if (OUT / "effort.json").exists() else None,
+            "chat_eval": json.loads((OUT / "chat_eval.json").read_text()) if (OUT / "chat_eval.json").exists() else None}
     (APP / "data.json").write_text(json.dumps(data, separators=(",", ":")))
     ctx = {p["id"]: {k: p[k] for k in ("id", "title", "description", "requirement", "decision", "outcome", "danger",
                                        "evidence", "checked", "signoff", "findings", "refusals", "notes", "spots", "diff", "stats")}
@@ -182,7 +304,8 @@ def main():
     (APP / "api" / "_context.json").write_text(json.dumps(ctx, separators=(",", ":")))
     for p in prs:
         s = p["stats"]
-        print(f"{p['id']}: {p['decision']['tier']:8} files {s['files_changed']}+{s['files_affected']}/{s['files']}  read {s['lines_to_read']}/{s['codebase_lines']}")
+        print(f"{p['id']}: {[x['kind'] for x in p['formats']]} tables={[(t['file'], sum(r['differs'] for r in t['rows'])) for t in p['tables']]}")
+        print(f"   {p['decision']['tier']:8} files {s['files_changed']}+{s['files_affected']}/{s['files']}  read {s['lines_to_read']}/{s['codebase_lines']}")
 
 
 if __name__ == "__main__":

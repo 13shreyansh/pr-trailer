@@ -1,0 +1,205 @@
+{
+ "model": "gemini-3.8-flash",
+ "decisions": {
+  "PR-101": [
+   {
+    "decision": "Define INSTANT_MAX_CENTS constant set to 500",
+    "agent_reason": "REQ-PAY-204 AC3: cap at EUR 5.00",
+    "review": "Nothing flagged.",
+    "file": "ledger/fees.py"
+   },
+   {
+    "decision": "Clamp fee between minimum and maximum bounds using min and max functions",
+    "agent_reason": null,
+    "review": "Nothing flagged.",
+    "file": "ledger/fees.py"
+   }
+  ],
+  "PR-102": [
+   {
+    "decision": "Only include settled booked transfers when calculating the daily total",
+    "agent_reason": "this lets the query use the (from_account, status) index.",
+    "review": "Acceptance test regressed: REQ_PAY_210.test_ac2_pending_counts failed. Rows selected by transfers query changed, and daily_total changed outside stated outcome.",
+    "file": "ledger/transfers.py"
+   }
+  ],
+  "PR-103": [
+   {
+    "decision": "Query transfers by account_id without checking account ownership",
+    "agent_reason": null,
+    "review": "GET /api/history reads account_id without an ownership check: REQ-SEC-301 AC1: every handler taking account_id must call require_owner.",
+    "file": "ledger/api.py"
+   },
+   {
+    "decision": "Limit transfer history query results to fifty records ordered by ID descending",
+    "agent_reason": null,
+    "review": "Nothing flagged.",
+    "file": "ledger/api.py"
+   },
+   {
+    "decision": "Return transfers as dictionaries mapping database column created_day to day",
+    "agent_reason": null,
+    "review": "Nothing flagged.",
+    "file": "ledger/api.py"
+   }
+  ],
+  "PR-104": [
+   {
+    "decision": "Use float instead of Decimal to parse monetary amounts into integer cents",
+    "agent_reason": "simplifies amount parsing",
+    "review": "Money passes through float: Kassa's standard is integer cents end to end; float cannot represent most cent values exactly.",
+    "file": "ledger/money.py"
+   },
+   {
+    "decision": "Store currency symbols with position indicators to format prefix and suffix currencies",
+    "agent_reason": null,
+    "review": "Nothing flagged.",
+    "file": "ledger/money.py"
+   }
+  ],
+  "PR-105": [
+   {
+    "decision": "Record an audit entry when a transfer is rejected",
+    "agent_reason": "REQ-OBS-401 AC2: every rejected transfer is audited with its reason.",
+    "review": "Nothing flagged.",
+    "file": "ledger/transfers.py"
+   },
+   {
+    "decision": "Log a warning with transfer rejection details including recipient IBAN",
+    "agent_reason": null,
+    "review": "Log line writes `to_iban` unmasked: REQ-OBS-401 AC3: logs never contain a full IBAN. Use mask_iban().",
+    "file": "ledger/transfers.py"
+   }
+  ],
+  "PR-106": [
+   {
+    "decision": "Drop the memo column from the transfers table using a database migration.",
+    "agent_reason": "REQ-DATA-501: memo is not written by any client since v2; drop it.",
+    "review": "Destructive migration destroys stored data; dropped column is still read in ledger/statements.py, causing an acceptance test regression.",
+    "file": "migrations/002_drop_memo.sql"
+   },
+   {
+    "decision": "Remove the memo field from the transfers insert query.",
+    "agent_reason": "The memo column is no longer written by clients; this migration drops it and stops writing it.",
+    "review": "`create_transfer()` changed outside the stated outcome REQ-DATA-501; this change is only executed by tests for other requirements.",
+    "file": "ledger/transfers.py"
+   }
+  ],
+  "PR-107": [
+   {
+    "decision": "Compute and return total debited amount in fee endpoint response",
+    "agent_reason": null,
+    "review": "Nothing flagged.",
+    "file": "ledger/api.py"
+   },
+   {
+    "decision": "Update the total display element from the API response",
+    "agent_reason": null,
+    "review": "Nothing flagged.",
+    "file": "web/app.js"
+   },
+   {
+    "decision": "Add total debited element under fee in the transfer form HTML",
+    "agent_reason": null,
+    "review": "Nothing flagged.",
+    "file": "web/transfer.html"
+   }
+  ],
+  "PR-108": [
+   {
+    "decision": "Store transfer type in localStorage and preselect it on page load",
+    "agent_reason": "Stores the chosen transfer type in localStorage and preselects it on the next visit.",
+    "review": "Nothing flagged.",
+    "file": "web/app.js"
+   },
+   {
+    "decision": "Replace the kind change event listener with a localStorage update callback",
+    "agent_reason": null,
+    "review": "Acceptance test regressed: REQ_UI_601.test_ac1_fee_updates: Passed on main, fail on this PR.",
+    "file": "web/app.js"
+   }
+  ],
+  "PR-109": [
+   {
+    "decision": "Add an index on transfers for the idempotency_key column",
+    "agent_reason": "REQ-PAY-230: speed up retry lookups.",
+    "review": "Nothing flagged.",
+    "file": "migrations/002_idem_index.sql"
+   },
+   {
+    "decision": "Remove user_id filtering when querying transfers by idempotency key",
+    "agent_reason": null,
+    "review": "Rows selected changed by dropping user_id filter; review cannot know if the requirement intended them to change.",
+    "file": "ledger/transfers.py"
+   },
+   {
+    "decision": "Extract the idempotency lookup logic into a helper function",
+    "agent_reason": "moves the retry lookup into a helper that uses it.",
+    "review": "Cannot prove create_transfer behaves as before because it accesses the database, preventing equivalence checks on random inputs.",
+    "file": "ledger/transfers.py"
+   }
+  ],
+  "PR-110": [
+   {
+    "decision": "Moved fee calculation logic into a dictionary lookup table",
+    "agent_reason": null,
+    "review": "Module-level value changed in a 'no behaviour change' PR: constants change behaviour everywhere they are read.",
+    "file": "ledger/fees.py"
+   },
+   {
+    "decision": "Replaced Decimal quantize ROUND_HALF_UP rounding with the built-in round function",
+    "agent_reason": null,
+    "review": "`transfer_fee` behaves differently, despite 'no behaviour change': 39 of 4000 random inputs differ. First: transfer_fee(57250, 'instant') was 115, now 114.",
+    "file": "ledger/fees.py"
+   }
+  ],
+  "PR-111": [
+   {
+    "decision": "Expose a GET /api/metrics endpoint to return metric snapshots.",
+    "agent_reason": null,
+    "review": "New endpoint is new attack surface requiring security decisions; it was changed outside REQ-OBS-402 and is not executed by acceptance tests.",
+    "file": "ledger/api.py"
+   },
+   {
+    "decision": "Store metrics using in-process thread-safe counters with a snapshot function.",
+    "agent_reason": "In-process counters exported to the ops dashboard (REQ-OBS-402).",
+    "review": "`snapshot()` changed outside the stated outcome REQ-OBS-402 and is never executed by any REQ-OBS-402 acceptance test.",
+    "file": "ledger/metrics.py"
+   },
+   {
+    "decision": "Wrap transfer execution in try-except to record created and rejected transfer counts.",
+    "agent_reason": null,
+    "review": "Nothing flagged.",
+    "file": "ledger/transfers.py"
+   }
+  ],
+  "PR-112": [
+   {
+    "decision": "Lock accounts for 15 minutes after five failed login attempts",
+    "agent_reason": "Login throttling (REQ-SEC-302): 5 failures lock the account for 15 minutes.",
+    "review": "AI review is advice only for authn/authz changes and will not sign off on security logic per policy.",
+    "file": "ledger/ratelimit.py"
+   },
+   {
+    "decision": "Store failure counts and lockout expirations in in-memory dictionaries",
+    "agent_reason": null,
+    "review": "Nothing flagged.",
+    "file": "ledger/ratelimit.py"
+   },
+   {
+    "decision": "Reset failure count upon successful login",
+    "agent_reason": null,
+    "review": "Nothing flagged.",
+    "file": "ledger/ratelimit.py"
+   }
+  ],
+  "PR-113": [
+   {
+    "decision": "Updated the fee label text to 'Fee for this transfer:'",
+    "agent_reason": null,
+    "review": "Nothing flagged.",
+    "file": "web/transfer.html"
+   }
+  ]
+ }
+}

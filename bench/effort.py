@@ -138,6 +138,13 @@ def main():
                     seen.append(k)
         trailer_order.extend(seen)
         per_pr.append({"pr": pid, "lane": tier, "lines": len(seen), "why": p["decision"]["why"]})
+    # Per PR: which diff lines are the ones you read (for the sprint picture on the landing page).
+    for row in per_pr:
+        pk = [k for k in keys if k[0] == row["pr"]]
+        want = set(trailer_order)
+        row["diff_len"] = len(pk)
+        row["hl"] = [i for i, k in enumerate(pk) if k in want]
+        row["title"] = data[row["pr"]]["title"]
     trailer_total = len(trailer_order)
     trailer_pts, trailer_found = curve(trailer_order, bugs, trailer_total)
     trailer_pts[-1] = (trailer_total, len(trailer_found))
