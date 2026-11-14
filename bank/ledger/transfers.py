@@ -1,5 +1,5 @@
 """Outgoing transfers (REQ-PAY-201, REQ-PAY-210, REQ-PAY-230)."""
-from . import audit
+from . import audit, metrics
 from .auth import require_owner
 from .fees import transfer_fee
 from .iban import is_valid_iban
@@ -22,6 +22,18 @@ def daily_total(db, account_id: str, day: str) -> int:
 
 def create_transfer(db, user_id, account_id, to_iban, amount_cents, kind="sepa",
                     memo=None, idempotency_key=None, day="2026-11-14"):
+    try:
+        tid = _create_transfer(db, user_id, account_id, to_iban, amount_cents, kind,
+                               memo, idempotency_key, day)
+    except TransferError:
+        metrics.inc("transfers_rejected")
+        raise
+    metrics.inc("transfers_created")
+    return tid
+
+
+def _create_transfer(db, user_id, account_id, to_iban, amount_cents, kind,
+                     memo, idempotency_key, day):
     require_owner(db, user_id, account_id)
     if idempotency_key:
         prior = db.execute(

@@ -5,6 +5,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from . import db as dbmod
+from . import metrics
 from .fees import transfer_fee
 from .money import format_amount, to_cents
 from .transfers import TransferError, create_transfer
@@ -26,6 +27,11 @@ def get_fee(db, user_id, params):
     cents = to_cents(params["amount"])
     fee = transfer_fee(cents, params.get("kind", "sepa"))
     return {"fee_cents": fee, "fee_display": format_amount(fee)}
+
+
+@route("GET", "/api/metrics")
+def get_metrics(db, user_id, params):
+    return metrics.snapshot()
 
 
 @route("POST", "/api/transfer")
