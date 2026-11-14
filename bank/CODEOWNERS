@@ -1,0 +1,9 @@
+# path-prefix            owner (named human who signs off)
+ledger/auth.py           @mikko.security
+ledger/ratelimit.py      @mikko.security
+ledger/api.py            @mikko.security
+migrations/              @sara.data
+ledger/statements.py     @sara.data
+ledger/                  @aino.payments
+web/                     @lauri.frontend
+*                        @aino.payments

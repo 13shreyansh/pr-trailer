@@ -1,0 +1,47 @@
+{
+  "PR-101": null,
+  "PR-102": {
+    "bug": "Daily total ignores pending transfers, so the daily limit can be bypassed by sending many transfers before settlement.",
+    "file": "ledger/transfers.py",
+    "class": "logic"
+  },
+  "PR-103": {
+    "bug": "History endpoint never checks ownership: any user can read any account's transfers (IDOR).",
+    "file": "ledger/api.py",
+    "class": "security"
+  },
+  "PR-104": {
+    "bug": "Amount parsing goes through float: '19.99' becomes 1998 cents.",
+    "file": "ledger/money.py",
+    "class": "money"
+  },
+  "PR-105": {
+    "bug": "The new warning log writes the full recipient IBAN (PII) to application logs.",
+    "file": "ledger/transfers.py",
+    "class": "privacy"
+  },
+  "PR-106": {
+    "bug": "Statement export still reads memo; dropping the column breaks CSV export and destroys customer memos irreversibly.",
+    "file": "migrations/002_drop_memo.sql",
+    "class": "data"
+  },
+  "PR-107": null,
+  "PR-108": {
+    "bug": "Refactor removed the fee refresh on transfer-type change: switching to Instant still shows the SEPA fee.",
+    "file": "web/app.js",
+    "class": "frontend"
+  },
+  "PR-109": {
+    "bug": "Idempotency lookup is no longer scoped to the user: a key collision returns another customer's transfer id and skips the payment.",
+    "file": "ledger/transfers.py",
+    "class": "security"
+  },
+  "PR-110": {
+    "bug": "round() on Decimal is banker's rounding: fees on half-cent amounts drop by one cent (e.g. EUR 752.50 -> 150 instead of 151).",
+    "file": "ledger/fees.py",
+    "class": "money"
+  },
+  "PR-111": null,
+  "PR-112": null,
+  "PR-113": null
+}

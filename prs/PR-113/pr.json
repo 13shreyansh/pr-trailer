@@ -1,0 +1,13 @@
+{
+  "id": "PR-113",
+  "requirement": "REQ-UI-601",
+  "title": "Clarify fee label",
+  "author": "agent:kassa-coder",
+  "description": "Copy change: 'Fee' becomes 'Fee for this transfer'.",
+  "behavior_change": false,
+  "files": [
+    "web/transfer.html"
+  ],
+  "deleted": [],
+  "claims_acs": []
+}

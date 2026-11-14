@@ -1,0 +1,381 @@
+{
+  "pr": {
+    "id": "PR-113",
+    "requirement": "REQ-UI-601",
+    "title": "Clarify fee label",
+    "author": "agent:kassa-coder",
+    "description": "Copy change: 'Fee' becomes 'Fee for this transfer'.",
+    "behavior_change": false,
+    "files": [
+      "web/transfer.html"
+    ],
+    "deleted": [],
+    "claims_acs": []
+  },
+  "requirement": {
+    "id": "REQ-UI-601",
+    "area": "frontend",
+    "title": "Fee transparency",
+    "intent": "The customer sees exactly what they will pay before sending.",
+    "acceptance": [
+      {
+        "ac": "AC1",
+        "text": "The fee updates when the amount or transfer type changes."
+      },
+      {
+        "ac": "AC2",
+        "text": "The total debited (amount + fee) is shown before sending."
+      }
+    ],
+    "owner": "@lauri.frontend"
+  },
+  "diff": [
+    {
+      "path": "web/transfer.html",
+      "status": "modified",
+      "added": 1,
+      "removed": 1,
+      "unified": "--- a/web/transfer.html\n+++ b/web/transfer.html\n@@ -28,5 +28,5 @@\n     <option value=\"instant\">Instant (0.2 %, min \u20ac0.50)</option>\n   </select>\n-  <div class=\"fee\">Fee: <strong id=\"fee\">\u2013</strong></div>\n+  <div class=\"fee\">Fee for this transfer: <strong id=\"fee\">\u2013</strong></div>\n   <button id=\"send\">Send transfer</button>\n   <div id=\"result\" role=\"status\"></div>"
+    }
+  ],
+  "lines_changed": 2,
+  "evidence": [
+    {
+      "ac": "AC1",
+      "text": "The fee updates when the amount or transfer type changes.",
+      "claimed": false,
+      "tests": [],
+      "status": "no test"
+    },
+    {
+      "ac": "AC2",
+      "text": "The total debited (amount + fee) is shown before sending.",
+      "claimed": false,
+      "tests": [],
+      "status": "no test"
+    }
+  ],
+  "video": null,
+  "before_after": null,
+  "sequence": null,
+  "findings": [],
+  "refusals": [
+    {
+      "kind": "refusal",
+      "rule": "T-NO-ORACLE",
+      "title": "REQ-UI-601 AC1 has no acceptance test",
+      "detail": "\u201cThe fee updates when the amount or transfer type changes.\u201d. Without a test the AI cannot show this criterion holds, and it will not vouch for it from reading code alone.",
+      "file": null,
+      "line": null,
+      "severity": "warn",
+      "verified": false,
+      "verification": null,
+      "ask": "Confirm AC1 by hand, or add an acceptance test for it.",
+      "owner": "@lauri.frontend",
+      "evidence": null
+    },
+    {
+      "kind": "refusal",
+      "rule": "T-NO-ORACLE",
+      "title": "REQ-UI-601 AC2 has no acceptance test",
+      "detail": "\u201cThe total debited (amount + fee) is shown before sending.\u201d. Without a test the AI cannot show this criterion holds, and it will not vouch for it from reading code alone.",
+      "file": null,
+      "line": null,
+      "severity": "warn",
+      "verified": false,
+      "verification": null,
+      "ask": "Confirm AC2 by hand, or add an acceptance test for it.",
+      "owner": "@lauri.frontend",
+      "evidence": null
+    }
+  ],
+  "notes": [],
+  "checked": {
+    "spec_tests": {
+      "total": 20,
+      "pass": 12,
+      "already_failing": 8,
+      "regressions": 0,
+      "seconds": 0.15
+    },
+    "ui_tests": null,
+    "invariants": [
+      {
+        "id": "parse_is_exact",
+        "ok": true
+      },
+      {
+        "id": "fee_is_bounded_and_monotonic",
+        "ok": true
+      },
+      {
+        "id": "format_has_two_decimals",
+        "ok": true
+      }
+    ],
+    "other_requirements_regressed": [],
+    "rules": [
+      "tests",
+      "invariants",
+      "money-float",
+      "pii-in-logs",
+      "authz-probe",
+      "sql-scope",
+      "migrations",
+      "security-policy",
+      "behaviour-claim"
+    ]
+  },
+  "danger": {
+    "door": "two-way",
+    "reasons": [
+      "Code-only change; a revert fully undoes it."
+    ],
+    "blast_radius": "contained",
+    "surfaces": [
+      "Transfer form (web)"
+    ],
+    "tables": [],
+    "changed_functions": [],
+    "callers": []
+  },
+  "decision": {
+    "tier": "targeted",
+    "label": "Targeted review",
+    "why": "Read the trailer, then answer the open questions and read the flagged hunks only."
+  },
+  "signoff": {
+    "owner": "@lauri.frontend",
+    "co_signers": [],
+    "checked": [
+      "20 acceptance tests run on main and on this PR: 0 regressions, 12 pass, 8 fail on both (features not built yet)",
+      "3/3 money invariants hold"
+    ],
+    "not_checked": [
+      "AC1: no acceptance test",
+      "AC2: no acceptance test",
+      "Performance under load, concurrency between simultaneous requests, production config"
+    ],
+    "residual_risk": [
+      "Code-only change; a revert fully undoes it."
+    ],
+    "questions": [
+      {
+        "q": "Confirm AC1 by hand, or add an acceptance test for it.",
+        "owner": "@lauri.frontend",
+        "rule": "T-NO-ORACLE",
+        "file": null,
+        "line": null
+      },
+      {
+        "q": "Confirm AC2 by hand, or add an acceptance test for it.",
+        "owner": "@lauri.frontend",
+        "rule": "T-NO-ORACLE",
+        "file": null,
+        "line": null
+      }
+    ]
+  },
+  "test_rows": [
+    {
+      "id": "REQ_DATA_502.test_ac1_csv_has_memo",
+      "req": "REQ-DATA-502",
+      "ac": "AC1",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_MNY_220.test_ac1_sek_format",
+      "req": "REQ-MNY-220",
+      "ac": "AC1",
+      "base": "error",
+      "head": "error",
+      "detail": "Traceback (most recent call last):\n  File \"/tmp/trailer-PR-113-m67ldtxm/head/tests/spec/test_spec.py\", line 92, in test_ac1_sek_format\n    self.assertEqual(format_amount(123456, \"SEK\"), \"1 234,56 kr\")\n                     ~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/tmp/trailer-PR-113-m67ldtxm/head/ledger/money.py\", line 18, in format_amount\n    raise ValueError(f\"unsupported currency {currency}\")\nValueError: unsupported currency SEK\n",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_MNY_220.test_ac2_parse_exact",
+      "req": "REQ-MNY-220",
+      "ac": "AC2",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_OBS_401.test_ac1_created_is_audited",
+      "req": "REQ-OBS-401",
+      "ac": "AC1",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_OBS_401.test_ac2_rejected_is_audited",
+      "req": "REQ-OBS-401",
+      "ac": "AC2",
+      "base": "fail",
+      "head": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"/tmp/trailer-PR-113-m67ldtxm/head/tests/spec/test_spec.py\", line 142, in test_ac2_rejected_is_audited\n    self.assertTrue(any(e == \"transfer.rejected\" and \"reason\" in json.loads(d) for e, d in rows))\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: False is not true\n",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_OBS_401.test_ac3_no_full_iban_in_audit_table",
+      "req": "REQ-OBS-401",
+      "ac": "AC3",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_OBS_402.test_ac1_counters",
+      "req": "REQ-OBS-402",
+      "ac": "AC1",
+      "base": "error",
+      "head": "error",
+      "detail": "Traceback (most recent call last):\n  File \"/tmp/trailer-PR-113-m67ldtxm/head/tests/spec/test_spec.py\", line 153, in test_ac1_counters\n    from ledger import metrics\nImportError: cannot import name 'metrics' from 'ledger' (/tmp/trailer-PR-113-m67ldtxm/head/ledger/__init__.py)\n",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_PAY_201.test_ac1_only_owner",
+      "req": "REQ-PAY-201",
+      "ac": "AC1",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_PAY_201.test_ac2_insufficient_funds",
+      "req": "REQ-PAY-201",
+      "ac": "AC2",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_PAY_201.test_ac3_invalid_iban",
+      "req": "REQ-PAY-201",
+      "ac": "AC3",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_PAY_204.test_ac1_sepa_free",
+      "req": "REQ-PAY-204",
+      "ac": "AC1",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_PAY_204.test_ac2_instant_rate_and_min",
+      "req": "REQ-PAY-204",
+      "ac": "AC2",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_PAY_204.test_ac3_instant_cap",
+      "req": "REQ-PAY-204",
+      "ac": "AC3",
+      "base": "fail",
+      "head": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"/tmp/trailer-PR-113-m67ldtxm/head/tests/spec/test_spec.py\", line 56, in test_ac3_instant_cap\n    self.assertEqual(transfer_fee(1_000_000, \"instant\"), 500)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 2000 != 500\n",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_PAY_210.test_ac1_limits_by_tier",
+      "req": "REQ-PAY-210",
+      "ac": "AC1",
+      "base": "error",
+      "head": "error",
+      "detail": "Traceback (most recent call last):\n  File \"/tmp/trailer-PR-113-m67ldtxm/head/tests/spec/test_spec.py\", line 63, in test_ac1_limits_by_tier\n    create_transfer(db, \"u-ben\", \"acc-ben\", GOOD, 2_500_000)\n    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/trailer-PR-113-m67ldtxm/head/ledger/transfers.py\", line 44, in create_transfer\n    raise TransferError(\"daily limit exceeded\")\nledger.transfers.TransferError: daily limit exceeded\n",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_PAY_210.test_ac2_pending_counts",
+      "req": "REQ-PAY-210",
+      "ac": "AC2",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_PAY_210.test_ac3_exactly_at_limit",
+      "req": "REQ-PAY-210",
+      "ac": "AC3",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_PAY_230.test_ac1_retry_debits_once",
+      "req": "REQ-PAY-230",
+      "ac": "AC1",
+      "base": "pass",
+      "head": "pass",
+      "detail": "",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_SEC_301.test_ac2_history_lists_own_transfers",
+      "req": "REQ-SEC-301",
+      "ac": "AC2",
+      "base": "fail",
+      "head": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"/tmp/trailer-PR-113-m67ldtxm/head/tests/spec/test_spec.py\", line 106, in test_ac2_history_lists_own_transfers\n    self.assertIsNotNone(fn, \"history endpoint missing\")\n    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: unexpectedly None : history endpoint missing\n",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_SEC_302.test_ac1_lock_after_five",
+      "req": "REQ-SEC-302",
+      "ac": "AC1",
+      "base": "error",
+      "head": "error",
+      "detail": "d/tests/spec/test_spec.py\", line 113, in test_ac1_lock_after_five\n    rl = importlib.import_module(\"ledger.ratelimit\")\n  File \"/usr/local/lib/python3.13/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1404, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1369, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1333, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'ledger.ratelimit'\n",
+      "regression": false,
+      "fixed": false
+    },
+    {
+      "id": "REQ_SEC_302.test_ac2_success_resets",
+      "req": "REQ-SEC-302",
+      "ac": "AC2",
+      "base": "error",
+      "head": "error",
+      "detail": "ad/tests/spec/test_spec.py\", line 121, in test_ac2_success_resets\n    rl = importlib.import_module(\"ledger.ratelimit\")\n  File \"/usr/local/lib/python3.13/importlib/__init__.py\", line 88, in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen importlib._bootstrap>\", line 1404, in _gcd_import\n  File \"<frozen importlib._bootstrap>\", line 1369, in _find_and_load\n  File \"<frozen importlib._bootstrap>\", line 1333, in _find_and_load_unlocked\nModuleNotFoundError: No module named 'ledger.ratelimit'\n",
+      "regression": false,
+      "fixed": false
+    }
+  ]
+}

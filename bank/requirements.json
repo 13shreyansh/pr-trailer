@@ -1,0 +1,72 @@
+{
+  "product": "Kassa retail banking (synthetic)",
+  "requirements": [
+    {"id": "REQ-PAY-201", "area": "payments", "title": "Outgoing transfers",
+     "intent": "A customer can send money from their own account to a valid IBAN.",
+     "acceptance": [
+       {"ac": "AC1", "text": "Only the account owner can create a transfer."},
+       {"ac": "AC2", "text": "Transfers above balance plus overdraft are rejected."},
+       {"ac": "AC3", "text": "Invalid IBANs are rejected before any money moves."}],
+     "non_functional": ["Money is integer cents end to end."]},
+    {"id": "REQ-PAY-204", "area": "payments", "title": "Transfer fees",
+     "intent": "Fees are predictable and shown before sending.",
+     "acceptance": [
+       {"ac": "AC1", "text": "SEPA transfers are free."},
+       {"ac": "AC2", "text": "Instant transfers cost 0.2 %, minimum EUR 0.50."},
+       {"ac": "AC3", "text": "Instant transfer fee is capped at EUR 5.00."},
+       {"ac": "AC4", "text": "Fees round half-up to the cent.", "note": "No acceptance test supplied by the product owner."}]},
+    {"id": "REQ-PAY-210", "area": "payments", "title": "Daily transfer limit",
+     "intent": "Limit fraud losses per account per day.",
+     "acceptance": [
+       {"ac": "AC1", "text": "Daily limit is EUR 10,000 for basic and EUR 25,000 for premium accounts."},
+       {"ac": "AC2", "text": "Pending transfers count toward the daily limit."},
+       {"ac": "AC3", "text": "A transfer that lands exactly on the limit is allowed."}]},
+    {"id": "REQ-PAY-230", "area": "payments", "title": "Idempotent retries",
+     "intent": "A client retrying after a timeout never pays twice.",
+     "acceptance": [
+       {"ac": "AC1", "text": "Retrying with the same idempotency key returns the original transfer and debits once."},
+       {"ac": "AC2", "text": "Idempotency keys are scoped to the user who sent them.", "note": "No acceptance test supplied by the product owner."}]},
+    {"id": "REQ-MNY-220", "area": "payments", "title": "Multi-currency display",
+     "intent": "Show SEK accounts for Swedish customers.",
+     "acceptance": [
+       {"ac": "AC1", "text": "SEK amounts display as '1 234,56 kr'."},
+       {"ac": "AC2", "text": "Parsing a two-decimal amount is exact."}]},
+    {"id": "REQ-SEC-301", "area": "security", "title": "Account data access",
+     "intent": "Nobody can read or move another customer's money or data.",
+     "acceptance": [
+       {"ac": "AC1", "text": "Every API handler that takes an account_id checks ownership."},
+       {"ac": "AC2", "text": "Customers can list their own transfer history."}]},
+    {"id": "REQ-SEC-302", "area": "security", "title": "Login throttling",
+     "intent": "Slow down password guessing.",
+     "acceptance": [
+       {"ac": "AC1", "text": "After 5 failed logins an account is locked for 15 minutes."},
+       {"ac": "AC2", "text": "A successful login resets the counter."}]},
+    {"id": "REQ-OBS-401", "area": "observability", "title": "Audit trail",
+     "intent": "Every money movement and every failed attempt is auditable.",
+     "acceptance": [
+       {"ac": "AC1", "text": "Every created transfer writes an audit entry."},
+       {"ac": "AC2", "text": "Rejected transfers write an audit entry with the reason."},
+       {"ac": "AC3", "text": "Logs never contain a full IBAN."}]},
+    {"id": "REQ-OBS-402", "area": "observability", "title": "Transfer metrics",
+     "intent": "Operations can see transfer volume and failures.",
+     "acceptance": [
+       {"ac": "AC1", "text": "Created and rejected transfers increment counters."}]},
+    {"id": "REQ-DATA-501", "area": "data", "title": "Schema cleanup",
+     "intent": "Remove columns nobody uses.",
+     "acceptance": [
+       {"ac": "AC1", "text": "Unused columns are removed without losing data that is still read."}]},
+    {"id": "REQ-DATA-502", "area": "data", "title": "Statement export",
+     "intent": "Customers download a CSV statement including their memos.",
+     "acceptance": [
+       {"ac": "AC1", "text": "CSV includes day, recipient, amount, fee and memo."}]},
+    {"id": "REQ-UI-601", "area": "frontend", "title": "Fee transparency",
+     "intent": "The customer sees exactly what they will pay before sending.",
+     "acceptance": [
+       {"ac": "AC1", "text": "The fee updates when the amount or transfer type changes."},
+       {"ac": "AC2", "text": "The total debited (amount + fee) is shown before sending."}]},
+    {"id": "REQ-UI-602", "area": "frontend", "title": "Remember transfer type",
+     "intent": "Frequent instant-transfer users do not re-pick the type every time.",
+     "acceptance": [
+       {"ac": "AC1", "text": "The last used transfer type is preselected on the next visit."}]}
+  ]
+}

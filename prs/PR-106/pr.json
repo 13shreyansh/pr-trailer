@@ -1,0 +1,16 @@
+{
+  "id": "PR-106",
+  "requirement": "REQ-DATA-501",
+  "title": "Drop unused memo column",
+  "author": "agent:kassa-coder",
+  "description": "The memo column is no longer written by clients; this migration drops it and stops writing it.",
+  "behavior_change": true,
+  "files": [
+    "ledger/transfers.py",
+    "migrations/002_drop_memo.sql"
+  ],
+  "deleted": [],
+  "claims_acs": [
+    "AC1"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "PR-103",
+  "requirement": "REQ-SEC-301",
+  "title": "Add transfer history endpoint",
+  "author": "agent:kassa-coder",
+  "description": "Adds GET /api/history returning the last 50 transfers for an account.",
+  "behavior_change": true,
+  "files": [
+    "ledger/api.py"
+  ],
+  "deleted": [],
+  "claims_acs": [
+    "AC2"
+  ]
+}

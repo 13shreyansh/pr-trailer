@@ -1,0 +1,15 @@
+{
+  "id": "PR-108",
+  "requirement": "REQ-UI-602",
+  "title": "Remember last used transfer type",
+  "author": "agent:kassa-coder",
+  "description": "Stores the chosen transfer type in localStorage and preselects it on the next visit.",
+  "behavior_change": true,
+  "files": [
+    "web/app.js"
+  ],
+  "deleted": [],
+  "claims_acs": [
+    "AC1"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "PR-107",
+  "requirement": "REQ-UI-601",
+  "title": "Show total debited before sending",
+  "author": "agent:kassa-coder",
+  "description": "The fee endpoint returns the total, and the transfer form shows 'Total debited' under the fee.",
+  "behavior_change": true,
+  "files": [
+    "ledger/api.py",
+    "web/app.js",
+    "web/transfer.html"
+  ],
+  "deleted": [],
+  "claims_acs": [
+    "AC2"
+  ]
+}

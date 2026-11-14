@@ -1,0 +1,15 @@
+{
+  "id": "PR-102",
+  "requirement": "REQ-PAY-210",
+  "title": "Raise premium daily limit to EUR 25,000",
+  "author": "agent:kassa-coder",
+  "description": "Sets the premium daily limit to EUR 25,000 and speeds up the daily total query by only reading settled transfers.",
+  "behavior_change": true,
+  "files": [
+    "ledger/transfers.py"
+  ],
+  "deleted": [],
+  "claims_acs": [
+    "AC1"
+  ]
+}

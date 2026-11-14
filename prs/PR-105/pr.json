@@ -1,0 +1,15 @@
+{
+  "id": "PR-105",
+  "requirement": "REQ-OBS-401",
+  "title": "Audit rejected transfers",
+  "author": "agent:kassa-coder",
+  "description": "Every rejected transfer now writes a transfer.rejected audit entry with the reason, and logs a warning for ops.",
+  "behavior_change": true,
+  "files": [
+    "ledger/transfers.py"
+  ],
+  "deleted": [],
+  "claims_acs": [
+    "AC2"
+  ]
+}

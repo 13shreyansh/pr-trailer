@@ -1,0 +1,13 @@
+{
+  "id": "PR-110",
+  "requirement": "REQ-PAY-204",
+  "title": "Refactor fee calculation into a table",
+  "author": "agent:kassa-coder",
+  "description": "Pure refactor: fee rules move into a lookup table. No behaviour change.",
+  "behavior_change": false,
+  "files": [
+    "ledger/fees.py"
+  ],
+  "deleted": [],
+  "claims_acs": []
+}

@@ -1,0 +1,299 @@
+<meta charset="utf-8">
+<title>PR Trailer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: a review console. Left rail = the PR queue sorted by lane; right = the selected trailer read top to bottom like a PR comment. */
+:root {
+  --paper: #f5f6f3; --panel: #ffffff; --ink: #17201d; --muted: #5b6862; --line: #dde2dd; --soft: #eef1ed;
+  --accent: #0f6a5b; --accent-soft: #dcefe9;
+  --return: #b4372b; --return-soft: #f8e3df; --full: #9a5b00; --full-soft: #f7ecd8;
+  --targeted: #2a5db0; --targeted-soft: #e1e9f7; --light: #2f7d32; --light-soft: #e2f1e2;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #101614; --panel: #17201d; --ink: #e6ece8; --muted: #9aa8a1; --line: #2a3531; --soft: #1d2723;
+  --accent: #5cc4ad; --accent-soft: #173a33;
+  --return: #f08a7c; --return-soft: #3a1f1b; --full: #e0a64e; --full-soft: #362a17;
+  --targeted: #8cb2f0; --targeted-soft: #1c2a42; --light: #82c785; --light-soft: #1c3320; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #101614; --panel: #17201d; --ink: #e6ece8; --muted: #9aa8a1; --line: #2a3531; --soft: #1d2723;
+  --accent: #5cc4ad; --accent-soft: #173a33;
+  --return: #f08a7c; --return-soft: #3a1f1b; --full: #e0a64e; --full-soft: #362a17;
+  --targeted: #8cb2f0; --targeted-soft: #1c2a42; --light: #82c785; --light-soft: #1c3320; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font: 15px/1.55 var(--body); margin: 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 28px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 22px; font-weight: 600; }
+h3 { font-size: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+a { color: var(--accent); }
+.lede { max-width: 68ch; color: var(--muted); font-size: 16.5px; margin: 10px 0 0; }
+header { display: grid; gap: 22px; margin-bottom: 26px; }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.kpi b { display: block; font: 600 28px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.kpi span { color: var(--muted); font-size: 13px; }
+.console { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 860px) { .console { grid-template-columns: 1fr; } }
+.queue { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; position: sticky; top: calc(12px + env(safe-area-inset-top, 0px)); }
+@media (max-width: 860px) { .queue { position: static; } }
+.queue h3 { padding: 14px 16px 8px; }
+.queue button { all: unset; box-sizing: border-box; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; width: 100%; padding: 10px 16px; border-top: 1px solid var(--line); cursor: pointer; }
+.queue button:hover { background: var(--soft); }
+.queue button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.queue button[aria-current="true"] { background: var(--accent-soft); }
+.queue .t { font-weight: 500; font-size: 14px; min-width: 0; }
+.queue .s { grid-column: 1 / -1; font: 12px var(--mono); color: var(--muted); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font: 600 11.5px/1 var(--body); letter-spacing: 0.02em; padding: 5px 9px; border-radius: 999px; white-space: nowrap; height: fit-content; }
+.pill.return { color: var(--return); background: var(--return-soft); }
+.pill.full { color: var(--full); background: var(--full-soft); }
+.pill.targeted { color: var(--targeted); background: var(--targeted-soft); }
+.pill.light { color: var(--light); background: var(--light-soft); }
+.pill.neutral { color: var(--muted); background: var(--soft); }
+.trailer { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+.trailer > section { padding: 20px 24px; border-top: 1px solid var(--line); display: grid; gap: 12px; min-width: 0; }
+.trailer > section:first-child { border-top: 0; }
+@media (max-width: 560px) { .trailer > section { padding: 16px; } }
+.lane { border-left: 4px solid var(--c); background: var(--cs); padding: 12px 14px; border-radius: 0 8px 8px 0; }
+.lane b { color: var(--c); }
+.quote { color: var(--muted); font-style: italic; margin: 0; }
+.scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 600; }
+td.num { font-variant-numeric: tabular-nums; text-align: right; }
+.st { font: 500 12px var(--mono); white-space: nowrap; }
+.st.pass { color: var(--light); } .st.fail, .st.error { color: var(--return); } .st.none { color: var(--muted); }
+.item { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 6px; min-width: 0; }
+.item .h { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; justify-content: space-between; }
+.item .h strong { font-weight: 600; }
+.item p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.item .ev { font: 12.5px/1.5 var(--mono); background: var(--soft); padding: 8px 10px; border-radius: 6px; overflow-x: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ask { color: var(--targeted); font-weight: 500; }
+.media { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 14px; }
+@media (max-width: 700px) { .media { grid-template-columns: 1fr; } }
+video, .stills img { width: 100%; max-width: 100%; border-radius: 8px; border: 1px solid var(--line); background: var(--soft); display: block; }
+.stills { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stills figure { margin: 0; } .stills figcaption { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.seq { background: var(--soft); border-radius: 8px; padding: 12px; overflow-x: auto; }
+.seq svg { max-width: none; }
+.seq pre { margin: 0; font: 12px var(--mono); }
+.danger { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.danger > div { background: var(--soft); border-radius: 8px; padding: 12px 14px; }
+.danger b { display: block; font: 600 18px var(--display); margin: 2px 0 4px; }
+.card { border: 2px solid var(--ink); border-radius: 10px; padding: 18px 20px; display: grid; gap: 12px; }
+.card ul { margin: 0; padding-left: 20px; }
+.card label { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.card input { margin-top: 4px; accent-color: var(--accent); }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.signbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.btn { font: 600 14px var(--body); padding: 9px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); cursor: pointer; }
+.btn.primary { background: var(--accent); color: var(--panel); border-color: var(--accent); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details { border-top: 1px solid var(--line); padding-top: 10px; }
+summary { cursor: pointer; color: var(--muted); font-weight: 500; }
+pre.diff { font: 12.5px/1.5 var(--mono); margin: 8px 0 0; overflow-x: auto; background: var(--soft); padding: 10px; border-radius: 6px; }
+pre.diff .a { color: var(--light); } pre.diff .r { color: var(--return); } pre.diff .h { color: var(--muted); }
+.block { margin-top: 44px; display: grid; gap: 16px; }
+.principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.principles div { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.principles b { display: block; margin-bottom: 4px; }
+.bar { display: flex; height: 26px; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
+.bar span { display: flex; align-items: center; justify-content: center; font: 600 12px var(--body); color: var(--panel); min-width: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; }
+.muted { color: var(--muted); }
+.timer { font: 500 13px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: no-preference) { .trailer { animation: in .18s ease-out; } @keyframes in { from { opacity: .6 } to { opacity: 1 } } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Junction 2026 · Tieto · Earned Trust in AI Code · team The CS Guy</div>
+    <div>
+      <h1>Review the trailer, not the diff.</h1>
+      <p class="lede">Every agent-written pull request ships with a trailer: evidence for each acceptance criterion, what the AI found, what it refused to decide and why, how dangerous the merge is, and a sign-off card for the named owner. The AI never approves. Only problems it can reproduce are allowed to block.</p>
+    </div>
+    <div class="kpis" id="kpis"></div>
+  </header>
+
+  <div class="console">
+    <nav class="queue" aria-label="Sample pull requests">
+      <h3>Agent PR queue · Kassa bank</h3>
+      <div id="queue"></div>
+    </nav>
+    <article class="trailer" id="trailer" aria-live="polite"></article>
+  </div>
+
+  <section class="block" id="measure">
+    <h2>How we measure trust</h2>
+    <p class="lede" style="margin-top:0">We planted bugs in 8 of 13 sample PRs. Because we also wrote the checks, we generated mechanical mutants of the bank code as a second, unbiased test, each submitted as a "tidy-up, no behaviour change" PR. Review minutes are modelled with the assumptions listed under the table. The timer on each sign-off card lets reviewers replace them with real measurements.</p>
+    <div class="kpis" id="mkpis"></div>
+    <div>
+      <h3 style="margin-bottom:8px">Where the 13 sample PRs went</h3>
+      <div class="bar" id="lanebar"></div>
+    </div>
+    <div class="scroll"><table id="bench"></table></div>
+    <p class="muted" id="assume"></p>
+    <h3>Trust ledger on the mutants</h3>
+    <p class="muted" id="ledger" style="margin:0;max-width:75ch"></p>
+  </section>
+
+  <section class="block">
+    <h2>Principles</h2>
+    <div class="principles">
+      <div><b>Evidence over confidence</b>There are no confidence scores. Every claim is either re-runnable evidence or marked as advice.</div>
+      <div><b>Only reproduced problems block</b>Tests, probes, invariants and counterexamples decide. Static rules and LLM opinions only route attention.</div>
+      <div><b>Trace to the requirement</b>Tests are named <code>REQ_ID.test_acN</code>. A criterion with no test becomes an open question, never a silent pass.</div>
+      <div><b>Refuse out loud</b>Intent, security logic, data destruction and unprovable equivalence go to a named human, with the exact question.</div>
+      <div><b>Depth follows danger</b>Lane by door type and blast radius, not by lines changed. A two-line DROP COLUMN gets a full read.</div>
+      <div><b>Trust is earned per area</b>Light checks unlock after a clean streak in an area. One escape forces full reads for the next five PRs.</div>
+      <div><b>LLMs must quote</b>An LLM finding must quote the line it is about. If the quote isn't in the PR, the finding is dropped and counted as a hallucination.</div>
+      <div><b>Test the reviewer</b>Catch rate, false alarms, escapes and minutes, on planted bugs <em>and</em> on mutants nobody chose.</div>
+    </div>
+  </section>
+</div>
+
+<script id="data" type="application/json">/*DATA*/</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+const DATA = JSON.parse(document.getElementById("data").textContent);
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const LANE = { return: ["Return to agent", "--return"], full: ["Full read", "--full"], targeted: ["Targeted review", "--targeted"], light: ["Light check", "--light"] };
+const pill = (tier) => `<span class="pill ${tier}">${LANE[tier][0]}</span>`;
+const pct = (x) => Math.round(x * 100) + "%";
+const S = DATA.bench.samples.summary, M = DATA.bench.mutants && DATA.bench.mutants.summary;
+
+const cons = DATA.bench.samples.rows.reduce((a, r) => a + r.trailer_min + (r.tier === "return" ? r.baseline_min : 0), 0);
+$("#kpis").innerHTML = [
+  [pct(S.catch_rate), `planted bugs caught (${S.blocked_with_verified_evidence} with verified evidence, ${S.routed_to_human_at_bug} as a targeted question)`],
+  [pct(S.false_alarm_rate), `clean PRs blocked by mistake (${S.clean} clean PRs)`],
+  [pct(M ? M.strict_catch_rate : 0), `of ${M ? M.mutants : 0} unbiased mutants sent back with proof`],
+  [S.minutes_saved_pct + "%", `fewer review minutes, modelled (${Math.round(100 * (1 - cons / S.minutes_baseline))}% if every returned PR later gets a full read)`],
+].map(([b, s]) => `<div class="kpi"><b>${b}</b><span>${s}</span></div>`).join("");
+
+const order = { return: 0, full: 1, targeted: 2, light: 3 };
+const trailers = DATA.trailers;
+$("#queue").innerHTML = trailers.map((t) => `<button data-id="${t.pr.id}" aria-current="false">
+  <span class="t">${esc(t.pr.title)}</span>${pill(t.decision.tier)}
+  <span class="s">${t.pr.id} · ${t.requirement.id} · ${t.lines_changed} lines</span></button>`).join("");
+$("#queue").addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) location.hash = b.dataset.id.toLowerCase(); });
+
+function statusCell(s) { const c = s === "pass" ? "pass" : s === "absent" ? "none" : (s === "no test" ? "none" : "fail"); return `<span class="st ${c}">${esc(s)}</span>`; }
+
+function diffHtml(u) {
+  return u.split("\n").map((l) => {
+    const c = l.startsWith("+++") || l.startsWith("---") || l.startsWith("@@") ? "h" : l.startsWith("+") ? "a" : l.startsWith("-") ? "r" : "";
+    return `<span class="${c}">${esc(l)}</span>`;
+  }).join("\n");
+}
+
+let timer = null, started = 0;
+function render(id) {
+  const t = trailers.find((x) => x.pr.id.toLowerCase() === id) || trailers[0];
+  document.querySelectorAll("#queue button").forEach((b) => b.setAttribute("aria-current", String(b.dataset.id === t.pr.id)));
+  const [laneName, laneVar] = LANE[t.decision.tier];
+  const d = t.danger, s = t.signoff;
+  const ev = t.evidence.map((e) => `<tr><td class="mono">${e.ac}</td><td>${esc(e.text)}${e.claimed ? ' <span class="pill neutral">claimed by PR</span>' : ""}</td>
+      <td>${e.tests.map((x) => `<div class="mono" style="font-size:12px">${esc(x.id)}${x.ui ? " · browser" : ""}<br>main ${statusCell(x.base)} → PR ${statusCell(x.head)}</div>`).join("") || '<span class="muted">no acceptance test</span>'}</td>
+      <td>${statusCell(e.status)}</td></tr>`).join("");
+  const findings = t.findings.length ? t.findings.map((f) => `<div class="item">
+      <div class="h"><strong>${esc(f.title)}</strong><span class="pill ${f.verified ? "return" : "neutral"}">${f.verified ? "verified · blocks" : "unverified · advice"}</span></div>
+      ${f.file ? `<span class="mono muted">${esc(f.file)}:${f.line}</span>` : ""}
+      <p>${esc(f.detail)}</p>
+      ${f.verification ? `<p class="muted">How it was verified: ${esc(f.verification)}</p>` : ""}
+      ${f.evidence ? `<div class="ev">${esc(String(f.evidence).slice(0, 600))}</div>` : ""}</div>`).join("")
+    : `<p class="muted" style="margin:0">Nothing found. That is not proof of correctness. See <em>Not checked</em> on the card.</p>`;
+  const refusals = t.refusals.length ? t.refusals.map((r) => `<div class="item">
+      <div class="h"><strong>${esc(r.title)}</strong><span class="pill targeted">${esc(r.owner)}</span></div>
+      ${r.file ? `<span class="mono muted">${esc(r.file)}${r.line ? ":" + r.line : ""}</span>` : ""}
+      <p>${esc(r.detail)}</p><p class="ask">Question: ${esc(r.ask)}</p></div>`).join("")
+    : `<p class="muted" style="margin:0">Nothing left open.</p>`;
+  const media = t.video ? `<section><h3>Evidence: UI walkthrough, recorded on this PR</h3><div class="media">
+      <video src="media/${t.pr.id}/walkthrough.mp4" controls muted playsinline preload="metadata"></video>
+      <div class="stills"><figure><img src="media/${t.pr.id}/before.png" alt="Transfer form on main"><figcaption>main</figcaption></figure>
+      <figure><img src="media/${t.pr.id}/final.png" alt="Transfer form on this PR"><figcaption>this PR</figcaption></figure></div></div></section>` : "";
+  const seq = t.sequence ? `<section><h3>Evidence: what the changed code does</h3><p class="muted" style="margin:0">Generated from the call graph of the PR head, from the API entry point to the changed function.</p><div class="seq" id="seq"><pre>${esc(t.sequence)}</pre></div></section>` : "";
+  const qs = s.questions.map((q, i) => `<label><input type="checkbox" class="q" id="q-${t.pr.id}-${i}"> <span>${esc(q.q)} <span class="muted">(${esc(q.owner)})</span></span></label>`).join("");
+  $("#trailer").innerHTML = `
+    <section>
+      <div class="eyebrow">${t.pr.id} · ${t.requirement.id} · ${esc(t.pr.author)}</div>
+      <h2>${esc(t.pr.title)}</h2>
+      <p class="quote">“${esc(t.pr.description)}” (the agent's own description)</p>
+      <div class="lane" style="--c:var(${laneVar});--cs:var(${laneVar}-soft)"><b>${laneName}.</b> ${esc(t.decision.why)}</div>
+    </section>
+    <section><h3>Evidence per acceptance criterion · ${esc(t.requirement.title)}</h3>
+      <div class="scroll"><table><thead><tr><th>AC</th><th>Criterion</th><th>Test, main → PR</th><th>Result</th></tr></thead><tbody>${ev}</tbody></table></div></section>
+    ${media}${seq}
+    <section><h3>What the AI found</h3>${findings}</section>
+    <section><h3>What the AI refused to decide</h3>${refusals}</section>
+    <section><h3>Merge danger</h3><div class="danger">
+      <div><span class="muted">Door</span><b>${esc(d.door)}</b>${esc(d.reasons.join(" "))}</div>
+      <div><span class="muted">Blast radius</span><b>${esc(d.blast_radius)}</b>${d.changed_functions.length ? "Changed: " + d.changed_functions.map((x) => `<code>${esc(x)}</code>`).join(", ") : "No Python functions changed"}${d.surfaces.length ? ". Reached from " + d.surfaces.map(esc).join(", ") : ""}.</div>
+    </div></section>
+    <section><h3>Sign-off card</h3><div class="card">
+      <div class="signbar"><div><span class="muted">Owner</span> <b>${esc(s.owner)}</b>${s.co_signers.length ? ` <span class="muted">· co-sign</span> ${s.co_signers.map(esc).join(", ")}` : ""}</div><span class="timer" id="timer">review time 0:00</span></div>
+      <div class="cols">
+        <div><b>Checked</b><ul>${s.checked.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
+        <div><b>Not checked</b><ul>${s.not_checked.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
+        <div><b>Residual risk accepted</b><ul>${s.residual_risk.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
+      </div>
+      ${qs ? `<div><b>Answer before merge</b>${qs}</div>` : ""}
+      <label><input type="checkbox" class="q" id="accept-${t.pr.id}"> <span>I, ${esc(s.owner)}, accept this change and the residual risk above. The AI review was advice, not approval.</span></label>
+      <div class="signbar"><span class="muted" id="signmsg">${t.decision.tier === "return" ? "This PR goes back to the agent. Signing is disabled until it is fixed." : "Tick every box to sign."}</span>
+      <button class="btn primary" id="sign" disabled>Sign as ${esc(s.owner)}</button></div>
+    </div></section>
+    <section><details><summary>The diff (${t.lines_changed} changed lines), for when you want it</summary>
+      ${t.diff.map((f) => `<pre class="diff">${diffHtml(f.unified)}</pre>`).join("")}</details></section>`;
+  const boxes = [...document.querySelectorAll("#trailer .q")];
+  const sign = $("#sign");
+  const update = () => { sign.disabled = t.decision.tier === "return" || !boxes.every((b) => b.checked); };
+  boxes.forEach((b) => b.addEventListener("change", update));
+  sign.addEventListener("click", () => {
+    const secs = Math.round((Date.now() - started) / 1000);
+    clearInterval(timer);
+    $("#signmsg").textContent = `Signed by ${s.owner} after ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")} of review (the model assumes ${DATA.bench.samples.rows.find((r) => r.pr === t.pr.id).trailer_min} min).`;
+    sign.disabled = true;
+    try { const log = JSON.parse(localStorage.getItem("trailer.timings") || "{}"); log[t.pr.id] = secs; localStorage.setItem("trailer.timings", JSON.stringify(log)); } catch (e) {}
+  });
+  clearInterval(timer); started = Date.now();
+  timer = setInterval(() => { const secs = Math.round((Date.now() - started) / 1000); const el = $("#timer"); if (el) el.textContent = `review time ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`; }, 1000);
+  if (t.sequence && window.mermaid) {
+    const dark = document.documentElement.dataset.theme === "dark" || (!document.documentElement.dataset.theme && matchMedia("(prefers-color-scheme: dark)").matches);
+    mermaid.initialize({ startOnLoad: false, theme: dark ? "dark" : "neutral", fontFamily: "IBM Plex Sans, system-ui" });
+    mermaid.render("seq-" + t.pr.id + "-" + Date.now(), t.sequence).then(({ svg }) => { const el = $("#seq"); if (el) el.innerHTML = svg; }).catch(() => {});
+  }
+}
+
+function route() { render((location.hash || "").slice(1) || "pr-109"); }
+window.addEventListener("hashchange", () => { route(); if (innerWidth < 860) $("#trailer").scrollIntoView(); });
+route();
+
+// Measurement section
+if (M) {
+  const L = DATA.bench.mutants.ledger;
+  $("#mkpis").innerHTML = [
+    [`${S.escaped}`, `planted bugs that escaped to a light check`],
+    [`${M.blocked_with_verified_evidence}/${M.mutants}`, `mutants returned with proof`],
+    [`${M.routed_to_human}`, `mutants routed to a human question`],
+    [`${L.escapes_without_ledger} → ${L.escapes_with_ledger}`, `mutant escapes, without vs with the trust ledger`],
+  ].map(([b, s]) => `<div class="kpi"><b>${b}</b><span>${s}</span></div>`).join("");
+  $("#ledger").textContent = `The ledger lets an area use the light lane only after 3 PRs with no escapes, and withdraws trust for 5 PRs after one. On the mutants, light-check escapes fell from ${L.escapes_without_ledger} to ${L.escapes_with_ledger}, at the cost of ${L.extra_full_reads_from_ledger} extra full reads. Every remaining escape was in IBAN validation boundaries, which our random inputs never reach. Survivors were not filtered by hand, so equivalent mutants count as misses.`;
+}
+const tiers = S.tiers, n = S.prs;
+$("#lanebar").innerHTML = ["return", "full", "targeted", "light"].filter((k) => tiers[k]).map((k) => `<span style="flex:${tiers[k]};background:var(${LANE[k][1]})" title="${LANE[k][0]}: ${tiers[k]}">${tiers[k]}</span>`).join("");
+$("#lanebar").insertAdjacentHTML("afterend", `<div class="legend" style="margin-top:8px">${["return", "full", "targeted", "light"].map((k) => `${pill(k)}<span class="muted" style="font-size:13px">${tiers[k]}</span>`).join("")}</div>`);
+$("#bench").innerHTML = `<thead><tr><th>PR</th><th>Planted bug</th><th>Lane</th><th>Caught by</th><th class="num">Line-by-line min</th><th class="num">Trailer min</th></tr></thead><tbody>` +
+  DATA.bench.samples.rows.map((r) => `<tr><td><a href="#${r.pr.toLowerCase()}">${r.pr}</a></td><td>${esc(r.bug || "none (clean)")}</td><td>${pill(r.tier)}</td><td class="mono">${esc(r.caught_by.join(", ") || "–")}</td><td class="num">${r.baseline_min}</td><td class="num">${r.trailer_min}</td></tr>`).join("") +
+  `<tr><td colspan="4"><b>Total</b></td><td class="num"><b>${S.minutes_baseline}</b></td><td class="num"><b>${S.minutes_with_trailer}</b></td></tr></tbody>`;
+const A = DATA.bench.assumptions;
+$("#assume").textContent = `Model: a line-by-line read costs ${A.orientation_min} min to orient plus ${A.min_per_line} min per changed line, including the surrounding code it needs. Light check ${A.light_min} min. Targeted: ${A.targeted_min}. Full: ${A.full_min}. Return to agent: ${A.return_min} min, and the review after the agent's fix is not counted.`;
+</script>

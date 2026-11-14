@@ -1,0 +1,16 @@
+{
+  "id": "PR-112",
+  "requirement": "REQ-SEC-302",
+  "title": "Throttle failed logins",
+  "author": "agent:kassa-coder",
+  "description": "Adds LoginLimiter: 5 failures lock the account for 15 minutes; success resets.",
+  "behavior_change": true,
+  "files": [
+    "ledger/ratelimit.py"
+  ],
+  "deleted": [],
+  "claims_acs": [
+    "AC1",
+    "AC2"
+  ]
+}

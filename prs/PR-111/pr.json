@@ -1,0 +1,17 @@
+{
+  "id": "PR-111",
+  "requirement": "REQ-OBS-402",
+  "title": "Add transfer counters",
+  "author": "agent:kassa-coder",
+  "description": "Adds in-process counters for created and rejected transfers and a /api/metrics endpoint.",
+  "behavior_change": true,
+  "files": [
+    "ledger/api.py",
+    "ledger/metrics.py",
+    "ledger/transfers.py"
+  ],
+  "deleted": [],
+  "claims_acs": [
+    "AC1"
+  ]
+}

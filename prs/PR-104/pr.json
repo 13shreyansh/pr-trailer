@@ -1,0 +1,15 @@
+{
+  "id": "PR-104",
+  "requirement": "REQ-MNY-220",
+  "title": "Display SEK amounts",
+  "author": "agent:kassa-coder",
+  "description": "Adds SEK with Swedish formatting and simplifies amount parsing.",
+  "behavior_change": true,
+  "files": [
+    "ledger/money.py"
+  ],
+  "deleted": [],
+  "claims_acs": [
+    "AC1"
+  ]
+}

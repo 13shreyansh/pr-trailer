@@ -1,0 +1,16 @@
+{
+  "id": "PR-109",
+  "requirement": "REQ-PAY-230",
+  "title": "Index idempotency key lookups",
+  "author": "agent:kassa-coder",
+  "description": "Adds an index on idempotency_key and moves the retry lookup into a helper that uses it.",
+  "behavior_change": false,
+  "files": [
+    "ledger/transfers.py",
+    "migrations/002_idem_index.sql"
+  ],
+  "deleted": [],
+  "claims_acs": [
+    "AC1"
+  ]
+}
