@@ -20,16 +20,19 @@ def daily_total(db, account_id: str, day: str) -> int:
     return row[0]
 
 
+def find_by_idempotency_key(db, key):
+    """Look up a previous transfer by its idempotency key (uses idx_transfers_idem)."""
+    row = db.execute("SELECT id FROM transfers WHERE idempotency_key = ?", (key,)).fetchone()
+    return row[0] if row else None
+
+
 def create_transfer(db, user_id, account_id, to_iban, amount_cents, kind="sepa",
                     memo=None, idempotency_key=None, day="2026-11-14"):
     require_owner(db, user_id, account_id)
     if idempotency_key:
-        prior = db.execute(
-            "SELECT id FROM transfers WHERE user_id = ? AND idempotency_key = ?",
-            (user_id, idempotency_key),
-        ).fetchone()
+        prior = find_by_idempotency_key(db, idempotency_key)
         if prior:
-            return prior[0]
+            return prior
     if amount_cents <= 0:
         raise TransferError("amount must be positive")
     if not is_valid_iban(to_iban):
