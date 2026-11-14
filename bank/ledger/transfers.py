@@ -47,9 +47,9 @@ def create_transfer(db, user_id, account_id, to_iban, amount_cents, kind="sepa",
         (amount_cents + fee, account_id),
     )
     cur = db.execute(
-        "INSERT INTO transfers (user_id, from_account, to_iban, amount_cents, fee_cents, kind, status, memo, idempotency_key, created_day) "
-        "VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?)",
-        (user_id, account_id, to_iban, amount_cents, fee, kind, memo, idempotency_key, day),
+        "INSERT INTO transfers (user_id, from_account, to_iban, amount_cents, fee_cents, kind, status, idempotency_key, created_day) "
+        "VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?)",
+        (user_id, account_id, to_iban, amount_cents, fee, kind, idempotency_key, day),
     )
     audit.record(db, "transfer.created", user_id, iban=to_iban, amount_cents=amount_cents, kind=kind)
     return cur.lastrowid
