@@ -1,0 +1,396 @@
+"use strict";
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const pct = (x) => `${Math.round(x * 100)}%`;
+let DATA = null;
+
+const LANE = {
+  return: { label: "Sent back to the agent", short: "Sent back", icon: "↩" },
+  light: { label: "Quick check", short: "Quick check", icon: "✓" },
+  targeted: { label: "Targeted review", short: "Targeted review", icon: "◎" },
+  full: { label: "Full read", short: "Full read", icon: "!" },
+};
+const KIND = { block: "Proven problem", refusal: "Question for you", warn: "Worth a look", note: "FYI" };
+const lanePill = (t) => `<span class="pill lane-${t}"><span class="dot"></span>${LANE[t].short}</span>`;
+const vClass = (v) => (v === "yes" ? "yes" : v === "no" ? "no" : "unknown");
+const vText = (v) => (v === "yes" ? "Yes" : v === "no" ? "No" : "Not proven");
+
+// ---------- decisions (per browser) ----------
+const store = {
+  get(id) { try { return JSON.parse(localStorage.getItem("prt:" + id) || "null"); } catch { return null; } },
+  set(id, v) { try { localStorage.setItem("prt:" + id, JSON.stringify(v)); } catch {} },
+  clear(id) { try { localStorage.removeItem("prt:" + id); } catch {} },
+};
+
+// ---------- helpers ----------
+function questions(p) { return p.spots.filter((s) => s.kind === "refusal"); }
+function readSummary(p) {
+  const s = p.stats, t = p.decision.tier;
+  if (t === "return") return `<b>0 lines</b> to read until the agent fixes it`;
+  if (t === "full") return `<b>All ${p.lines_changed} changed lines</b>, by policy`;
+  if (!s.lines_to_read) return `<b>0 lines</b> to read${questions(p).length ? `, ${questions(p).length} question` : ", watch the evidence"}`;
+  return `<b>${s.lines_to_read} of ${s.codebase_lines}</b> lines to read`;
+}
+function bannerText(p) {
+  const t = p.decision.tier, q = questions(p).length, s = p.stats;
+  if (t === "return") return { big: "Sent back to the agent. Nothing for you to read yet.", sub: p.decision.why.replace(/\(s\)/g, "s") + " The proof is below, so you don't have to take our word for it." };
+  if (t === "light") return { big: "Quick check: watch the evidence, then sign.", sub: "Every acceptance criterion has passing evidence, there are no open questions, and the change is easy to undo." };
+  if (t === "full") return { big: "Full read required by policy.", sub: p.decision.why + " The map and evidence below are your guide." };
+  return { big: s.lines_to_read ? `Read ${s.lines_to_read} lines and answer ${q} question${q === 1 ? "" : "s"}.` : `Answer ${q} question${q === 1 ? "" : "s"}. No code needs reading.`,
+    sub: `Everything else in this PR is covered by evidence. You review ${s.lines_to_read ? pct(s.lines_to_read / s.codebase_lines) + " of the codebase" : "no code"}, not the whole diff.` };
+}
+
+// ---------- router ----------
+function route() {
+  const h = location.hash || "#/";
+  document.querySelectorAll(".top nav a[data-nav]").forEach((a) => a.classList.remove("on"));
+  const nav = (k) => { const a = $(`.top nav a[data-nav="${k}"]`); if (a) a.classList.add("on"); };
+  const m = h.match(/^#\/pr\/(PR-\d+)/);
+  if (m) { const p = DATA.prs.find((x) => x.id === m[1]); if (p) { renderPR(p); return; } }
+  if (h.startsWith("#/how")) { nav("how"); renderHow(); }
+  else if (h.startsWith("#/proof")) { nav("proof"); renderProof(); }
+  else { nav("inbox"); renderInbox(); }
+  window.scrollTo(0, 0);
+}
+
+// ---------- inbox ----------
+function prRow(p) {
+  const d = store.get(p.id);
+  const right = d ? `<span class="done-badge ${d.verdict}">${d.verdict === "approved" ? "Approved" : "Denied"} by you</span>` : lanePill(p.decision.tier);
+  return `<a class="card prrow" href="#/pr/${p.id}">
+    <div class="id">${p.id}</div>
+    <div><div class="t">${esc(p.title)}</div><div class="r">${esc(p.requirement.id)} · ${esc(p.requirement.title)} · owner ${esc(p.signoff.owner)}</div></div>
+    <div class="read">${readSummary(p)}</div>
+    <div class="dec">${right}</div></a>`;
+}
+function renderInbox() {
+  const S = DATA.bench.samples;
+  const needs = DATA.prs.filter((p) => p.decision.tier !== "return");
+  const back = DATA.prs.filter((p) => p.decision.tier === "return");
+  const order = { full: 0, targeted: 1, light: 2 };
+  needs.sort((a, b) => order[a.decision.tier] - order[b.decision.tier]);
+  $("#app").innerHTML = `
+  <div class="hero">
+    <div>
+      <div class="eyebrow">For the person who approves AI-written code</div>
+      <h1>Approve the outcome,<br>not the diff.</h1>
+      <p class="lede">AI agents now write pull requests faster than anyone can read them. You are still accountable for what gets merged. PR Trailer reads, tests and attacks every PR first, then tells you the few lines that actually need a human, and shows you the proof for everything else.</p>
+    </div>
+    <ol class="flow card pad">
+      <li><div><b>A PR arrives with its requirement</b><span>Here: 13 PRs from a coding agent on a small banking app.</span></div></li>
+      <li><div><b>We map what it touches</b><span>Which files change, which depend on them, which stay untouched.</span></div></li>
+      <li><div><b>We test and attack it</b><span>Proven problems go straight back to the agent. No human time spent.</span></div></li>
+      <li><div><b>You read only the flagged lines</b><span>Ask questions about the code, then approve or deny with a reason.</span></div></li>
+    </ol>
+  </div>
+  <div class="kpis">
+    <div class="card kpi"><div class="n">${S.buggy - S.escaped}/${S.buggy}</div><div class="l">planted bugs caught (${S.blocked_with_verified_evidence} with reproduced proof)</div></div>
+    <div class="card kpi"><div class="n">${pct(S.false_alarm_rate)}</div><div class="l">clean PRs wrongly blocked</div></div>
+    <div class="card kpi"><div class="n">${S.tiers.return} of ${S.prs}</div><div class="l">PRs sent back to the agent with proof</div></div>
+    <div class="card kpi"><div class="n">${Math.round(S.minutes_saved_pct)}%</div><div class="l">less review time (modelled, see "Does it work?")</div></div>
+  </div>
+  <div class="section-head"><div><h2>Waiting for your decision</h2><div class="muted">${needs.length} PRs. Open one to see exactly what to read.</div></div></div>
+  <div class="prlist">${needs.map(prRow).join("")}</div>
+  <div class="section-head"><div><h2>Sent back to the agent</h2><div class="muted">${back.length} PRs where we reproduced a problem. Open one to see the proof.</div></div></div>
+  <div class="prlist">${back.map(prRow).join("")}</div>`;
+}
+
+// ---------- PR page ----------
+function renderPR(p) {
+  const t = p.decision.tier, b = bannerText(p), s = p.stats;
+  $("#app").innerHTML = `
+  <div class="pr-head">
+    <a class="back" href="#/">← All pull requests</a>
+    <div class="meta"><span class="tag">${p.id}</span><span class="tag">${esc(p.requirement.id)}</span><span>opened by ${esc(p.author || "coding agent")}</span><span>·</span><span>${p.lines_changed} lines changed in ${s.files_changed} file${s.files_changed === 1 ? "" : "s"}</span><span>·</span><span>owner ${esc(p.signoff.owner)}</span></div>
+    <h1 style="margin-top:10px">${esc(p.title)}</h1>
+  </div>
+  <div class="banner lane-${t}">
+    <div class="icon">${LANE[t].icon}</div>
+    <div><div class="big">${esc(b.big)}</div><div class="sub">${esc(b.sub)}</div></div>
+    <div class="stat"><b>${t === "return" ? 0 : t === "full" ? p.lines_changed : s.lines_to_read}</b>lines to read of ${s.codebase_lines}</div>
+  </div>
+  <div class="layout">
+    <nav class="steps">
+      <a href="#s-outcome"><span>1</span>Outcome</a>
+      <a href="#s-impact"><span>2</span>Impact map</a>
+      <a href="#s-read"><span>3</span>${t === "return" ? "Why it went back" : "What to read"}</a>
+      <a href="#s-evidence"><span>4</span>Evidence</a>
+      <a href="#s-ask"><span>5</span>Ask about it</a>
+      <a href="#s-decide"><span>6</span>${t === "return" ? "What happens next" : "Decide"}</a>
+      <div class="hint">You are the approver: accountable that this does what it should, and nothing else.</div>
+    </nav>
+    <div>
+      ${secOutcome(p)}${secImpact(p)}${secRead(p)}${secEvidence(p)}${secAsk(p)}${secDecide(p)}
+    </div>
+  </div>`;
+  window.scrollTo(0, 0);
+  wireSteps(); wireChat(p); wireDecide(p);
+  if (p.sequence && window.mermaid) {
+    try { mermaid.initialize({ startOnLoad: false, theme: "neutral", securityLevel: "strict" }); mermaid.run({ querySelector: ".mermaid" }); } catch (e) { console.warn(e); }
+  }
+}
+
+function sec(id, num, title, desc, body) {
+  return `<section class="step" id="${id}"><div class="step-title"><span class="num">${num}</span><h2>${title}</h2></div><p class="step-desc">${desc}</p>${body}</section>`;
+}
+
+function secOutcome(p) {
+  const o = p.outcome;
+  return sec("s-outcome", "01", "The outcome you are approving",
+    `Start from what the change is supposed to achieve, not from the code. The requirement: <b>${esc(p.requirement.title)}</b>.`,
+    `<div class="card pad" style="margin-bottom:12px"><div class="eyebrow">Requirement ${esc(p.requirement.id)}</div><div style="font-size:17px">${esc(o.statement)}</div></div>
+     <div class="verdicts">
+       <div class="verdict ${vClass(o.does_it.verdict)}"><div class="q">Does it do what it should?</div><div class="a">${vText(o.does_it.verdict)}</div><div class="small">${esc(o.does_it.why)}</div></div>
+       <div class="verdict ${vClass(o.nothing_else.verdict)}"><div class="q">Does it do anything else?</div><div class="a">${o.nothing_else.verdict === "yes" ? "No, nothing else" : o.nothing_else.verdict === "no" ? "Yes, it does" : "Not proven"}</div><div class="small">${esc(o.nothing_else.why)}</div></div>
+     </div>
+     ${p.description ? `<p class="quote">"${esc(p.description)}" <span class="muted" style="font-style:normal">(the agent's own description)</span></p>` : ""}`);
+}
+
+function secImpact(p) {
+  const s = p.stats, d = p.danger;
+  const untouched = s.files - s.files_changed - s.files_affected;
+  const order = { changed: 0, deleted: 0, affected: 1, untouched: 2 };
+  const files = [...p.map].sort((a, b) => order[a.status] - order[b.status]);
+  const fileHtml = files.map((f) => {
+    const bars = f.lines.map(([len, ind, k]) => `<div class="${k}" style="width:${Math.max(3, Math.min(len, 80)) * 1.6}px;margin-left:${Math.min(ind, 16) * 1.6}px"></div>`).join("");
+    const label = f.status === "changed" ? "changed" : f.status === "deleted" ? "deleted" : f.status === "affected" ? "depends on the change" : "untouched";
+    return `<div class="file ${f.status}" title="${esc(f.path)}"><div class="fn">${esc(f.path)}</div><div class="fs">${f.n} lines · ${label}</div><div class="bars">${bars}</div>${f.why.length ? `<div class="why">${f.why.map(esc).join("<br>")}</div>` : ""}</div>`;
+  }).join("");
+  const reach = [...d.surfaces.map((x) => `<span class="tag">${esc(x)}</span>`), ...d.tables.map((x) => `<span class="tag">table ${esc(x)}</span>`)];
+  return sec("s-impact", "02", "What this PR touches in the codebase",
+    `The whole codebase, one tile per file, one bar per line. Orange is what the PR changed. Red is where we want your eyes. Faded files are untouched, so you can ignore them.`,
+    `<div class="card pad">
+      <div class="map-head">
+        <div class="m"><b>${s.files_changed} of ${s.files}</b>files changed</div>
+        <div class="m"><b>${s.files_affected}</b>more depend on them</div>
+        <div class="m"><b>${untouched}</b>untouched</div>
+        <div class="m"><b>${t2(d.door)}</b>if it goes wrong</div>
+      </div>
+      <div class="map">${fileHtml}</div>
+      <div class="legend"><span><i style="background:#ea8a3e"></i>changed line</span><span><i style="background:var(--red)"></i>flagged for you</span><span><i style="background:#8fb0ff"></i>context you read</span><span><i style="background:var(--purple)"></i>calls the changed code</span><span><i style="background:#d9d6cc"></i>untouched</span></div>
+      <div class="reach">Reaches: ${reach.length ? reach.join("") : '<span class="muted">nothing outside the changed files</span>'}<span class="muted">· blast radius ${esc(d.blast_radius)}</span></div>
+      <p class="small muted" style="margin:12px 0 0">${esc(d.reasons.join(" "))}</p>
+    </div>`);
+}
+function t2(door) { return door === "one-way" ? "Hard to undo" : door.startsWith("two-way, with") ? "Revert leaves traces" : "Easy to undo"; }
+
+let SHOWN = new Set();
+function codeBlock(s) {
+  if (!s.snippet) return "";
+  const key = s.file + ":" + s.snippet.map((l) => l.n).join(",");
+  const lines = s.snippet.map((l) => s.file + ":" + l.n);
+  if (SHOWN.has(key) || lines.every((k) => SHOWN.has(k))) return `<div class="code"><div class="file-label">Same lines as shown above (${esc(s.file)}${s.line ? ":" + s.line : ""})</div></div>`;
+  SHOWN.add(key); lines.forEach((k) => SHOWN.add(k));
+  return `<div class="code"><div class="file-label">${esc(s.file)}</div>${s.snippet.map((l) =>
+    `<div class="ln${l.hl ? " hl" : l.changed ? " changed" : ""}"><span class="no">${l.n}</span><span class="mk">${l.changed ? "+" : ""}</span><span>${esc(l.text)}</span></div>`).join("")}</div>`;
+}
+function spotCard(s) {
+  const where = s.file ? `${esc(s.file)}${s.line ? ":" + s.line : ""}` : "";
+  return `<div class="card spot"><div class="spot-head"><span class="kind ${s.kind}">${KIND[s.kind]}</span>
+    <div><div class="w">${esc(s.what)}</div><div class="y">${esc(s.why)}</div></div>
+    <div class="o">${where ? `<span class="mono">${where}</span><br>` : ""}${s.owner ? "ask " + esc(s.owner) : ""}</div></div>${codeBlock(s)}</div>`;
+}
+function secRead(p) {
+  SHOWN = new Set();
+  const t = p.decision.tier;
+  const main = p.spots.filter((s) => s.kind !== "note");
+  const notes = p.spots.filter((s) => s.kind === "note");
+  const diff = `<details class="diff"><summary>Show the full diff (${p.lines_changed} lines) anyway</summary>${p.diff.map((d) =>
+    `<div class="udiff">${(d.unified || "(no text diff)").split("\n").map((l) => `<div class="${l.startsWith("@@") ? "h" : l.startsWith("+") && !l.startsWith("+++") ? "a" : l.startsWith("-") && !l.startsWith("---") ? "d" : ""}">${esc(l) || " "}</div>`).join("")}</div>`).join("")}</details>`;
+  let body;
+  if (!main.length) body = `<div class="card zero"><b>Nothing to read.</b>Every changed line ran under this requirement's tests, there are no open questions, and nothing outside the requirement changed. Check the evidence and sign.</div>`;
+  else body = main.map(spotCard).join("");
+  if (notes.length) body += `<details class="diff"><summary>${notes.length} smaller note${notes.length > 1 ? "s" : ""}</summary>${notes.map(spotCard).join("")}</details>`;
+  return sec("s-read", "03", t === "return" ? "Why it was sent back" : "The lines that need a human",
+    t === "return" ? "These problems were reproduced by running the code, not guessed. The agent gets them as a fix list. The questions stay open for when it comes back."
+      : `Out of ${p.stats.codebase_lines} lines in the codebase and ${p.lines_changed} in this diff, these are the places worth your attention, with the reason and who to ask.`,
+    body + diff);
+}
+
+function evText(f) {
+  const e = String(f.evidence || "");
+  if (!e) return f.verification;
+  return f.verification + ": " + (e.length > 220 ? e.slice(0, 220) + "…" : e);
+}
+function res(r) { return `<span class="res ${r === "pass" ? "pass" : r === "fail" ? "fail" : "none"}">${esc(r)}</span>`; }
+function secEvidence(p) {
+  const c = p.checked, so = p.signoff;
+  const rows = p.evidence.map((e) => `<tr><td><b>${e.ac}</b></td><td>${esc(e.text)}${e.claimed ? "" : ' <span class="muted small">(not claimed by this PR)</span>'}</td>
+    <td>${e.tests.length ? e.tests.map((t) => `<div class="mono small">${esc(t.id.split(".").pop())}</div>`).join("") : '<span class="res none">no test</span>'}</td>
+    <td>${e.tests.map((t) => `<div>${res(t.base)}</div>`).join("") || "–"}</td><td>${e.tests.map((t) => `<div>${res(t.head)}</div>`).join("") || "–"}</td></tr>`).join("");
+  const proven = p.findings.filter((f) => f.verified);
+  const media = p.media ? `<div class="card pad" style="margin-top:14px"><h3>Watch it work</h3><p class="small muted" style="margin:0 0 10px">Recorded by a browser robot running the acceptance tests on this PR.</p>
+      <div class="media"><video src="${p.media.video}" controls muted playsinline preload="metadata"></video>
+      <div class="ba"><figure><img src="${p.media.before}" alt="Before"><figcaption>Before (main)</figcaption></figure><figure><img src="${p.media.after}" alt="After"><figcaption>After (this PR)</figcaption></figure></div></div></div>` : "";
+  const seq = p.sequence ? `<div class="card pad" style="margin-top:14px"><h3>What happens when this code runs</h3><p class="small muted" style="margin:0 0 10px">Generated from the code that changed, from the entry point down to the database.</p><pre class="mermaid">${esc(p.sequence)}</pre></div>` : "";
+  return sec("s-evidence", "04", "The evidence", "Each acceptance criterion with the test that proves it, run on main and on this PR. This is why you don't have to read the rest.",
+    `<div class="card scroll"><table><thead><tr><th></th><th>Acceptance criterion</th><th>Test</th><th>Main</th><th>This PR</th></tr></thead><tbody>${rows}</tbody></table></div>
+    ${proven.length ? `<div class="card pad" style="margin-top:14px"><h3>Problems we reproduced</h3>${proven.map((f) => `<p style="margin:8px 0"><span class="kind block">${esc(f.rule)}</span> <b>${esc(f.title)}</b><br><span class="small muted">${esc(evText(f))}</span></p>`).join("")}</div>` : ""}
+    ${media}${seq}
+    <div class="grid g2" style="margin-top:14px">
+      <div class="card pad"><h3>What we checked</h3><ul class="checks">${so.checked.map((x) => `<li>${esc(x)}</li>`).join("")}<li>${c.rules.length} rule packs: ${esc(c.rules.join(", "))}</li></ul></div>
+      <div class="card pad"><h3>What we did not check</h3><ul class="checks no">${so.not_checked.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
+    </div>`);
+}
+
+function suggestions(p) {
+  const t = p.decision.tier, q = [];
+  if (t === "return") q.push("Why was this sent back?", "How do you know it's really broken?");
+  else q.push("What exactly does this change?", "What could go wrong if I merge it?");
+  if (questions(p).length) q.push("Explain the open question in plain words");
+  q.push("Which tests prove the requirement?");
+  return q.slice(0, 4);
+}
+function secAsk(p) {
+  return sec("s-ask", "05", "Ask about this PR", "Ask anything about the change. Answers come only from this PR's code, tests and findings, with file and line, and say so when something was not checked.",
+    `<div class="card chat"><div class="suggest">${suggestions(p).map((q) => `<button type="button">${esc(q)}</button>`).join("")}</div>
+     <div class="chat-log" id="chatlog"></div>
+     <form id="chatform"><input id="chatq" placeholder="e.g. Does this change who can see the data?" autocomplete="off" maxlength="1000"><button class="btn" type="submit">Ask</button></form></div>`);
+}
+
+function secDecide(p) {
+  const t = p.decision.tier;
+  if (t === "return") {
+    const proven = p.findings.filter((f) => f.verified && f.severity === "block");
+    const msg = `To: ${p.author || "coding agent"}\nRe: ${p.id} ${p.title}\n\nThis PR was returned before human review. Fix these and push again:\n\n` +
+      proven.map((f, i) => `${i + 1}. ${f.title}${f.file ? ` (${f.file}${f.line ? ":" + f.line : ""})` : ""}\n   Proof: ${evText(f)}`).join("\n") +
+      (questions(p).length ? `\n\nOpen questions the owner will ask when you come back:\n` + questions(p).map((r) => `- ${r.what}`).join("\n") : "");
+    return sec("s-decide", "06", "What happens next", `Nothing for you to sign yet. This is the fix list the agent receives. When it pushes a fix, the PR comes back through the same checks.`,
+      `<div class="agent-msg">${esc(msg)}</div>`);
+  }
+  const d = store.get(p.id);
+  if (d) {
+    return sec("s-decide", "06", "Your decision", "Recorded in this browser.",
+      `<div class="receipt ${d.verdict}"><h3>${d.verdict === "approved" ? "Approved" : "Denied"} · ${new Date(d.at).toLocaleString()}</h3><p style="margin:6px 0"><b>Reason:</b> ${esc(d.reason)}</p>${d.accepted.length ? `<p class="small" style="margin:6px 0"><b>You confirmed:</b> ${d.accepted.map(esc).join(" · ")}</p>` : ""}<button class="btn ghost" id="undo" type="button" style="margin-top:8px">Change my decision</button></div>`);
+  }
+  const so = p.signoff;
+  const items = [
+    ...questions(p).map((r) => `I have answered: ${r.what}`),
+    ...so.residual_risk.map((r) => `I accept this risk: ${r}`),
+    "The AI review was advice, not approval. I am accountable for this merge.",
+  ];
+  return sec("s-decide", "06", "Your decision", `You are approving the outcome, so confirm the open points, then approve or deny. A reason is always required, so the record shows why.`,
+    `<div class="card pad decide">
+      ${items.map((x, i) => `<label class="chk"><input type="checkbox" data-i="${i}"><span>${esc(x)}</span></label>`).join("")}
+      <textarea id="reason" placeholder="Your reason (required), e.g. Fee cap matches REQ-PAY-204; confirmed AC3 manually on staging."></textarea>
+      <div class="row"><span class="small muted" id="dhint">Tick every box and write a reason to approve.</span><button class="btn red" id="deny" type="button" disabled>Deny</button><button class="btn green" id="approve" type="button" disabled>Approve</button></div>
+    </div>`);
+}
+
+function wireDecide(p) {
+  const undo = $("#undo");
+  if (undo) undo.onclick = () => { store.clear(p.id); renderPR(p); location.hash = `#/pr/${p.id}`; setTimeout(() => $("#s-decide").scrollIntoView(), 50); };
+  const ap = $("#approve"), dn = $("#deny"), reason = $("#reason");
+  if (!ap) return;
+  const boxes = [...document.querySelectorAll(".decide input[type=checkbox]")];
+  const update = () => {
+    const okReason = reason.value.trim().length >= 8;
+    ap.disabled = !(okReason && boxes.every((b) => b.checked));
+    dn.disabled = !okReason;
+  };
+  boxes.forEach((b) => (b.onchange = update)); reason.oninput = update;
+  const record = (verdict) => {
+    store.set(p.id, { verdict, reason: reason.value.trim(), at: Date.now(),
+      accepted: boxes.filter((b) => b.checked).map((b) => b.nextElementSibling.textContent) });
+    renderPR(p); setTimeout(() => $("#s-decide").scrollIntoView(), 50);
+  };
+  ap.onclick = () => record("approved");
+  dn.onclick = () => record("denied");
+}
+
+function wireChat(p) {
+  const log = $("#chatlog"), form = $("#chatform"), input = $("#chatq");
+  const history = [];
+  const add = (role, text, src) => {
+    const el = document.createElement("div");
+    el.className = "msg " + (role === "user" ? "user" : "bot");
+    el.textContent = text;
+    if (src) { const s = document.createElement("span"); s.className = "src"; s.textContent = src; el.appendChild(s); }
+    log.appendChild(el); log.scrollTop = log.scrollHeight; return el;
+  };
+  add("bot", `Hi. I've read this PR's diff, tests and findings. ${p.decision.tier === "return" ? "It was sent back to the agent. Ask me why." : "Ask me anything before you decide."}`);
+  const ask = async (q) => {
+    q = q.trim(); if (!q) return;
+    add("user", q); history.push({ role: "user", text: q });
+    const pending = add("bot", "Thinking…");
+    form.querySelector("button").disabled = true;
+    try {
+      const r = await fetch("/api/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pr: p.id, question: q, history: history.slice(0, -1) }) });
+      const j = await r.json();
+      pending.remove();
+      add("bot", j.answer || j.error || "No answer.", j.source === "trailer" ? "answered from the trailer" : j.source ? `answered by ${j.source}, grounded in this PR` : "");
+      history.push({ role: "bot", text: j.answer || "" });
+    } catch (e) {
+      pending.textContent = "Couldn't reach the assistant. Try again.";
+    } finally { form.querySelector("button").disabled = false; }
+  };
+  form.onsubmit = (e) => { e.preventDefault(); const q = input.value; input.value = ""; ask(q); };
+  document.querySelectorAll(".suggest button").forEach((b) => (b.onclick = () => ask(b.textContent)));
+}
+
+function wireSteps() {
+  const links = [...document.querySelectorAll(".steps a")];
+  links.forEach((a) => (a.onclick = (e) => { e.preventDefault(); $(a.getAttribute("href")).scrollIntoView({ behavior: "smooth" }); }));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((en) => { if (en.isIntersecting) links.forEach((a) => a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id)); });
+  }, { rootMargin: "-30% 0px -60% 0px" });
+  document.querySelectorAll("section.step").forEach((s) => io.observe(s));
+}
+
+// ---------- how ----------
+function renderHow() {
+  $("#app").innerHTML = `
+  <div class="eyebrow">How it works</div>
+  <h1>From "read everything" to "read these lines"</h1>
+  <p class="lede" style="margin-bottom:28px">Tieto's mentors told us the person who merges is not really a reviewer any more. They are the approver: accountable that the change does what it should and nothing else, so they can sleep without fearing a 3 a.m. call. Nobody can read millions of lines. So we built the steps that let them stop.</p>
+  <div class="how-steps">
+    <div class="card"><div class="n">01</div><div><h3>Start from the outcome</h3><p class="muted" style="margin:0">Every PR is tied to a requirement ID with acceptance criteria. We answer two questions first: does it do what the requirement says, and does it do anything else? Changed code that the requirement's tests never reach is flagged as "outside the outcome".</p></div></div>
+    <div class="card"><div class="n">02</div><div><h3>Map the impact on the whole codebase</h3><p class="muted" style="margin:0">Which files changed, which import or call them, which API endpoints, screens and tables they reach, and how hard it is to undo (a dropped column is forever; a code revert is not). Untouched files fade out.</p></div></div>
+    <div class="card"><div class="n">03</div><div><h3>Test and attack it before a human looks</h3><p class="muted" style="margin:0">Acceptance tests run on main and on the PR. UI changes are clicked through in a real browser and recorded on video. Probes try to read another customer's data, grep logs for leaked IBANs, check money invariants, and fuzz "no behaviour change" claims against main. Anything reproduced sends the PR back to the agent with the proof.</p></div></div>
+    <div class="card"><div class="n">04</div><div><h3>Point the human at the few risky spots</h3><p class="muted" style="margin:0">What the AI could not decide on its own (intent, security, data loss) becomes a question with a named owner and the exact lines, at most 10 spots. Everything else is covered by the evidence. The approver can ask questions about the code in plain English.</p></div></div>
+    <div class="card"><div class="n">05</div><div><h3>A human approves or denies, with a reason</h3><p class="muted" style="margin:0">The AI never approves. The approver ticks what they checked and what risk they accept, and writes why. Trust is earned per area: the quick-check lane opens only after clean PRs, and one escaped bug closes it again.</p></div></div>
+  </div>
+  <div class="note-box" style="margin-top:22px">Rule we never break: only problems we can reproduce are allowed to block. Opinions, including an LLM's, can only point a human somewhere. That keeps false alarms at zero, so people keep trusting the lane.</div>`;
+}
+
+// ---------- proof ----------
+function renderProof() {
+  const B = DATA.bench, S = B.samples, M = B.mutants, H = B.heldout, A = DATA.ai;
+  const rows = B.rows.map((r) => `<tr><td><a href="#/pr/${r.pr}">${r.pr}</a></td><td>${esc(r.bug || "none (clean)")}</td><td>${lanePill(r.tier)}</td><td class="mono small">${esc(r.caught_by.join(", ") || "–")}</td><td>${r.baseline_min}</td><td>${r.trailer_min}</td></tr>`).join("");
+  let cmp = "";
+  if (A) {
+    const c = A.summary;
+    const v = (x) => x.verdict === "caught" ? `<span class="ok">✓</span> ${esc(x.quote || "")}` : x.verdict === "hidden" ? `<span class="meh">flagged, text hidden</span>` : `<span class="meh">${esc(x.verdict)}</span>`;
+    cmp = `<h2 style="margin-top:36px">Against AI code reviewers on the same PRs</h2>
+    <p class="muted" style="max-width:75ch">Every sample PR is a real pull request on GitHub. We asked GitHub Copilot to review all 13 (it refused: the account was out of review quota). Devin Review and Codex also reviewed them. They are good: they find most of these bugs too. The difference is what the approver gets: a comment is an opinion to re-check, while the trailer reproduces the failure, sends it back without a human, and tells you what to read on the rest.</p>
+    <div class="card scroll"><table class="compare"><thead><tr><th>PR</th><th>Planted bug</th><th>PR Trailer</th><th>Devin Review</th><th>Codex</th></tr></thead><tbody>
+    ${A.rows.map((r) => `<tr><td><a href="#/pr/${r.pr}">${r.pr}</a></td><td class="small">${esc(r.bug || "none (clean)")}</td><td class="small">${r.trailer.startsWith("caught") ? `<span class="ok">✓</span> ${esc(r.trailer.slice(8))}` : esc(r.trailer)}</td><td>${v(r.devin)}</td><td>${v(r.codex)}</td></tr>`).join("")}
+    <tr><td colspan="2"><b>Planted bugs caught</b></td><td><b>${c.trailer.caught}/${c.trailer.of}</b> (${c.trailer_reproduced} reproduced)</td><td><b>${c.devin.caught}/${c.devin.of}</b> + ${c.devin_hidden_on_bugs} hidden</td><td><b>${c.codex.caught}/${c.codex.of}</b> (finished ${c.codex_reviewed} of 13)</td></tr></tbody></table></div>`;
+  }
+  const base = B.baselines ? `<h2 style="margin-top:36px">Against simple rules</h2><p class="muted">A change only counts if it beats "CI green = merge" on bugs caught and "read everything" on minutes.</p>
+    <div class="card scroll"><table><thead><tr><th>Approach</th><th>13 sample PRs</th><th>${M ? M.mutants + " mutants" : ""}</th><th>${H ? H.mutants + " held-out mutants" : ""}</th></tr></thead><tbody>
+    ${B.baselines.samples.map((row, i) => `<tr${row.name === "PR Trailer" ? ' style="font-weight:600"' : ""}><td>${esc(row.name)}</td>${["samples", "mutants", "heldout"].map((k) => B.baselines[k] ? `<td>${pct(B.baselines[k][i].catch_rate)} caught · ${B.baselines[k][i].minutes} min</td>` : "<td></td>").join("")}</tr>`).join("")}</tbody></table></div>` : "";
+  $("#app").innerHTML = `
+  <div class="eyebrow">Does it work?</div>
+  <h1>Measured, including where it fails</h1>
+  <p class="lede" style="margin-bottom:24px">We planted 8 bugs in 13 agent PRs, then also generated mechanical mutants we did not hand-pick, and a held-out set we never tuned on. Review minutes are modelled with stated assumptions, not stopwatched: that part is a hypothesis to test with real approvers.</p>
+  <div class="kpis">
+    <div class="card kpi"><div class="n">${S.buggy - S.escaped}/${S.buggy}</div><div class="l">planted bugs caught (${S.blocked_with_verified_evidence} with reproduced proof)</div></div>
+    <div class="card kpi"><div class="n">${pct(S.false_alarm_rate)}</div><div class="l">of ${S.clean} clean PRs wrongly blocked</div></div>
+    <div class="card kpi"><div class="n">${M ? pct(M.strict_catch_rate) : "–"}</div><div class="l">of ${M ? M.mutants : ""} unbiased mutants sent back with proof</div></div>
+    <div class="card kpi"><div class="n">${S.minutes_with_trailer}</div><div class="l">modelled minutes for all 13, vs ${S.minutes_baseline} reading line by line</div></div>
+  </div>
+  <div class="card scroll"><table><thead><tr><th>PR</th><th>Planted bug</th><th>Lane</th><th>Caught by</th><th>Read-all min</th><th>Trailer min</th></tr></thead><tbody>${rows}</tbody></table></div>
+  ${cmp}${base}
+  <h2 style="margin-top:36px">Honest limits</h2>
+  <ul class="checks no" style="max-width:80ch">
+    <li>Small synthetic banking app (about 400 lines of product code). We wrote the planted bugs and the checks, which is why we also test on mutants we did not write.</li>
+    <li>${M ? `${M.passed_as_light} of ${M.mutants} mutants slipped through as a quick check (some change nothing observable). A random 20% spot check of the quick-check lane caught one, and the trust ledger then withdraws that area's quick lane.` : ""}</li>
+    <li>Not covered: concurrency, performance, infrastructure, multi-PR interactions.</li>
+    <li>"Three days of reading to half an hour" is the hypothesis from Tieto's mentors. Our minutes are a model; the next step is timing real approvers.</li>
+  </ul>`;
+}
+
+// ---------- boot ----------
+fetch("data.json").then((r) => r.json()).then((d) => { DATA = d; route(); window.addEventListener("hashchange", route); })
+  .catch(() => { $("#app").innerHTML = '<div class="loading">Could not load data.</div>'; });

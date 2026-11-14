@@ -1,0 +1,4 @@
+{
+  "functions": { "api/ask.js": { "maxDuration": 60, "includeFiles": "api/_context.json" } },
+  "headers": [{ "source": "/data.json", "headers": [{ "key": "Cache-Control", "value": "public, max-age=60" }] }]
+}
