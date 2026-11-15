@@ -35,3 +35,13 @@ Method: Playwright headless Chromium on this Mac against the deployed URL, cold 
 Why the workspace is slow: `init()` renders nothing until `GET /api/workspace` returns, and that endpoint calls `service.sync(True)`, a forced re-read of the whole workspace from GitHub (one PR list, then repo + PR + files for each of 21 bank PRs and 2 Reduino PRs, about 70 GitHub API calls) relayed Vercel route → Cloudflare quick tunnel → worker on this Mac. Six to seven seconds on a good run; a slow GitHub response, a rate-limit backoff or a tunnel reconnect stretches it towards a minute. The in-memory state (`/api/status`) answers in about 100 ms and is never used for the first paint.
 
 Why it opens "finished": the worker keeps one global `var/product/state.json` for everyone. Whatever the last visitor or test run did (trimmed, merged, blocked) is what the next visitor gets; there is no visitor session, and the only reset is a localhost-only `/internal/reset` behind a CLI script.
+
+## After the rebuild (measured 02:35 UTC, same method, median of 5)
+
+| What | 1440x900 | 390 |
+|---|---|---|
+| Landing first contentful paint | 116 ms | 112 ms |
+| `/workspace` first contentful paint (skeleton) | 104 ms | 112 ms |
+| `/workspace` first real PR rows | 254 ms | 258 ms |
+
+Raw runs: `perf-after.json`. Script: `scripts/fable/perf.js`.

@@ -1,0 +1,102 @@
+{
+ "390": {
+  "runs": 5,
+  "landingFcpMs": {
+   "median": 112,
+   "all": [
+    124,
+    104,
+    112,
+    104,
+    116
+   ]
+  },
+  "landingLcpMs": {
+   "median": 112,
+   "all": [
+    124,
+    104,
+    112,
+    104,
+    116
+   ]
+  },
+  "landingApiCalls": [
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "workspaceSkeletonFcpMs": {
+   "median": 112,
+   "all": [
+    168,
+    112,
+    108,
+    108,
+    172
+   ]
+  },
+  "workspaceFirstRealRowsMs": {
+   "median": 258,
+   "all": [
+    259,
+    253,
+    257,
+    260,
+    258
+   ]
+  }
+ },
+ "1440": {
+  "runs": 5,
+  "landingFcpMs": {
+   "median": 116,
+   "all": [
+    132,
+    140,
+    116,
+    104,
+    116
+   ]
+  },
+  "landingLcpMs": {
+   "median": 116,
+   "all": [
+    132,
+    140,
+    116,
+    104,
+    116
+   ]
+  },
+  "landingApiCalls": [
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "workspaceSkeletonFcpMs": {
+   "median": 104,
+   "all": [
+    108,
+    104,
+    136,
+    100,
+    104
+   ]
+  },
+  "workspaceFirstRealRowsMs": {
+   "median": 254,
+   "all": [
+    254,
+    252,
+    288,
+    243,
+    352
+   ]
+  }
+ }
+}

@@ -1,8 +1,8 @@
 {
-  "commit": "7ad09d9229c1e2d276d9ef73984b27226ee199fe",
-  "id": "dpl_2nETUbuC2gU3PwYiSWJYXyNjg7Zc",
+  "commit": "a4f5fd2d84ad206bc966d0ab08fc661d77d1048d",
+  "id": "dpl_HEczMGmL9B8XPXhPg6Eqk84m9B65",
   "url": "https://pr-trailer.vercel.app",
-  "deploymentUrl": "https://pr-trailer-d21co60jf-13shreyanshs-projects.vercel.app",
+  "deploymentUrl": "https://pr-trailer-h5ests5xa-13shreyanshs-projects.vercel.app",
   "files": [
     {
       "file": "app/review.js",
@@ -11,23 +11,38 @@
     },
     {
       "file": "app/index.html",
-      "sha": "043c8b9c5d09710322b07604b76878697b87d74a",
-      "size": 928
+      "sha": "8f75799d7e8af99dfb64a98077865ed7893005ca",
+      "size": 14311
     },
     {
       "file": "app/vercel.json",
-      "sha": "63c524da707fb10f54d54d418667903e3cd57a84",
-      "size": 375
+      "sha": "f42c86f394f3d633c478e2a5d4fabf4d50ae14bf",
+      "size": 542
+    },
+    {
+      "file": "app/snapshot.json",
+      "sha": "89fd5ba15a3a9f071fc940ae5e7862b86bfb25dd",
+      "size": 18501
     },
     {
       "file": "app/style.css",
-      "sha": "727599357bf05f8025f4ca5b13b91f64068090a4",
-      "size": 29930
+      "sha": "c384734142aa994cff01e43956dd0452d27082a5",
+      "size": 34036
+    },
+    {
+      "file": "app/landing.css",
+      "sha": "c1ceb16a3d6d1e76b2af04b75948fd098e2d6972",
+      "size": 9758
+    },
+    {
+      "file": "app/workspace.html",
+      "sha": "80c68198a62522b5e8468a088161b54b6a5815dd",
+      "size": 3788
     },
     {
       "file": "app/app.js",
-      "sha": "30f656d9058b9c324d035fb96e015a72b747be54",
-      "size": 20277
+      "sha": "89af67d5f3963dd336980f980bbb437c0585bfea",
+      "size": 26552
     },
     {
       "file": "app/evidence/KASSA-11.json",
@@ -166,8 +181,8 @@
     },
     {
       "file": "app/evidence/manifest.json",
-      "sha": "c87cd54fb65bb8709caeda10fe52e38aedb05e9c",
-      "size": 35855
+      "sha": "d98eb49dd8eafe47216b4a339e6659bc5fe1a484",
+      "size": 35861
     },
     {
       "file": "app/evidence/AIDEV-24.full.json.gz",
@@ -381,13 +396,23 @@
     },
     {
       "file": "app/api/bridge.js",
-      "sha": "6ca4843cdb4054d5c0cae181b2470fba6ee6754c",
-      "size": 2576
+      "sha": "6ce338f3ec09559fdcb1a174110a31bf4ead82ad",
+      "size": 2664
     },
     {
       "file": "app/fonts/Archivo.ttf",
       "sha": "7b9deb8883fbf04a3a623094affd293bdae5a0fe",
       "size": 658596
+    },
+    {
+      "file": "app/fonts/JetBrainsMono.woff2",
+      "sha": "eb85eace351e0877e501655f7da3ab4fefdf52f8",
+      "size": 71768
+    },
+    {
+      "file": "app/fonts/Archivo.woff2",
+      "sha": "29646a6595c9b4278149b5ff8d6d2f272c0be0c3",
+      "size": 189068
     },
     {
       "file": "app/fonts/JetBrainsMono.ttf",
