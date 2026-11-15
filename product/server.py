@@ -1,6 +1,7 @@
 """HTTP worker. GitHub credentials are resolved only by the broker, never sent to the UI."""
 from http.server import ThreadingHTTPServer,BaseHTTPRequestHandler
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -8,7 +9,7 @@ import sys
 import urllib.parse
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from product import service,visitors
-BOOT_COMMIT=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+BOOT_COMMIT=(ROOT/'release-commit').read_text().strip() if (ROOT/'release-commit').is_file() else subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
 
 def publication_asset(id):
  match=re.fullmatch(r'asset-([a-f0-9]{40})-(style|build)',id)
@@ -27,11 +28,11 @@ class Handler(BaseHTTPRequestHandler):
  def do_GET(self):
   url=urllib.parse.urlparse(self.path);query=urllib.parse.parse_qs(url.query)
   try:
-   if url.path=='/health':return self.respond(200,{'ready':True,'repo':service.FULL,'commit':BOOT_COMMIT})
+   if url.path=='/health':return self.respond(200,{'ready':True,'repo':service.FULL,'commit':BOOT_COMMIT,'execution':os.environ.get('TIETO_TEST_RUNNER','local'),'runLogConfigured':bool(os.environ.get('MONGODB_URI')),'codeContextConfigured':bool(os.environ.get('ENTIRE_BIN'))})
    visitor=visitors.touch(query.get('v',[''])[0])
    if url.path=='/api/workspace':return self.respond(200,visitors.view(visitor,service.client() if visitors.resetting() else service.sync(True)))
    if url.path=='/api/status':return self.respond(200,visitors.view(visitor))
-   if url.path in ('/api/proof','/api/patch'):
+   if url.path in ('/api/proof','/api/patch','/api/context','/api/run-log'):
     id=query.get('id',[''])[0]
     if url.path=='/api/patch':
      asset=publication_asset(id)
@@ -40,7 +41,14 @@ class Handler(BaseHTTPRequestHandler):
     if not p or not p.get('_root'):raise ValueError('Run the checks first')
     root=Path(p['_root'])
     if url.path=='/api/patch':return self.respond(200,(root/'trimmed.patch').read_bytes(),'text/plain',{'Content-Disposition':'attachment; filename="trimmed.patch"'})
-    return self.respond(200,service.compact(json.loads((root/'result.json').read_text())))
+    report=json.loads((root/'result.json').read_text())
+    if url.path=='/api/context':
+     from product.evidence_page import code_context_page
+     return self.respond(200,code_context_page(p,report),'text/html; charset=utf-8')
+    if url.path=='/api/run-log':
+     from product.runlog import read_run
+     return self.respond(200,read_run(report['runId']))
+    return self.respond(200,service.compact(report))
    self.respond(404,{'error':'Not found'})
   except ValueError as exc:self.respond(400,{'error':str(exc)})
   except Exception as exc:self.respond(503,{'error':str(exc)[:200]})
@@ -66,7 +74,7 @@ class Handler(BaseHTTPRequestHandler):
 if __name__=='__main__':
  from product.github import api,OWNER
  if api('/user')['login']!=OWNER:raise RuntimeError('Wrong workspace connection')
- server=ThreadingHTTPServer(('127.0.0.1',4322),Handler)
+ server=ThreadingHTTPServer((os.environ.get('TIETO_BIND','127.0.0.1'),int(os.environ.get('PORT','4322'))),Handler)
  if __import__('os').environ.get('TIETO_TUNNEL_MANAGED')=='1':
   from product.tunnel import supervise
   __import__('threading').Thread(target=supervise,daemon=True).start()

@@ -179,7 +179,9 @@ def measure(id):
   comparison=api(f'/repos/{full}/compare/{pr["base"]["sha"]}...{row["headSha"]}')
   base_sha=comparison['merge_base_commit']['sha']
   unpack(full,base_sha,root/'base');unpack(full,row['headSha'],root/'head')
-  base=root/'base';head=root/'head';work=root/'work';logs=root/'logs';check=runner(root)
+  base=root/'base';head=root/'head';work=root/'work';logs=root/'logs';check=runner(root,metadata=row)
+  from .provenance import code_context
+  context=code_context(head,row['ask'],row['headSha'])
   config=known_cases().get(id)
   if config:
    tests=config['tests'] if row['kind']=='junior' else [*config['tests'],'tests']
@@ -218,10 +220,10 @@ def measure(id):
    names={'ledger/fee_cap.py':'The cap','ledger/retry_rewrite.py':'Retry rewrite','ledger/currency_cache.py':'Currency cache'}
    for b in blocks:b['name']=names.get(b.get('path'),b['name'])
   # Bind every action to both measured commits and the actual generated patch.
-  result.update(baseSha=base_sha,headSha=row['headSha'],repo=full,number=row['number'],measuredAt=now())
+  result.update(baseSha=base_sha,headSha=row['headSha'],repo=full,number=row['number'],measuredAt=now(),runId=root.name,codeContext=context)
   (root/'result.json').write_text(json.dumps(result));(root/'trimmed.patch').write_text(result['patch'])
   with LOCK:
-   p=STATE['prs'][id];p.update(status='done',verdict=verdict,written=result['written'],kept=result['kept'],unchecked=result['unchecked'],tests=final['tests'],passed=final['passed'],blocks=[{k:b[k] for k in ('id','name','lines','needed') if k in b} for b in blocks],risk=risk,readLines=sum(len(r.get('lines',[])) for r in risk),lampFiles=len(set('.'.join(c['name'].split('.')[:2]) for c in final['cases'])),neededFailures=sum(not c['passed'] for control in result['controls'] for c in control['cases']),riskPosition=position(result,base,head,risk[0]) if risk and row['kind']!='junior' else None,measuredAt=result['measuredAt'],baseSha=base_sha,patchSha256=result.get('patchSha256'),_root=str(root));save()
+   p=STATE['prs'][id];p.update(status='done',verdict=verdict,written=result['written'],kept=result['kept'],unchecked=result['unchecked'],tests=final['tests'],passed=final['passed'],blocks=[{k:b[k] for k in ('id','name','lines','needed') if k in b} for b in blocks],risk=risk,readLines=sum(len(r.get('lines',[])) for r in risk),lampFiles=len(set('.'.join(c['name'].split('.')[:2]) for c in final['cases'])),neededFailures=sum(not c['passed'] for control in result['controls'] for c in control['cases']),riskPosition=position(result,base,head,risk[0]) if risk and row['kind']!='junior' else None,measuredAt=result['measuredAt'],baseSha=base_sha,patchSha256=result.get('patchSha256'),runId=root.name,executionProvider=final.get('execution',{}).get('provider','local'),codeContext=context,_root=str(root));save()
  except InterruptedError:
   with LOCK:STATE['prs'][id].update(status='stopped',error=None);save()
  except Exception as exc:
@@ -292,7 +294,7 @@ def trimmed_commit(p,result,branch):
   else:target.parent.mkdir(parents=True,exist_ok=True);target.write_text(text)
  cases=known_cases();tests=['tests']
  for id in [x['id'] for x in STATE['merged']]+[p['id']]:tests+=cases[id]['tests']
- check=runner(validate)(validate/'work',list(dict.fromkeys(tests)),validate/'logs','merge-proof')
+ check=runner(validate,metadata=p)(validate/'work',list(dict.fromkeys(tests)),validate/'logs','merge-proof')
  if check['exitCode']!=0:raise ValueError('The trimmed change fails on current main. Run the checks again.')
  commit=commit_tree(files,parent=current,message='Tieto: '+p['title']+'; measured '+result.get('patchSha256',''))
  set_ref(branch,commit)

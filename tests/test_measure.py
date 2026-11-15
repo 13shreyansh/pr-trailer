@@ -10,7 +10,12 @@ import unittest
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'scripts/measure'))
 from engine import blocks_for,materialize,trim,run_check
-from bank_cases import CASES
+from bank_cases import CASES,make
+
+def setUpModule():
+ # A clean checkout must not depend on ignored folders from an earlier run.
+ (ROOT/'evidence/work').mkdir(parents=True,exist_ok=True)
+ make()
 
 class MeasureTests(unittest.TestCase):
  def setUp(self):

@@ -18,6 +18,7 @@ _token=None
 
 def credential():
  global _token
+ if os.environ.get('TIETO_GITHUB_TOKEN'):return os.environ['TIETO_GITHUB_TOKEN']
  if _token:return _token
  with _lock:
   if not _token:

@@ -13,7 +13,8 @@ import time
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
-PYTHON = str(ROOT / '.venv312/bin/python')
+# Follow the active environment in clean CI checkouts as well as a local venv.
+PYTHON = sys.executable
 
 
 def digest(data):

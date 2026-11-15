@@ -1,3 +1,9 @@
+Goal: make Modal sandbox execution, MongoDB Atlas run logging and Entire provenance real in PR Trailer.
+Scope: isolated feature worktree; no portal changes, description edits or shared worker restart before verification.
+Acceptance: existing Python/Node regressions pass and real provider receipts prove the integrations.
+Acceptance: sandbox credentials remain isolated, output/time bounded, and GitHub decisions stay with the named human.
+Release only after independent review and deployed desktop/mobile checks; preserve the current production worker until then.
+
 UI REBUILD / Sun 15 Nov 2026 02:40 UTC (04:40 Helsinki) / https://pr-trailer.vercel.app / served build a4f5fd2 (Vercel deployment dpl_HEczMGmL9B8XPXhPg6Eqk84m9B65; build.json, 7 static files and worker /health all match that commit; later commits touch only STATUS, screenshots and scripts)
 
 WHAT CHANGED:

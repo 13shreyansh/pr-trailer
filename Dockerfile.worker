@@ -1,0 +1,17 @@
+FROM python:3.12-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl git && rm -rf /var/lib/apt/lists/*
+COPY app/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+# Both official releases are checksum verified by the installer/plugin registry.
+RUN curl -fsSL https://entire.com/install.sh -o /tmp/install-entire.sh && \
+    bash /tmp/install-entire.sh --version 0.13.4 && \
+    /root/.local/bin/entire plugin install graph --pin v0.6.0 --yes
+COPY product /app/product
+COPY scripts /app/scripts
+COPY app/runtime /app/app/runtime
+COPY var/workspace.json /app/var/workspace.json
+COPY release-commit /app/release-commit
+ENV TIETO_BIND=0.0.0.0 PORT=4326 TIETO_TEST_RUNNER=modal ENTIRE_BIN=/root/.local/bin/entire
+EXPOSE 4326
+CMD ["python", "-m", "product.server"]

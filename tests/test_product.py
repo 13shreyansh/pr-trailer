@@ -23,6 +23,7 @@ class GitHubBoundaryTests(unittest.TestCase):
    github.set_ref('agent/test','abc')
    self.assertEqual(mock.call_args_list[1].kwargs['method'],'POST')
 
+@unittest.skipUnless(sys.platform=='darwin','Seatbelt is macOS-only; Modal isolation has separate integration checks')
 class SandboxTests(unittest.TestCase):
  def test_public_code_cannot_read_broker_or_use_network(self):
   import tempfile
@@ -88,6 +89,7 @@ class UncheckedAskRegression(unittest.TestCase):
    self.assertTrue(risks)
    self.assertIn('acceptance',risks[0]['note'])
 
+@unittest.skipUnless(sys.platform=='darwin','Seatbelt is macOS-only; Modal source isolation is checked separately')
 class SourceIsolationRegression(unittest.TestCase):
  def test_test_code_cannot_change_the_measured_source(self):
   import tempfile
