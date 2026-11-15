@@ -1,11 +1,13 @@
-PR TRAILER / 15 Nov 2026 09:44 Helsinki / app candidate pending commit / https://pr-trailer-sponsors.72.61.22.106.sslip.io
+PR TRAILER / 15 Nov 2026 09:49 Helsinki / app c977619b2239a662a1eaca8a7cf398a09e9075ff / https://pr-trailer-sponsors.72.61.22.106.sslip.io
 DONE:
-- Full deployed acceptance passed at 390 and 1440 on ac1cdca, including real Modal tests, Graph context, 19 merges, trimmed return, block, reset and sign-out at each width.
-- Explicit full-inbox Run again and T after completion now request fresh provider execution. Initial verified reuse remains available; measurement logic/profile is unchanged.
-- README describes actual Modal/Graph/CRACI and pending Atlas truthfully.
-NUMBERS: dev measured 68 Python tests and four JavaScript suites passed. Acceptance measured 2/2 passed, 390 cold14.5min and 1440 warm5.6min. Held-out measured known rounding failure0/1 retained. Legacy revalidation measured0accepted24declined.
-SCREENSHOTS: screenshots/fable/1440-01-inbox.png; screenshots/fable/390-05-fee-ledger.png; screenshots/fable/390-05-code-context.png. All loaded and actual canary content.
-REVIEW: 6 Astra cleared ac1 source and observed full acceptance; focused fresh-batch delta review and deployed action receipt pending.
-NEXT: stage candidate, verify a top-level fresh rerun creates a new noncached Modal report, restore workspace, then root owns main publication and public cutover.
+- Real Modal checks and source-linked Entire Graph run on the Mac-independent VPS canary. Original public route and bank were preserved; root owns the public cutover.
+- Complete deployed phone and desktop flows passed. Explicit inbox and row reruns are fresh, with correct displayed measurement time. Legacy evidence without producer contracts is rejected.
+- README and receipts document actual service use. Atlas remains explicitly pending; no Sessions capture or live Atlas claim.
+NUMBERS: dev measured 70 Python tests, four JavaScript suites and two green final CI workflows. Browser acceptance measured 2/2, 390 cold14.5min and 1440 warm5.6min, each19 real merges plus return/block/reset/sign-out. Held-out measured known rounding failure0/1 retained; baseline measured cap request9/9. Final fresh bulk action measured5/5 in actual Sandbox sb-01M7F2T6906S247GNHH9GGZF8E, new noncached run d8387e599df64ba5a23f9fb79d51cbfd. Legacy revalidation measured0accepted24declined.
+SCREENSHOTS: screenshots/fable/1440-01-inbox.png; screenshots/fable/390-01-inbox.png; screenshots/fable/390-fresh-batch-proof.png. Loaded images inspected. Code-context and risky-line captures also saved.
+REVIEW: 6 Astra cleared two passes, independently reran70 Python/four Node suites, verified actual fresh/provider receipts and final CI. Atlas remote storage remains unverified.
+TASTE: real product and real user actions yes, shown by both complete browser receipts. Small normal workspace entry yes; changed controls work yes; counts measured yes. Scope follows existing screen placement/type/colour, with provider/time in metadata and context/run links in Proof. One primary yes; domain copy yes; clear next step yes; no added cards/clutter/decorative effects yes. Focus/selection/tabular styles retained, no overflow at either width yes. Full deployed flow and zero console errors yes; loaded trim/risk/block moments yes. No UI flicker observed; cold processing duration is stated above and has real progress/Stop controls. Fresh account restored yes; no raw internals on the main flow yes; screenshots loaded yes; cloud works independently of the Mac yes.
+SPEC GAPS I FILLED: placed sponsor provenance in existing metadata and Proof, kept the original measured time only for reused reports, and hid the remote archive link while Atlas is unavailable. Existing landing/design baseline was preserved.
+NEXT: root merges/publishes after checking receipts, then deploys the exact clean app revision from /Users/shreyansh/Documents/ChatGPT/Junction/tieto/.work/release-c977619 and verifies the primary URL. No further app changes or canary restarts planned.
 NEEDS DECISION: none
-BLOCKED: Atlas credential handoff unavailable. Remote Atlas write/read remains unverified. Original public route and bank untouched.
+BLOCKED: Atlas credential handoff unavailable. Remote Atlas write/read and qualification are not claimed.

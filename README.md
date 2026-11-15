@@ -78,6 +78,10 @@ Use an isolated owned test repository for merge, return and block acceptance che
 
 ## Evidence and known failures
 
+The cloud canary passed the complete real browser flow at 390 px and 1440 px on application revision `ac1cdca`. Each width verified 19 actual merges, a trimmed return, a block, reset and sign-out in the isolated owned repository, with no browser errors. Measured end-to-end wall times were 14.5 minutes cold and 5.6 minutes warm. These include GitHub actions and workspace restoration, and are not per-Sandbox execution times. See [browser receipts](artifacts/e2e/results.json).
+
+Application revision `c977619` separately passed the explicit full-inbox fresh-rerun check, including the visible new measurement time. The new Modal report passed 5 of 5 checks, had a distinct run ID, and was not cached. The workspace was restored afterwards. See [fresh action receipt](evidence/fresh-batch-live.json), [actual Sandbox receipt](evidence/fresh-batch-provider.json) and [loaded phone view](screenshots/fable/390-fresh-batch-proof.png). Both CI workflows for this revision passed; [CRACI run](https://github.com/13shreyansh/pr-trailer/actions/runs/43691475160).
+
 The recorded experiment reduced 5,741 implementation lines across 23 PRs to 25 selected review lines. This is a measured presentation reduction, not measured time saved or proof of safety. On one recorded request set, the implementation needed 7 of 37 changed lines and passed 9 of 9 request tests while held-out checks still found failures.
 
 Two important failures remain in the evidence: a retained cap is not wired into the transfer path, and a half-cent rounding case fails. Review bots also caught both issues. Do not attribute those discoveries solely to PR Trailer or claim passing request tests establish correctness.
