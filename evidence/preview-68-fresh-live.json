@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "68e4144102d3bf2aa8f8241256982b86fe0ffbb7",
+  "url": "https://pr-trailer-amutnbxmx-13shreyanshs-projects.vercel.app",
+  "measured": true,
+  "freshRequest": true,
+  "id": "KASSA-01",
+  "previousRunId": "d8387e599df64ba5a23f9fb79d51cbfd",
+  "newRunId": "13c0c6d1f3e14b8bae085f8435ebcd5b",
+  "measuredAt": "2026-11-15T08:01:13.490128+00:00",
+  "tests": 5,
+  "passed": 5,
+  "provider": "modal",
+  "cachedMeasurement": false,
+  "restored": true
+}

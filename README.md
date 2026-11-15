@@ -32,12 +32,22 @@ The [cloud integration canary](https://pr-trailer-sponsors.72.61.22.106.sslip.io
 
 The Vercel frontend forwards workspace API calls to the configured `RUNNER_ORIGIN`. Cloud releases use the VPS broker above; neither its database nor its execution depends on the builder's Mac. The deployment script accepts this exact owned HTTPS host and existing Cloudflare tunnel origins, and rejects credentials, custom ports, paths and queries. The isolated sponsor workspace protects the original bank repository during acceptance and cutover.
 
+## Published release
+
+The primary URL is [pr-trailer.vercel.app](https://pr-trailer.vercel.app). Its existing READY frontend is revision `68e4144`; the VPS broker is revision `7b566e8`. The existing Vercel GLOBAL project rewrite sends `/api/*` directly to the VPS. The release reuses a built frontend because the account reached its measured 100-deployments-per-day limit. No new Vercel build or paid upgrade was used for cutover.
+
+The API routing rule was promoted at 10:00 Helsinki on 15 November. The primary alias was reassigned at 10:02. Final primary verification completed at 10:04, after the challenge's 10:00 deadline. These are actual publication and verification times.
+
+The primary check verified the exact served frontend JavaScript, the isolated sponsor repository, a genuinely fresh Modal rerun, its visible new timestamp, Entire Graph links pinned to the reviewed source SHA, and loaded 390 px and 1440 px views. It restored the workspace to 23 untrimmed PRs. See [primary browser receipt](evidence/primary-fresh-live.json), [actual provider receipt](evidence/primary-provider.json) and [Graph view](screenshots/fable/390-primary-graph.png). The fresh request passed a measured 5 of 5 checks. The final backend passed 71 Python checks and four JavaScript suites; [main CI](https://github.com/13shreyansh/pr-trailer/actions/runs/43692398582).
+
+The old Mac worker, its launchd service and its tunnel publishers were retired. No product endpoint requires the Mac to stay online. The broker keeps origin metadata only on genuinely reused API rows, so the already-built frontend displays fresh run times correctly.
+
 ## Sponsor use
 
 | Service | Implemented role and evidence |
 | --- | --- |
 | Codex | Used to build, revise and verify the product. The runtime does not ask Codex to approve a merge. |
-| CRACI | Real `runs-on: craci` workflow runs Python and JavaScript regression checks. [Successful run](https://github.com/13shreyansh/pr-trailer/actions/runs/43685139962). |
+| CRACI | Real `runs-on: craci` workflow runs Python and JavaScript regression checks. [Successful run](https://github.com/13shreyansh/pr-trailer/actions/runs/43692398582). |
 | Modal | Actual fresh Sandboxes execute fixed request tests, removal trials, necessity controls and held-out checks. Each report records its Sandbox ID, wrapper digest, bounded output, exit status and original time. [Real provider receipt](evidence/sponsor-live-verification.json). |
 | Entire Graph | Runs against the actual reviewed checkout and ask, pinned to its source SHA. The Code context link shows graph evidence with source links. The official local Graph binary needs no hosted account. This integration does not capture Entire Sessions. |
 | MongoDB Atlas | Adapter, idempotent execution/review-event metadata and durable local outbox are implemented. Provider credential configuration and remote write/read verification remain pending. No live Atlas usage or qualification is claimed. |
