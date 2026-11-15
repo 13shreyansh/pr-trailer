@@ -46,7 +46,7 @@ The original Vercel URL still routes to the older Mac-hosted worker until the cl
 
 The trusted broker owns GitHub credentials. Sandboxes receive a bounded source archive, fixed tests and the command to run. They receive no broker secrets and cannot access the network. The source tree is read-only to the test user. The wrapper bounds CPU, duration, output and filesystem reads, rejects nonregular result files, and terminates each Sandbox after its check. A provider failure is shown as a failed run, with no silent local fallback.
 
-Completed reports can be reused only when a producer-written contract matches the source/base SHA, ask, case, changed paths, effective test invocation, held-out invocation and execution profile. Reused evidence displays its original measurement time and source; it is not a newly timed execution. Explicit Re-run tests always calls the provider. Legacy reports without that producer contract are declined.
+Completed reports can be reused only when a producer-written contract matches the source/base SHA, ask, case, changed paths, effective test invocation, held-out invocation and execution profile. Reused evidence displays its original measurement time and source; it is not a newly timed execution. Explicit Re-run tests, inbox Run again and its T shortcut always request fresh provider execution. Legacy reports without that producer contract are declined.
 
 ### What the log store retains
 

@@ -75,6 +75,17 @@ class VerifiedMeasurementCacheTests(unittest.TestCase):
     service.sync(True)
    self.assertEqual(service.STATE['prs']['CAP']['status'],'done');self.assertEqual(service.STATE['prs']['CAP']['baseSha'],self.base);self.assertEqual(service.STATE['prs']['CAP']['targetSha'],'new-sibling-merge')
   finally:service.STATE.clear();service.STATE.update(original)
+ def test_explicit_bulk_rerun_selects_done_rows_and_forces_fresh_provider(self):
+  from product import service
+  original=copy.deepcopy(service.STATE)
+  try:
+   service.STATE.clear();service.STATE.update(prs={'one':{'id':'one','status':'done'},'two':{'id':'two','status':'done'}},batch=None)
+   with patch.object(service,'save'),patch.object(service,'client',return_value={}),patch.object(service.POOL,'submit') as submit:
+    service.start(fresh=True);self.assertEqual(submit.call_count,2)
+    self.assertEqual([c.args for c in submit.call_args_list],[(service.measure,'one',False),(service.measure,'two',False)])
+   for invalid in [1,'true',None,{}]:
+    with self.assertRaises(ValueError):service.start(fresh=invalid)
+  finally:service.STATE.clear();service.STATE.update(original)
  def test_explicit_rerun_is_always_submitted_with_reuse_disabled(self):
   from product import service
   original=copy.deepcopy(service.STATE)

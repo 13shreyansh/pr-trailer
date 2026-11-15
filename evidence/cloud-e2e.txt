@@ -5,60 +5,11 @@
 
 Running 2 tests using 1 worker
 
-(node:85437) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(node:89570) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
 (Use `node --trace-warnings ...` to show where the warning was created)
-  ✘  1 scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 390 (7.6m)
-(node:87396) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
-(Use `node --trace-warnings ...` to show where the warning was created)
-  ✘  2 scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 1440 (30.4s)
+  ✓  1 scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 390 (14.5m)
+  ✓  2 scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 1440 (5.6m)
 
-
-  1) scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 390 ───────────────────────────
-
-    Error: expect(received).toBeLessThanOrEqual(expected)
-
-    Expected: <= 772.625
-    Received:    811.0625
-
-      31 |  await expect(page.locator('.primary')).toHaveCount(1);await expect(page.locator('.pr-row.current')).toHaveCSS('margin-top','0px');await expect(page.getByRole('button',{name:'Finish',exact:true})).toHaveCSS('font-size','16px');expect(await page.locator('.pr-row .solid').count()).toBe(22);await bounds();
-      32 |  if(width===1440){const values=await page.locator('.pr-row:not(.ghost)').evaluateAll(rows=>rows.filter(r=>r.querySelector('.segment.solid')).map(r=>({width:r.querySelector('.segment.solid').getBoundingClientRect().width,n:Number(r.querySelector('.row-count').textContent.split(' of ')[0].replaceAll(',',''))})));for(const v of values)expect(Math.abs(v.width-Math.max(6,v.n*.52))).toBeLessThanOrEqual(1);}
-    > 33 |  await page.locator('.row-title[data-id="Jackhammer9--Reduino--9"]').click();await expect(page.getByRole('link',{name:'Download trimmed patch',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Finish',exact:true})).toHaveCount(0);await bounds();await expect(page.locator('.ledger-bar .hatch')).toHaveCount(0);await expect(page.getByRole('link',{name:'Download trimmed patch',exact:true})).toHaveCSS('background-color','rgb(240, 168, 24)');await shot('03b-outside');const proofBounds=await page.locator('.proof').boundingBox(),actionBounds=await page.locator('.actions').boundingBox();expect(proofBounds.y+proofBounds.height).toBeLessThanOrEqual(actionBounds.y);const downloadPromise=page.waitForEvent('download');await page.getByRole('link',{name:'Download trimmed patch',exact:true}).click();const download=await downloadPromise;await download.saveAs(path.join(ART,`${width}-outside.patch`));await page.getByRole('button',{name:/Inbox ·/}).click();
-         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ^
-      34 |  for(let i=0;i<19;i++){await page.getByRole('button',{name:'Finish',exact:true}).click();await expect(page.locator('.pr-row:not(.ghost)')).toHaveCount(22-i,{timeout:90000});}
-      35 |  await expect(page.locator('.footline')).toContainText('19 merged');await expect(page.getByRole('button',{name:'Revert last merge',exact:true})).toBeVisible();await shot('04-merged');
-      36 |  await page.locator('.row-title[data-id="KASSA-CAP"]').click();await expect(page.locator('.ledger h1')).toHaveText('Cap instant-transfer fees');await page.waitForTimeout(1200);await expect(page.locator('.ledger-line dd').first()).toHaveCSS('font-size','16px');await expect(page.locator('.ledger-line dt').first()).toHaveCSS('font-size','14px');await shot('05-fee-ledger');
-        at /Users/shreyansh/Documents/ChatGPT/Junction/tieto/.work/sponsor-integrations/scripts/product/e2e.spec.js:33:648
-
-    Error Context: test-results/e2e-real-deployed-workspace-flow-390/error-context.md
-
-  2) scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 1440 ──────────────────────────
-
-    Test was interrupted.
-
-    Error: expect(locator).toHaveCount(expected) failed
-
-    Locator:  getByRole('button', { name: 'Stop', exact: true })
-    Expected: 0
-    Received: 1
-
-    Call log:
-      - Expect "toHaveCount" getByRole('button', { name: 'Stop', exact: true }) with timeout 90000ms
-      - waiting for getByRole('button', { name: 'Stop', exact: true })
-        8 × locator resolved to 1 element
-          - unexpected value "1"
-      - Test ended.
-
-
-      27 |  await page.getByRole('button',{name:'Trim all',exact:true}).click();await expect(page.getByRole('button',{name:'Stop',exact:true})).toBeVisible();await expect(page.locator('.subline')).toContainText('tests run');await expect(page.locator('.pr-row.trimming').first()).toBeVisible();await expect(page.locator('.subline')).not.toContainText('· 0 tests run',{timeout:30000});await shot('02-queue');
-      28 |  // Stop is a real cancellation boundary. Restart the remaining unmeasured queue.
-    > 29 |  await page.getByRole('button',{name:'Stop',exact:true}).click();await expect(page.getByRole('button',{name:'Stop',exact:true})).toHaveCount(0,{timeout:90000});await expect(page.getByRole('button',{name:'Trim all',exact:true})).toBeVisible();await expect(page.locator('.primary')).toHaveCount(1);
-         |                                                                                                                                  ^
-      30 |  await page.getByRole('button',{name:'Trim all',exact:true}).click();await expect(page.getByRole('button',{name:'Stop',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Stop',exact:true})).toHaveCount(0,{timeout:process.env.TIETO_CANARY_REPO?840000:240000});await expect(page.getByRole('button',{name:'Finish',exact:true})).toBeVisible({timeout:10000});await expect(page.locator('[data-id="KASSA-01"] .hatch')).toHaveCount(0);await shot('03-trimmed');
-      31 |  await expect(page.locator('.primary')).toHaveCount(1);await expect(page.locator('.pr-row.current')).toHaveCSS('margin-top','0px');await expect(page.getByRole('button',{name:'Finish',exact:true})).toHaveCSS('font-size','16px');expect(await page.locator('.pr-row .solid').count()).toBe(22);await bounds();
-      32 |  if(width===1440){const values=await page.locator('.pr-row:not(.ghost)').evaluateAll(rows=>rows.filter(r=>r.querySelector('.segment.solid')).map(r=>({width:r.querySelector('.segment.solid').getBoundingClientRect().width,n:Number(r.querySelector('.row-count').textContent.split(' of ')[0].replaceAll(',',''))})));for(const v of values)expect(Math.abs(v.width-Math.max(6,v.n*.52))).toBeLessThanOrEqual(1);}
-        at /Users/shreyansh/Documents/ChatGPT/Junction/tieto/.work/sponsor-integrations/scripts/product/e2e.spec.js:29:130
-
-  1 failed
-    scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 390 ────────────────────────────
-  1 interrupted
-    scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 1440 ───────────────────────────
+  Slow test file: scripts/product/e2e.spec.js (20.2m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  2 passed (20.2m)

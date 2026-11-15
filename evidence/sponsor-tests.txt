@@ -18,6 +18,7 @@ test_actual_invocation_default_suite_and_heldout_must_match (test_measurement_ca
 test_any_source_test_or_image_profile_change_invalidates_reuse (test_measurement_cache.VerifiedMeasurementCacheTests.test_any_source_test_or_image_profile_change_invalidates_reuse) ... ok
 test_cached_measurement_does_not_allocate_runs_or_require_execution_disk (test_measurement_cache.VerifiedMeasurementCacheTests.test_cached_measurement_does_not_allocate_runs_or_require_execution_disk) ... ok
 test_completed_result_reuse_preserves_original_time_source_and_known_failure (test_measurement_cache.VerifiedMeasurementCacheTests.test_completed_result_reuse_preserves_original_time_source_and_known_failure) ... ok
+test_explicit_bulk_rerun_selects_done_rows_and_forces_fresh_provider (test_measurement_cache.VerifiedMeasurementCacheTests.test_explicit_bulk_rerun_selects_done_rows_and_forces_fresh_provider) ... ok
 test_explicit_rerun_is_always_submitted_with_reuse_disabled (test_measurement_cache.VerifiedMeasurementCacheTests.test_explicit_rerun_is_always_submitted_with_reuse_disabled) ... ok
 test_legacy_and_same_source_different_contract_are_declined_at_store (test_measurement_cache.VerifiedMeasurementCacheTests.test_legacy_and_same_source_different_contract_are_declined_at_store) ... ok
 test_partial_failed_or_tampered_results_are_never_reused (test_measurement_cache.VerifiedMeasurementCacheTests.test_partial_failed_or_tampered_results_are_never_reused) ... ok
@@ -69,6 +70,6 @@ test_hallucinated_quote_is_dropped (test_trailer.Grounding.test_hallucinated_quo
 test_predicates (test_trailer.SqlShape.test_predicates) ... ok
 
 ----------------------------------------------------------------------
-Ran 67 tests in 10.931s
+Ran 68 tests in 11.238s
 
 OK

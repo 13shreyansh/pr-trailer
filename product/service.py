@@ -259,17 +259,18 @@ def measure(id,reuse=False):
     save()
 
 
-def start(ids=None):
+def start(ids=None,fresh=False):
  with LOCK:
+  if type(fresh) is not bool:raise ValueError('Fresh must be true or false')
   if any(p['status'] in ('queued','running') for p in STATE['prs'].values()):raise ValueError('Tests are already running')
   if ids is not None and (not isinstance(ids,list) or not ids or any(not isinstance(id,str) for id in ids)):raise ValueError('Choose a list of PRs')
-  targets=list(dict.fromkeys(ids)) if ids is not None else [p['id'] for p in STATE['prs'].values() if p['status'] not in ('merged','returned','closed','blocked') and (STATE.get('trimmedAt') or p['status']!='done')]
+  targets=list(dict.fromkeys(ids)) if ids is not None else [p['id'] for p in STATE['prs'].values() if p['status'] not in ('merged','returned','closed','blocked') and (fresh or STATE.get('trimmedAt') or p['status']!='done')]
   if any(id not in STATE['prs'] for id in targets):raise ValueError('Unknown PR')
   if any(STATE['prs'][id]['status'] in ('merged','returned','closed') for id in targets):raise ValueError('This PR is no longer open')
   STOP.clear()
   for id in targets:STATE['prs'][id].update(status='queued',testsRun=0,error=None)
   STATE['batch']={'running':bool(targets),'total':len(targets),'completed':0,'testsRun':0,'startedAt':now()};save()
-  for id in targets:FUTURES.append(POOL.submit(measure,id,ids is None))
+  for id in targets:FUTURES.append(POOL.submit(measure,id,ids is None and not fresh))
  return client()
 
 

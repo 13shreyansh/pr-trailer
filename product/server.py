@@ -79,7 +79,7 @@ class Handler(BaseHTTPRequestHandler):
    visitor=visitors.touch(data.get('visitor'))
    sessions={'/api/enter':visitors.enter,'/api/leave':visitors.leave,'/api/reset':visitors.reset}
    if url.path in sessions:return self.respond(200,sessions[url.path](data.get('visitor')))
-   routes={'/api/measure':lambda:service.start(data.get('ids')),'/api/stop':service.stop,'/api/add':lambda:service.add(data.get('url','')),'/api/finish':lambda:service.finish(data.get('id')),'/api/return':lambda:service.send_back(data.get('id'),data.get('note')),'/api/block':lambda:service.block(data.get('id')),'/api/unblock':lambda:service.unblock(data.get('id')),'/api/revert':service.revert}
+   routes={'/api/measure':lambda:service.start(data.get('ids'),fresh=data.get('fresh',False)),'/api/stop':service.stop,'/api/add':lambda:service.add(data.get('url','')),'/api/finish':lambda:service.finish(data.get('id')),'/api/return':lambda:service.send_back(data.get('id'),data.get('note')),'/api/block':lambda:service.block(data.get('id')),'/api/unblock':lambda:service.unblock(data.get('id')),'/api/revert':service.revert}
    if url.path not in routes:return self.respond(404,{'error':'Not found'})
    if url.path!='/api/stop':visitors.guard()
    if url.path in ('/api/finish','/api/return','/api/block','/api/unblock','/api/revert'):visitors.mark_write()
