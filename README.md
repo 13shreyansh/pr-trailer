@@ -16,29 +16,41 @@ AI writes code. It does not perform runtime review or grant merge approval. A na
 
 ```mermaid
 flowchart LR
-    T[Task and proposed patch] --> W[Python workspace worker]
-    W --> S[Local test sandbox]
-    S --> E[Fixed-test results and behaviour evidence]
+    T[Task and proposed patch] --> W[Trusted Python broker on VPS]
+    W --> M[Fresh Modal Sandbox per check]
+    M --> E[Bounded test results]
+    W --> G[Entire Graph at the reviewed source SHA]
     E --> U[Browser review workspace]
+    G --> U
     U --> H[Named human decision]
-    H --> G[GitHub merge, return or block on owned repo]
+    H --> R[GitHub action on owned repository]
+    W --> O[Durable local metadata outbox]
+    O -. credentials pending .-> A[MongoDB Atlas]
 ```
 
-The frontend is on Vercel. The current interactive Python worker runs on the builder's Mac through a Cloudflare quick tunnel. Keep that machine awake and online while using this deployment. This is a material hosting limitation; Modal is not running it today.
+The [cloud integration canary](https://pr-trailer-sponsors.72.61.22.106.sslip.io) runs the broker on an existing VPS and executes tests in Modal. It does not depend on the builder's Mac. Its write actions target an isolated owned bank repository. `/build.json` identifies its exact application release.
 
-The documented live behaviour includes application changes newer than the published application snapshot at the time of this README update. This documentation-only publication does not publish those pending application commits. Some local behaviour may therefore differ from the live workspace.
+The original Vercel URL still routes to the older Mac-hosted worker until the cloud release passes the full desktop and phone acceptance test and independent review. The original repository and public route have not been replaced by this feature branch.
 
 ## Sponsor use
 
-| Service | Status and role |
+| Service | Implemented role and evidence |
 | --- | --- |
-| Codex | Used during development to build, revise and verify the review product. The runtime does not ask Codex to approve a merge. |
-| CRACI | **Planned, not implemented.** Run the existing Python and JavaScript checks on CRACI CI. |
-| Modal | **Planned, not implemented.** Execute isolated test reruns in Modal Sandboxes and return bounded logs and exit status. This does not yet remove the Mac-hosted worker. |
-| MongoDB Atlas | **Planned, not implemented.** Retain execution metadata and review-event logs with run and PR identifiers. |
-| Entire | **Planned, not implemented.** Use Entire Sessions/Graph to connect coding-session evidence to the change under review. An Entire account is still needed. |
+| Codex | Used to build, revise and verify the product. The runtime does not ask Codex to approve a merge. |
+| CRACI | Real `runs-on: craci` workflow runs Python and JavaScript regression checks. [Successful run](https://github.com/13shreyansh/pr-trailer/actions/runs/43685139962). |
+| Modal | Actual fresh Sandboxes execute fixed request tests, removal trials, necessity controls and held-out checks. Each report records its Sandbox ID, wrapper digest, bounded output, exit status and original time. [Real provider receipt](evidence/sponsor-live-verification.json). |
+| Entire Graph | Runs against the actual reviewed checkout and ask, pinned to its source SHA. The Code context link shows graph evidence with source links. The official local Graph binary needs no hosted account. This integration does not capture Entire Sessions. |
+| MongoDB Atlas | Adapter, idempotent execution/review-event metadata and durable local outbox are implemented. Provider credential configuration and remote write/read verification remain pending. No live Atlas usage or qualification is claimed. |
 
-Draft prize registration is not evidence that these planned services already work.
+### What Modal can access
+
+The trusted broker owns GitHub credentials. Sandboxes receive a bounded source archive, fixed tests and the command to run. They receive no broker secrets and cannot access the network. The source tree is read-only to the test user. The wrapper bounds CPU, duration, output and filesystem reads, rejects nonregular result files, and terminates each Sandbox after its check. A provider failure is shown as a failed run, with no silent local fallback.
+
+Completed reports can be reused only when a producer-written contract matches the source/base SHA, ask, case, changed paths, effective test invocation, held-out invocation and execution profile. Reused evidence displays its original measurement time and source; it is not a newly timed execution. Explicit Re-run tests always calls the provider. Legacy reports without that producer contract are declined.
+
+### What the log store retains
+
+Execution and acknowledged merge, return, block, unblock and revert events contain PR/run identifiers, commit hashes, counts, digests and provider metadata. They exclude raw source, test output, reviewer free text and credentials. An idempotent local SQLite outbox retries Atlas delivery. A pending event is never reported as stored remotely. Atlas must be configured and tested before this can be described as a live remote archive.
 
 ## Inspect locally
 
@@ -72,18 +84,13 @@ Two important failures remain in the evidence: a retained cap is not wired into 
 
 The bank is synthetic. Public Reduino/GPL examples and AI-generated development records require their original attribution and licence treatment. See [docs/RESULTS.md](docs/RESULTS.md), [docs/MEASURE-REVIEW.md](docs/MEASURE-REVIEW.md) and [DECISIONS.md](DECISIONS.md).
 
-## Planned execution and provenance
+## Cloud operation
 
-```mermaid
-flowchart LR
-    W[Existing worker] -. planned rerun request .-> M[Modal Sandbox]
-    M -. bounded results .-> R[Review evidence]
-    M -. run metadata .-> D[MongoDB Atlas]
-    E[Entire Sessions and Graph] -. planned session links .-> R
-    C[CRACI CI] -. planned .-> T[Existing regression checks]
-```
+The trusted broker reads encrypted systemd credentials into memory. Persistent credentials are stored only as host-key-encrypted ciphertext. Do not create plaintext environment files or put credential values in command arguments.
 
-After implementation approval, Modal needs a real sandbox run, timeout handling and a rerun against a frozen case. Atlas needs a retained run log that can be retrieved after restart without storing credentials or private source text by default. Entire needs an account and a real session/graph link that helps explain a reviewed change. CRACI needs a successful `runs-on: craci` job. None of these receipts exists for the planned integrations today.
+`TIETO_TEST_RUNNER=modal` selects real Modal execution. `ENTIRE_GRAPH_BIN` points to the checksum-verified Graph binary. `TIETO_STATE_DIR` and `TIETO_WORKSPACE_CONFIG` isolate product state and the owned test repository. The optional `MONGODB_URI` and `MONGODB_DATABASE` enable remote metadata delivery after configuration. Provider credentials stay with the broker and are never forwarded to Modal.
+
+`python scripts/product/stage_cloud.py` stages an exact committed archive on this entry's VPS. Deployment is separate from release to the public Vercel route. Run the deployed acceptance against the isolated canary and inspect real GitHub receipts before promotion.
 
 ## Code map
 

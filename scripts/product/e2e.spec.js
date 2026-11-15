@@ -35,7 +35,7 @@ for(const width of [390,1440])test(`real deployed workspace flow ${width}`,async
  await expect(page.locator('.footline')).toContainText('19 merged');await expect(page.getByRole('button',{name:'Revert last merge',exact:true})).toBeVisible();await shot('04-merged');
  await page.locator('.row-title[data-id="KASSA-CAP"]').click();await expect(page.locator('.ledger h1')).toHaveText('Cap instant-transfer fees');await page.waitForTimeout(1200);await expect(page.locator('.ledger-line dd').first()).toHaveCSS('font-size','16px');await expect(page.locator('.ledger-line dt').first()).toHaveCSS('font-size','14px');await shot('05-fee-ledger');
  if(process.env.TIETO_CANARY_REPO){
-  await expect(page.getByText(/Tests run in Modal\.|Same source · measured/)).toBeVisible();
+  await expect(page.getByText(/Modal · measured/)).toBeVisible();
   const popupWait=page.waitForEvent('popup');await page.getByRole('link',{name:'Code context',exact:true}).click();const popup=await popupWait;
   await expect(popup.locator('main')).toContainText('Code context from Entire Graph');await expect(popup.locator('a[href*="github.com"]').first()).toHaveAttribute('href',/\/blob\/[0-9a-f]{40}\//);
   await popup.screenshot({path:path.join(SHOTS,`${width}-05-code-context.png`)});await popup.close();

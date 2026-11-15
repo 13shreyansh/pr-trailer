@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import subprocess
 import sys
 import tarfile
 import threading
@@ -75,7 +76,9 @@ def sync(force=False):
  with LOCK:
   for row in rows:
    old=STATE['prs'].get(row['id'])
-   if old and old['headSha']==row['headSha'] and old['number']==row['number']:
+   # A sibling merge moves main without changing this PR's immutable measured merge base.
+   # Finish independently revalidates the patch on current main before writing.
+   if old and all(old.get(k)==row.get(k) for k in ('headSha','number','ask','paths')):
     old.update({k:row[k] for k in ('github','updatedAt','targetSha')})
    else:STATE['prs'][row['id']]=row
   open_ids={r['id'] for r in rows if not r['outside']}
@@ -172,10 +175,8 @@ def measure(id,reuse=False):
     if batch['completed']>=batch['total']:batch['running']=False
    save();return
   p.update(status='running',testsRun=0,error=None);row=dict(p);save()
- root=VAR/'runs'/uuid.uuid4().hex;root.mkdir(parents=True)
+ root=VAR/'runs'/uuid.uuid4().hex
  try:
-  if shutil.disk_usage(VAR).free<2_000_000_000:raise ValueError("Can't run this repo's tests here")
-  if sum(p.stat().st_size for p in (VAR/'runs').rglob('*') if p.is_file())>1_000_000_000:raise ValueError("Can't run this repo's tests here")
   full=row['repo'];pr=api(f'/repos/{full}/pulls/{row["number"]}')
   if pr['head']['sha']!=row['headSha']:raise ValueError('PR changed. Sync and run again.')
   comparison=api(f'/repos/{full}/compare/{pr["base"]["sha"]}...{row["headSha"]}')
@@ -187,6 +188,9 @@ def measure(id,reuse=False):
    if cached:
     with LOCK:STATE['prs'][id].update(cached,status='done',error=None);save()
     return
+  if shutil.disk_usage(VAR).free<2_000_000_000:raise ValueError("Can't run this repo's tests here")
+  if sum(p.stat().st_size for p in (VAR/'runs').rglob('*') if p.is_file())>1_000_000_000:raise ValueError("Can't run this repo's tests here")
+  root.mkdir(parents=True)
   unpack(full,base_sha,root/'base');unpack(full,row['headSha'],root/'head')
   base=root/'base';head=root/'head';work=root/'work';logs=root/'logs';check=runner(root,metadata=row)
   from .provenance import code_context
@@ -230,6 +234,9 @@ def measure(id,reuse=False):
    for b in blocks:b['name']=names.get(b.get('path'),b['name'])
   # Bind every action to both measured commits and the actual generated patch.
   result.update(baseSha=base_sha,headSha=row['headSha'],repo=full,number=row['number'],measuredAt=now(),runId=root.name,codeContext=context)
+  from .measurement_cache import contract
+  result['measurementContract']=contract(row,base_sha,config)
+  result['producerRelease']=(ROOT/'release-commit').read_text().strip() if (ROOT/'release-commit').exists() else subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
   (root/'result.json').write_text(json.dumps(result));(root/'trimmed.patch').write_text(result['patch'])
   with LOCK:
    p=STATE['prs'][id];p.update(status='done',verdict=verdict,written=result['written'],kept=result['kept'],unchecked=result['unchecked'],tests=final['tests'],passed=final['passed'],blocks=[{k:b[k] for k in ('id','name','lines','needed') if k in b} for b in blocks],risk=risk,readLines=sum(len(r.get('lines',[])) for r in risk),lampFiles=len(set('.'.join(c['name'].split('.')[:2]) for c in final['cases'])),neededFailures=sum(not c['passed'] for control in result['controls'] for c in control['cases']),riskPosition=position(result,base,head,risk[0]) if risk and row['kind']!='junior' else None,measuredAt=result['measuredAt'],baseSha=base_sha,patchSha256=result.get('patchSha256'),runId=root.name,executionProvider=final.get('execution',{}).get('provider','local'),codeContext=context,cachedMeasurement=False,_root=str(root));save()
@@ -275,7 +282,7 @@ def add(url):
  full,n=parse_pr(url);row=fetch_pr(full,n,known_cases().get(next((id for id,c in known_cases().items() if full==FULL and workspace_config().get('numbers',{}).get(id)==n),'')))
  with LOCK:
   old=STATE['prs'].get(row['id'])
-  if old and old.get('headSha')==row['headSha'] and old.get('status')=='done':return client()
+  if old and all(old.get(k)==row.get(k) for k in ('headSha','ask','paths')) and old.get('status')=='done':return client()
   STATE['prs'][row['id']]=row;save()
  # A pasted public PR runs immediately; it is independent of a workspace batch.
  with LOCK:

@@ -17,11 +17,13 @@ def main():
     from product.measurement_cache import _completed,store,risk_fingerprint
     if risk_fingerprint((original/'product/service.py').read_text())!=risk_fingerprint((ROOT/'product/service.py').read_text()):
         raise ValueError('Risk classification changed; old runs cannot be seeded')
-    service.sync(True);seeded=0
+    service.sync(True);seeded=0;declined=[]
     for path in (service.VAR/'runs').glob('*/result.json'):
         result=json.loads(path.read_text());root=path.parent
         row=next((p for p in service.STATE['prs'].values() if p['repo']==result.get('repo') and p['headSha']==result.get('headSha')),None)
-        if not row or row['kind']=='junior' or not _completed(result,row,result.get('baseSha')):continue
+        config=service.known_cases().get(row['id']) if row else None
+        if not row or row['kind']=='junior' or not _completed(result,row,result.get('baseSha'),config):
+            declined.append({'report':root.name,'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'measuredAt':result.get('measuredAt'),'reason':'missing or mismatched producer contract, invocation or completed result'});continue
         risk=service.find_risks(row,result,root/'head')
         if row['kind']=='cap' and result.get('heldOut'):risk[0]['failure']=result['heldOut']['output'][:4000]
         final=result['final'];blocks=result['blocks']
@@ -37,6 +39,6 @@ def main():
           'runId':result['runId'],'executionProvider':'modal','codeContext':result['codeContext'],'_root':str(root)}
         seeded+=bool(store(service.VAR/'verified',row,result['baseSha'],service.known_cases().get(row['id']),measured,
                           origin_commit=(original/'release-commit').read_text().strip()))
-    print(json.dumps({'completedActualRunsSeeded':seeded,'partialRunsSeeded':0,'sourceRelease':str(original)}))
+    print(json.dumps({'completedActualRunsSeeded':seeded,'partialRunsSeeded':0,'sourceRelease':str(original),'declinedCount':len(declined),'declined':declined}))
 
 if __name__=='__main__':main()
