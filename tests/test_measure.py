@@ -95,9 +95,14 @@ class MeasureTests(unittest.TestCase):
   from worker import execute
   with self.assertRaises(ValueError):execute('../../not-a-sample')
  def test_no_network_dependencies_in_story_assets(self):
-  html=(ROOT/'app/index.html').read_text()
-  self.assertNotIn('fonts.googleapis',html)
-  self.assertNotIn('https://',html)
+  # Links to the real GitHub PRs are content; nothing may be *loaded* from another origin.
+  import re
+  for name in ('index.html','workspace.html','landing.css','style.css'):
+   html=(ROOT/'app'/name).read_text()
+   self.assertNotIn('fonts.googleapis',html)
+   self.assertEqual(re.findall(r'<(?:script|img|iframe|link)\b[^>]*(?:src|href)="https?://[^"]*"',html),[],name)
+   self.assertEqual(re.findall(r'url\(\s*[\'"]?https?://',html),[],name)
+   self.assertNotIn('@import',html)
   self.assertTrue((ROOT/'app/fonts/Archivo.ttf').exists())
   self.assertTrue((ROOT/'app/fonts/JetBrainsMono.ttf').exists())
 
