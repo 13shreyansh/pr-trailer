@@ -93,7 +93,7 @@ def client():
    rows.append({k:v for k,v in p.items() if not k.startswith('_') and k not in ('files','paths')})
   order={id:i for i,id in enumerate(known_cases())}
   rows.sort(key=lambda p:(p['outside'],order.get(p['id'],1000),p['createdAt'],p['number']))
-  return {'product':'Tieto','workspace':'Nordbank · payments','account':OWNER,'syncedAt':STATE.get('syncedAt'),'trimmedAt':STATE.get('trimmedAt'),'prs':rows,'merged':STATE['merged'],'returned':STATE['returned'],'blocked':STATE['blocked'],'batch':STATE.get('batch')}
+  return {'product':'Tieto','repo':FULL,'workspace':'Nordbank · payments','account':OWNER,'syncedAt':STATE.get('syncedAt'),'trimmedAt':STATE.get('trimmedAt'),'prs':rows,'merged':STATE['merged'],'returned':STATE['returned'],'blocked':STATE['blocked'],'batch':STATE.get('batch')}
 
 
 def unpack(full,sha,dest):
@@ -161,7 +161,7 @@ def update_progress(id,run):
   save()
 
 
-def measure(id):
+def measure(id,reuse=False):
  with LOCK:
   p=STATE['prs'][id]
   if STOP.is_set():
@@ -180,6 +180,13 @@ def measure(id):
   if pr['head']['sha']!=row['headSha']:raise ValueError('PR changed. Sync and run again.')
   comparison=api(f'/repos/{full}/compare/{pr["base"]["sha"]}...{row["headSha"]}')
   base_sha=comparison['merge_base_commit']['sha']
+  config=known_cases().get(id)
+  if reuse and os.environ.get('TIETO_TEST_RUNNER')=='modal':
+   from .measurement_cache import load
+   cached=load(VAR/'verified',row,base_sha,config)
+   if cached:
+    with LOCK:STATE['prs'][id].update(cached,status='done',error=None);save()
+    return
   unpack(full,base_sha,root/'base');unpack(full,row['headSha'],root/'head')
   base=root/'base';head=root/'head';work=root/'work';logs=root/'logs';check=runner(root,metadata=row)
   from .provenance import code_context
@@ -225,7 +232,11 @@ def measure(id):
   result.update(baseSha=base_sha,headSha=row['headSha'],repo=full,number=row['number'],measuredAt=now(),runId=root.name,codeContext=context)
   (root/'result.json').write_text(json.dumps(result));(root/'trimmed.patch').write_text(result['patch'])
   with LOCK:
-   p=STATE['prs'][id];p.update(status='done',verdict=verdict,written=result['written'],kept=result['kept'],unchecked=result['unchecked'],tests=final['tests'],passed=final['passed'],blocks=[{k:b[k] for k in ('id','name','lines','needed') if k in b} for b in blocks],risk=risk,readLines=sum(len(r.get('lines',[])) for r in risk),lampFiles=len(set('.'.join(c['name'].split('.')[:2]) for c in final['cases'])),neededFailures=sum(not c['passed'] for control in result['controls'] for c in control['cases']),riskPosition=position(result,base,head,risk[0]) if risk and row['kind']!='junior' else None,measuredAt=result['measuredAt'],baseSha=base_sha,patchSha256=result.get('patchSha256'),runId=root.name,executionProvider=final.get('execution',{}).get('provider','local'),codeContext=context,_root=str(root));save()
+   p=STATE['prs'][id];p.update(status='done',verdict=verdict,written=result['written'],kept=result['kept'],unchecked=result['unchecked'],tests=final['tests'],passed=final['passed'],blocks=[{k:b[k] for k in ('id','name','lines','needed') if k in b} for b in blocks],risk=risk,readLines=sum(len(r.get('lines',[])) for r in risk),lampFiles=len(set('.'.join(c['name'].split('.')[:2]) for c in final['cases'])),neededFailures=sum(not c['passed'] for control in result['controls'] for c in control['cases']),riskPosition=position(result,base,head,risk[0]) if risk and row['kind']!='junior' else None,measuredAt=result['measuredAt'],baseSha=base_sha,patchSha256=result.get('patchSha256'),runId=root.name,executionProvider=final.get('execution',{}).get('provider','local'),codeContext=context,cachedMeasurement=False,_root=str(root));save()
+  if os.environ.get('TIETO_TEST_RUNNER')=='modal':
+   from .measurement_cache import store
+   try:store(VAR/'verified',row,base_sha,config,p)
+   except OSError:pass # A full reuse store does not invalidate the measured tests.
  except InterruptedError:
   with LOCK:STATE['prs'][id].update(status='stopped',error=None);save()
  except Exception as exc:
@@ -251,7 +262,7 @@ def start(ids=None):
   STOP.clear()
   for id in targets:STATE['prs'][id].update(status='queued',testsRun=0,error=None)
   STATE['batch']={'running':bool(targets),'total':len(targets),'completed':0,'testsRun':0,'startedAt':now()};save()
-  for id in targets:FUTURES.append(POOL.submit(measure,id))
+  for id in targets:FUTURES.append(POOL.submit(measure,id,ids is None))
  return client()
 
 

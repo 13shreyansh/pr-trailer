@@ -1,0 +1,73 @@
+
+> test:e2e
+> playwright test
+
+
+Running 2 tests using 1 worker
+
+(node:80883) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 390 (8.4m)
+(node:82442) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 1440 (19.4s)
+
+
+  1) scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 390 ───────────────────────────
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  getByRole('button', { name: 'Stop', exact: true })
+    Expected: 0
+    Received: 1
+    Timeout:  480000ms
+
+    Call log:
+      - Expect "toHaveCount" getByRole('button', { name: 'Stop', exact: true }) with timeout 480000ms
+      - waiting for getByRole('button', { name: 'Stop', exact: true })
+        957 × locator resolved to 1 element
+            - unexpected value "1"
+
+
+      28 |  // Stop is a real cancellation boundary. Restart the remaining unmeasured queue.
+      29 |  await page.getByRole('button',{name:'Stop',exact:true}).click();await expect(page.getByRole('button',{name:'Stop',exact:true})).toHaveCount(0,{timeout:90000});await expect(page.getByRole('button',{name:'Trim all',exact:true})).toBeVisible();await expect(page.locator('.primary')).toHaveCount(1);
+    > 30 |  await page.getByRole('button',{name:'Trim all',exact:true}).click();await expect(page.getByRole('button',{name:'Stop',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Stop',exact:true})).toHaveCount(0,{timeout:process.env.TIETO_CANARY_REPO?480000:240000});await expect(page.getByRole('button',{name:'Finish',exact:true})).toBeVisible({timeout:10000});await expect(page.locator('[data-id="KASSA-01"] .hatch')).toHaveCount(0);await shot('03-trimmed');
+         |                                                                                                                                                                                                                    ^
+      31 |  await expect(page.locator('.primary')).toHaveCount(1);await expect(page.locator('.pr-row.current')).toHaveCSS('margin-top','0px');await expect(page.getByRole('button',{name:'Finish',exact:true})).toHaveCSS('font-size','16px');expect(await page.locator('.pr-row .solid').count()).toBe(22);await bounds();
+      32 |  if(width===1440){const values=await page.locator('.pr-row:not(.ghost)').evaluateAll(rows=>rows.filter(r=>r.querySelector('.segment.solid')).map(r=>({width:r.querySelector('.segment.solid').getBoundingClientRect().width,n:Number(r.querySelector('.row-count').textContent.split(' of ')[0].replaceAll(',',''))})));for(const v of values)expect(Math.abs(v.width-Math.max(6,v.n*.52))).toBeLessThanOrEqual(1);}
+      33 |  await page.locator('.row-title[data-id="Jackhammer9--Reduino--9"]').click();await expect(page.getByRole('link',{name:'Download trimmed patch',exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Finish',exact:true})).toHaveCount(0);await bounds();await expect(page.locator('.ledger-bar .hatch')).toHaveCount(0);await expect(page.getByRole('link',{name:'Download trimmed patch',exact:true})).toHaveCSS('background-color','rgb(240, 168, 24)');await shot('03b-outside');const proofBounds=await page.locator('.proof').boundingBox(),actionBounds=await page.locator('.actions').boundingBox();expect(proofBounds.y+proofBounds.height).toBeLessThanOrEqual(actionBounds.y);const downloadPromise=page.waitForEvent('download');await page.getByRole('link',{name:'Download trimmed patch',exact:true}).click();const download=await downloadPromise;await download.saveAs(path.join(ART,`${width}-outside.patch`));await page.getByRole('button',{name:/Inbox ·/}).click();
+        at /Users/shreyansh/Documents/ChatGPT/Junction/tieto/.work/sponsor-integrations/scripts/product/e2e.spec.js:30:212
+
+    Error Context: test-results/e2e-real-deployed-workspace-flow-390/error-context.md
+
+  2) scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 1440 ──────────────────────────
+
+    Test was interrupted.
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.sync')
+    Expected substring: "Synced"
+    Received string:    "Syncing with GitHub…"
+
+    Call log:
+      - Expect "toContainText" locator('.sync') with timeout 60000ms
+      - waiting for locator('.sync')
+        10 × locator resolved to <span class="sync" aria-live="polite">Syncing with GitHub…</span>
+           - unexpected value "Syncing with GitHub…"
+      - Test ended.
+
+
+      20 |  await page.evaluate(()=>document.fonts.ready);const entry=page.locator('.hero').getByRole('link',{name:'Open the demo workspace',exact:true});await expect(entry).toBeVisible();await expect(page.locator('input')).toHaveCount(0);await expect(page.locator('h1')).toContainText('pull requests');expect(apiCalls).toEqual([]);await bounds();await shot('00-landing');await shot('00-landing-full',true);
+      21 |  for(const id of ['how','proof','limits']){await page.evaluate(id=>scrollTo(0,document.getElementById(id).offsetTop-44),id);await page.waitForTimeout(150);await shot('00-landing-'+id);}
+    > 22 |  await page.evaluate(()=>scrollTo(0,0));const opened=Date.now();await entry.click();await expect(page.locator('.pr-row:not(.ghost)')).toHaveCount(23,{timeout:60000});const firstRowsMs=Date.now()-opened;await expect(page.locator('.sync')).toContainText('Synced',{timeout:60000});await expect(page.locator('.subline')).toHaveText('None trimmed yet.');await bounds();await expect(page.locator('.counter-words')).toHaveCSS('font-size','20px');await expect(page.locator('.row-count').first()).toHaveCSS('font-size','14px');
+         |                                                                                                                                                                                                                                               ^
+      23 |  await expect(page.locator('[data-id="KASSA-INTERN"] .title-text')).toHaveText('Improve login, pricing and statement storage');await expect(page.locator('[data-id="KASSA-01"] .row-meta a')).toHaveAttribute('href',new RegExp('github\\.com/13shreyansh/'+(process.env.TIETO_CANARY_REPO||'tieto-nordbank-payments')+'/pull/\\d+$'));await shot('01-inbox');
+      24 |  expect(await page.locator('.pr-row .solid').count()).toBe(0);await expect(page.getByRole('button',{name:'Trim all',exact:true})).toBeVisible();
+      25 |  if(width===1440)await expect(page.locator('[data-id="KASSA-INTERN"] .track-line')).toHaveCount(4);
+        at /Users/shreyansh/Documents/ChatGPT/Junction/tieto/.work/sponsor-integrations/scripts/product/e2e.spec.js:22:239
+
+  1 failed
+    scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 390 ────────────────────────────
+  1 interrupted
+    scripts/product/e2e.spec.js:4:31 › real deployed workspace flow 1440 ───────────────────────────

@@ -100,3 +100,6 @@ a.workspace-name{text-decoration:none}a.workspace-name:hover{text-decoration:und
  .summary-action .key-hint{display:none}
 }
 @media(prefers-reduced-motion:reduce){.ghost>*{animation:none}}
+
+/* Keep a longer, truthful workspace repository name inside the existing header. */
+.workspace-name{min-width:0;overflow:hidden;text-overflow:ellipsis}

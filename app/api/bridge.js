@@ -1,6 +1,6 @@
-const allowed=new Set(['workspace','status','measure','stop','add','finish','return','block','unblock','revert','proof','patch','enter','leave','reset']);
+const allowed=new Set(['workspace','status','measure','stop','add','finish','return','block','unblock','revert','proof','patch','enter','leave','reset','context','run-log']);
 let cachedOrigin=null,until=0;
-function valid(value){const u=new URL(value);if(u.protocol!=='https:'||!u.hostname.endsWith('.trycloudflare.com')||u.username||u.password||u.port||u.pathname!=='/')throw Error('Invalid worker origin');return u;}
+function valid(value){const u=new URL(value);if(u.protocol!=='https:'||!(u.hostname.endsWith('.trycloudflare.com')||u.hostname==='pr-trailer-sponsors.72.61.22.106.sslip.io')||u.username||u.password||u.port||u.pathname!=='/'||u.search||u.hash)throw Error('Invalid worker origin');return u;}
 async function origin(refresh=false){
  if(!refresh&&cachedOrigin&&Date.now()<until)return cachedOrigin;
  // The deployment's address is authoritative. Raw GitHub branch URLs can retain
@@ -18,7 +18,7 @@ module.exports=async function(req,res){
   let response=await call(await origin());
   // A 530 means the named tunnel has no origin connection. No worker action ran.
   if(response.status===530)response=await call(await origin(true));
-  if(!(response.headers.get('content-type')||'').match(/application\/json|text\/plain/))throw Error('Worker unavailable');
+  if(!(response.headers.get('content-type')||'').match(/application\/json|text\/plain/)&&!(route==='context'&&(response.headers.get('content-type')||'').startsWith('text/html')))throw Error('Worker unavailable');
   res.statusCode=response.status;res.setHeader('Content-Type',response.headers.get('content-type'));res.setHeader('Cache-Control','no-store');
   if(response.headers.get('content-disposition'))res.setHeader('Content-Disposition',response.headers.get('content-disposition'));res.end(Buffer.from(await response.arrayBuffer()));
  }catch{until=0;res.statusCode=503;res.setHeader('Content-Type','application/json');res.end(JSON.stringify({error:'Could not reach the test runner. Try again.'}));}

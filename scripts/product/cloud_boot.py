@@ -32,5 +32,6 @@ if __name__=='__main__':
     os.chdir(current)
     command=[sys.executable,'-m','product.server']
     if len(sys.argv)>1 and sys.argv[1]=='setup':command=[sys.executable,str(current/'scripts/product/workspace.py'),'setup']
+    if len(sys.argv)>1 and sys.argv[1]=='seed-cache':command=[sys.executable,str(current/'scripts/product/seed_measurements.py'),*sys.argv[2:]]
     os.execvpe(sys.executable,command,os.environ)
 
