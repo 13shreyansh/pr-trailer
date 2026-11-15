@@ -21,6 +21,7 @@ assert.equal(new URL(base).origin,'https://pr-trailer-sponsors.72.61.22.106.ssli
   await expect.poll(async()=>{const s=await status();actual=s.prs.find(p=>p.status==='done'&&p.kind!=='junior'&&p.executionProvider==='modal'&&p.cachedMeasurement===false&&p.runId&&p.runId!==oldIds[p.id]&&p.tests>0);return Boolean(actual);},{timeout:180000}).toBe(true);
   await page.getByRole('button',{name:'Stop',exact:true}).click();await expect(page.getByRole('button',{name:'Stop',exact:true})).toHaveCount(0,{timeout:90000});
   await page.locator('.row-title[data-id="'+actual.id+'"]').click();await expect(page.locator('.proof-copy')).toContainText('tests pass');
+  const actualTime=new Intl.DateTimeFormat('en-GB',{hour:'2-digit',minute:'2-digit'}).format(new Date(actual.measuredAt));await expect(page.locator('.metadata')).toContainText('Modal · measured '+actualTime);
   await page.screenshot({path:'screenshots/fable/390-fresh-batch-proof.png',fullPage:true});
   const receipt={sourceCommit:build.commit,url:base,measured:true,freshRequest:payload.fresh,id:actual.id,previousRunId:oldIds[actual.id],newRunId:actual.runId,measuredAt:actual.measuredAt,tests:actual.tests,passed:actual.passed,provider:actual.executionProvider,cachedMeasurement:actual.cachedMeasurement};
   await page.getByRole('button',{name:/Inbox ·/}).click();await page.locator('#account-button').click();await page.getByRole('menuitem',{name:'Reset workspace',exact:true}).click();await page.getByRole('menuitem',{name:'Reset now',exact:true}).click();

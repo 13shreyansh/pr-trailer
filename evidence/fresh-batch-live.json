@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "f195a326568c070e3b79c5e4567d817e2a3b5229",
+  "url": "https://pr-trailer-sponsors.72.61.22.106.sslip.io",
+  "measured": true,
+  "freshRequest": true,
+  "id": "KASSA-01",
+  "previousRunId": "8509e5c22a4745b48a817e07e392323a",
+  "newRunId": "6d30f550029d4f6cb664fdbb478f9c36",
+  "measuredAt": "2026-11-15T07:45:19.057389+00:00",
+  "tests": 5,
+  "passed": 5,
+  "provider": "modal",
+  "cachedMeasurement": false,
+  "restored": true
+}

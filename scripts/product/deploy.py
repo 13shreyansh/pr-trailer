@@ -16,7 +16,7 @@ def validate_origin(value):
  try:
   parsed=urlsplit(value)
   valid_host=parsed.hostname=='pr-trailer-sponsors.72.61.22.106.sslip.io' or bool(parsed.hostname and parsed.hostname.endswith('.trycloudflare.com'))
-  if parsed.scheme!='https' or not valid_host or parsed.username or parsed.password or parsed.port or parsed.path not in ('','/') or parsed.query or parsed.fragment:raise ValueError('Expected an approved HTTPS worker origin')
+  if parsed.scheme!='https' or not valid_host or parsed.username or parsed.password or parsed.port is not None or parsed.path not in ('','/') or parsed.query or parsed.fragment:raise ValueError('Expected an approved HTTPS worker origin')
  except (ValueError,TypeError) as exc:raise ValueError('Expected an approved HTTPS worker origin') from exc
  return 'https://'+parsed.hostname
 

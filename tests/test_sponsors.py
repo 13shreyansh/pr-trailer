@@ -148,7 +148,7 @@ class DeploymentOriginTests(unittest.TestCase):
    self.assertEqual(validate_origin(value),value);self.assertEqual(validate_origin(value+'/'),value)
  def test_origin_rejects_unowned_hosts_credentials_ports_paths_and_queries(self):
   from scripts.product.deploy import validate_origin
-  for value in ['http://pr-trailer-sponsors.72.61.22.106.sslip.io','https://evil.sslip.io','https://pr-trailer-sponsors.72.61.22.106.sslip.io.evil.com','https://user:secret@current-worker.trycloudflare.com','https://current-worker.trycloudflare.com:443','https://current-worker.trycloudflare.com/path','https://current-worker.trycloudflare.com/?key=bad','https://current-worker.trycloudflare.com/#fragment','https://trycloudflare.com',None]:
+  for value in ['http://pr-trailer-sponsors.72.61.22.106.sslip.io','https://evil.sslip.io','https://pr-trailer-sponsors.72.61.22.106.sslip.io.evil.com','https://user:secret@current-worker.trycloudflare.com','https://current-worker.trycloudflare.com:443','https://current-worker.trycloudflare.com:0','https://current-worker.trycloudflare.com/path','https://current-worker.trycloudflare.com/?key=bad','https://current-worker.trycloudflare.com/#fragment','https://trycloudflare.com',None]:
    with self.subTest(origin=value),self.assertRaises(ValueError):validate_origin(value)
 
 if __name__=='__main__':unittest.main()

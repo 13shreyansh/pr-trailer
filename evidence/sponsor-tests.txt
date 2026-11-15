@@ -72,6 +72,6 @@ test_hallucinated_quote_is_dropped (test_trailer.Grounding.test_hallucinated_quo
 test_predicates (test_trailer.SqlShape.test_predicates) ... ok
 
 ----------------------------------------------------------------------
-Ran 70 tests in 9.970s
+Ran 70 tests in 10.733s
 
 OK
