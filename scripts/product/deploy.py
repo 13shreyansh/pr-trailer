@@ -25,7 +25,7 @@ if __name__=='__main__':
  if dirty:raise RuntimeError('Commit tracked source before production deployment')
  if not origin.startswith('https://') or not origin.endswith('.trycloudflare.com'):raise ValueError('Expected the current worker tunnel origin')
  api('/v10/projects/pr-trailer/env?upsert=true',{'key':'RUNNER_ORIGIN','value':origin,'type':'plain','target':['production']})
- top={'index.html','app.js','review.js','style.css','vercel.json','api/bridge.js'}
+ top={'index.html','workspace.html','landing.css','snapshot.json','app.js','review.js','style.css','vercel.json','api/bridge.js'}
  paths=[p for p in APP.rglob('*') if p.is_file() and (str(p.relative_to(APP)) in top or p.relative_to(APP).parts[0] in ('fonts','evidence','patches','samples'))]
  with concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:files=list(pool.map(upload,paths))
  version=json.dumps({'commit':commit,'repository':'https://github.com/13shreyansh/pr-trailer','measured':True})

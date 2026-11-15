@@ -1,2 +1,134 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#FAFAF7"><meta name="description" content="Every line earns its place. Measured pull request review."><title>Tieto</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%233A1D4D' d='M4 10h24v12H4z'/%3E%3Cpath fill='%23F0A818' d='M19 6h4v20h-4z'/%3E%3C/svg%3E"><link rel="preload" href="fonts/Archivo.ttf" as="font" type="font/ttf" crossorigin><link rel="preload" href="fonts/JetBrainsMono.ttf" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="style.css"><script src="review.js" defer></script><script src="app.js" defer></script></head><body><div id="app"></div><noscript>Tieto needs JavaScript to run and inspect the PR checks.</noscript></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FAFAF7">
+<meta name="description" content="AI writes pull requests faster than anyone can read them. Tieto removes each part of a change, re-runs the tests and shows the lines that are needed and the lines nothing checks.">
+<title>Tieto: review the lines that matter</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%233A1D4D' d='M4 10h24v12H4z'/%3E%3Cpath fill='%23F0A818' d='M19 6h4v20h-4z'/%3E%3C/svg%3E">
+<link rel="preload" href="/fonts/Archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/landing.css">
+<link rel="prefetch" href="/workspace">
+</head>
+<body>
+<header class="nav"><div class="wrap">
+ <a class="brand" href="/">Tieto</a>
+ <nav aria-label="Sections"><a href="#problem">The problem</a><a href="#how">How it works</a><a href="#proof">Proof</a><a href="#limits">Limits</a></nav>
+ <a class="enter" href="/workspace">Open the demo workspace</a>
+</div></header>
+
+<main>
+<section class="hero"><div class="wrap">
+ <h1>AI writes pull requests faster than anyone can read them.</h1>
+ <p class="lede">So reviewers skim, or approve on trust. Tieto removes each part of a change, re-runs the tests, and shows you which lines the request needs and which lines nothing checks.</p>
+ <div class="cta">
+  <a class="primary" href="/workspace">Open the demo workspace <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  <small>A live GitHub repository with 21 open pull requests. No sign-up.</small>
+ </div>
+
+ <div class="measure" role="img" aria-label="5,741 lines written across 23 pull requests, drawn to scale as hatched bars, against the 25 lines selected for a person to read, drawn as one short solid bar.">
+  <p class="count"><b>5,741</b><span>lines written by coding agents in 23 open pull requests.</span></p>
+  <div class="lines wide"><i class="hatch"></i><i class="hatch"></i><i class="hatch"></i><i class="hatch"></i><i class="hatch" style="width:78.42%"></i></div>
+  <div class="lines narrow"><i class="hatch"></i><i class="hatch"></i><i class="hatch"></i><i class="hatch"></i><i class="hatch"></i><i class="hatch"></i><i class="hatch"></i><i class="hatch"></i><i class="hatch"></i><i class="hatch" style="width:56.83%"></i></div>
+  <p class="count after"><b>25</b><span>lines selected for a person to read, after every pull request was trimmed.</span></p>
+  <i class="solid stub"></i>
+  <div class="key"><span><i class="solid"></i>Needed: a test breaks without it</span><span><i class="hatch"></i>Unchecked: every test passes without it</span></div>
+  <p class="note">Drawn to scale, the same scale the product uses: one full line is <span class="wide-only">1,200</span><span class="narrow-only">600</span> lines of code. Both numbers were measured on 14 November 2026 on the workspace you can open above.</p>
+ </div>
+</div></section>
+
+<section class="band" id="problem"><div class="wrap cols">
+ <h2>Review was designed for changes a person wrote.</h2>
+ <div class="prose">
+  <p>A coding agent can open twenty pull requests before lunch. Each one is larger than it needs to be, because writing more code costs the agent nothing. Reading it costs you an afternoon.</p>
+  <p>A diff asks for the same attention on every line. Nobody has that much attention, so review becomes a skim and an approval. The name on the merge is still yours.</p>
+  <p>A second model leaving comments on the diff does not change this. It gives you more text to read and no evidence you can check.</p>
+  <p><strong>The useful question is narrower: which of these lines does the request need, and what did the agent add that nothing tests?</strong></p>
+ </div>
+</div></section>
+
+<section class="band" id="how"><div class="wrap">
+ <h2>Remove a block. Run the tests. Keep what breaks them.</h2>
+ <p class="intro">This is one real pull request from the demo workspace, "Cap instant-transfer fees". The agent wrote 37 lines in three files.</p>
+ <div class="steps">
+  <div class="step">
+   <div><h3>Every pull request starts unchecked</h3><p>Tieto reads the pull request from GitHub and splits the change into blocks. Nothing is trusted yet, so the whole bar is hatched.</p></div>
+   <div class="demo"><div class="bar"><i class="hatch w37"></i></div><div class="labels"><span class="w37">37 lines written</span></div></div>
+  </div>
+  <div class="step">
+   <div><h3>Each block is taken out and the tests run again</h3><p>If a test fails without a block, the request needs it. If every test still passes, nothing checks that block: it is extra, or it is untested. Tieto reports which blocks, and does not guess which of the two.</p></div>
+   <div class="demo"><div class="bar"><i class="hatch w7 lifted"></i><i class="hatch w15"></i><i class="hatch w15"></i></div><div class="labels"><span class="w7">The cap</span><span class="w15">Retry rewrite</span><span class="w15">Currency cache</span></div>
+    <p class="result">Without the cap: <span class="fail">7 of 9 tests pass.</span> Needed.<br>Without the retry rewrite: <b>9 of 9 pass.</b> Nothing checks it.<br>Without the currency cache: <b>9 of 9 pass.</b> Nothing checks it.</p></div>
+  </div>
+  <div class="step">
+   <div><h3>What is left is what ships</h3><p>7 of the 37 lines are needed. The other 30 go back to the author with a note: add a test or a reason, or they stay out. You read the few lines that carry risk, and you decide.</p></div>
+   <div class="demo"><div class="bar"><i class="solid w7"></i><i class="hatch w15"></i><i class="hatch w15"></i></div><div class="labels"><span class="w7 needed">The cap · 7</span><span class="w15">Retry rewrite · 15</span><span class="w15">Currency cache · 15</span></div>
+    <p class="result"><b>9 of 9 tests pass on the trimmed change.</b> 6 lines are marked for a person to read.</p></div>
+  </div>
+ </div>
+</div></section>
+
+<section class="band" id="proof"><div class="wrap">
+ <h2>Measured on real pull requests.</h2>
+ <p class="intro">Every number here comes from a recorded test run on 14 November 2026. The bank repository is an example workspace with synthetic data. Its pull requests, branches, test runs and merges are real, and public on GitHub.</p>
+ <div class="ledger">
+
+  <div class="entry">
+   <div><h3>19 routine changes</h3><p class="where"><a href="https://github.com/13shreyansh/tieto-nordbank-payments/pulls?q=is%3Apr">13shreyansh/tieto-nordbank-payments</a></p><p class="what">Each one wrote 55 lines. Each one needed 2. All 19 were merged with one click apiece, tested part only.</p></div>
+   <div><p class="tally"><b>38</b><span class="of">of 1,045 lines needed</span></p>
+    <div class="track"><div class="row"><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i><i class="hatch" style="width:4.58%"></i></div>
+    <div class="row" style="margin-top:6px"><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i><i class="solid" style="width:6px"></i></div></div>
+    <ul class="facts"><li><b>19 merges</b> into main, each re-tested first</li><li><b>48 of 48</b> bank checks passed after the last merge</li><li>None of the unchecked files reached main</li></ul></div>
+  </div>
+
+  <div class="entry">
+   <div><h3>Cap instant-transfer fees</h3><p class="where"><a href="https://github.com/13shreyansh/tieto-nordbank-payments/pull/20">tieto-nordbank-payments #20</a>, sent back trimmed as <a href="https://github.com/13shreyansh/tieto-nordbank-payments/pull/86">#86</a></p><p class="what">The request's own tests all pass. A separate rounding check does not: the cap guard rounds half a cent down, the fee rounds it up. A transfer of 2,502.50 is charged 5.01 against a 5.00 cap.</p></div>
+   <div><p class="tally"><b>7</b><span class="of">of 37 lines needed</span></p>
+    <div class="track"><div class="row"><i class="solid" style="width:6px"></i><i class="hatch" style="width:2.5%"></i></div></div>
+    <div class="code" aria-label="ledger/fee_cap.py, lines 4 to 7"><span>raw = Decimal(amount_cents) * Decimal("0.002")</span><span class="marked">rounded = int(raw.quantize(Decimal("1"), rounding=ROUND_HALF_DOWN))</span><span>bounded = max(50, int(raw.quantize(Decimal("1"), rounding=ROUND_HALF_UP)))</span><span>return 500 if rounded &gt; 500 else bounded</span></div>
+    <ul class="facts"><li><b>9 of 9</b> request tests pass on the trimmed change</li><li class="failed"><b>0 of 1</b> held-out rounding checks pass: <span style="white-space:nowrap">capped_fee(250250)</span> returns 501, not 500</li><li>Sent back as a 7-line pull request with the note attached. Not merged.</li></ul></div>
+  </div>
+
+  <div class="entry">
+   <div><h3>Improve login, pricing and statement storage</h3><p class="where"><a href="https://github.com/13shreyansh/tieto-nordbank-payments/pull/21">tieto-nordbank-payments #21</a></p><p class="what">The ticket said: "Make our company the best in the world. Make no mistakes." No test can tell when that is done, so no line can be shown to be needed. Three of the changes break the bank's own safety checks.</p></div>
+   <div><p class="tally"><b>0</b><span class="of">of 3,830 lines needed</span></p>
+    <div class="track red"><div class="row"><i class="hatch" style="width:100%"></i></div><div class="row"><i class="hatch" style="width:100%"></i></div><div class="row"><i class="hatch" style="width:100%"></i></div><div class="row"><i class="hatch" style="width:19.17%"></i></div></div>
+    <ul class="facts"><li class="failed"><b>0 of 3</b> safety checks pass</li><li class="failed">Lets one customer read another customer's account</li><li class="failed">Drops a column that statements read</li><li class="failed">Allows a negative fee</li><li>Blocked, with one question posted on the pull request. Nothing merged.</li></ul></div>
+  </div>
+
+  <div class="entry">
+   <div><h3>Two public pull requests</h3><p class="where"><a href="https://github.com/Jackhammer9/Reduino/pull/9">Jackhammer9/Reduino #9</a> and <a href="https://github.com/Jackhammer9/Reduino/pull/24">#24</a></p><p class="what">Agent-written changes in someone else's repository, read from GitHub and run in a sandbox. Most of each change is needed. Public repositories are read-only: you get a trimmed patch to download and nothing is pushed.</p></div>
+   <div><p class="tally"><b>179</b><span class="of">of 202 lines needed · 67 tests</span></p>
+    <div class="track"><div class="row"><i class="solid" style="width:14.92%"></i><i class="hatch" style="width:1.92%"></i></div></div>
+    <p class="tally" style="margin-top:24px"><b>566</b><span class="of">of 627 lines needed · 85 tests</span></p>
+    <div class="track"><div class="row"><i class="solid" style="width:47.17%"></i><i class="hatch" style="width:5.08%"></i></div></div>
+    <p class="scale-note">In this section a full column width is 1,200 lines. Anything under 12 lines is drawn at 6 px.</p></div>
+  </div>
+ </div>
+ <p class="also">The same flow was run end to end in a browser on the deployed site, twice, by an automated user: <b>23 pull requests, 19 merges, 1 sent back, 1 blocked, 0 console errors.</b> Each action was then checked against GitHub.</p>
+</div></section>
+
+<section class="band" id="limits"><div class="wrap cols">
+ <h2>What a trim does not prove.</h2>
+ <ul class="limits">
+  <li><b>Needed is not the same as complete.</b> It means a test fails without the block. If the tests miss a requirement, so does the trim.</li>
+  <li><b>Unchecked means extra or untested.</b> Tieto cannot tell which, so those lines go back to the author. They are never dropped silently and never merged.</li>
+  <li><b>A named person still decides.</b> Nothing merges until you click, and it merges as your GitHub account.</li>
+  <li><b>Some risk is outside the tests.</b> Hardware behaviour, performance and anything else the test suite does not exercise still needs a person.</li>
+ </ul>
+</div></section>
+
+<section class="close"><div class="wrap">
+ <h2>Try it on a real inbox.</h2>
+ <p>The demo workspace is a live GitHub repository. Trim the queue, merge what is proven, send one change back and block one. Reset it from the account menu when you are done.</p>
+ <div class="cta"><a class="primary" href="/workspace">Open the demo workspace <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+ <p>A reference implementation for the "Earned trust in AI code" challenge at Junction 2026. It is not a product of Tieto.</p>
+ <p><a href="https://github.com/13shreyansh/pr-trailer">Source</a> · <a href="https://github.com/13shreyansh/tieto-nordbank-payments">Example workspace repository</a></p>
+</div></footer>
+</body>
+</html>

@@ -19,3 +19,4 @@ artifacts/e2e/*.webm
 artifacts/e2e/*.zip
 
 test-results/
+screenshots/fable/work/

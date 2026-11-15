@@ -6,8 +6,7 @@ TEAM='team_SjINqXczvI3i0JpBv7JRMqQN';PROJECT='prj_TqJO4nTjZj4gODIgOManda1qm5yH'
 
 def definitions(origin,commit):
  return [
-  {'id':'tieto-committed-style','name':'Committed Tieto stylesheet','enabled':True,'srcSyntax':'equals','route':{'src':'/style.css','dest':origin+'/api/patch?id=asset-'+commit+'-style','respectOriginCacheControl':True}},
-  {'id':'tieto-commit-marker','name':'Served Tieto commit','enabled':True,'srcSyntax':'equals','route':{'src':'/build.json','dest':origin+'/api/patch?id=asset-'+commit+'-build','respectOriginCacheControl':True}},
+  # Static assets and build.json are served by the Vercel deployment itself; only the API reaches the worker.
   {'id':'tieto-worker-api','name':'Live Tieto worker','enabled':True,'srcSyntax':'regex','route':{'src':'^/api/(.*)$','dest':origin+'/api/$1','respectOriginCacheControl':True}}
  ]
 

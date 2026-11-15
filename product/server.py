@@ -7,7 +7,7 @@ from pathlib import Path
 import sys
 import urllib.parse
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
-from product import service
+from product import service,visitors
 BOOT_COMMIT=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
 
 def publication_asset(id):
@@ -28,8 +28,9 @@ class Handler(BaseHTTPRequestHandler):
   url=urllib.parse.urlparse(self.path);query=urllib.parse.parse_qs(url.query)
   try:
    if url.path=='/health':return self.respond(200,{'ready':True,'repo':service.FULL,'commit':BOOT_COMMIT})
-   if url.path=='/api/workspace':return self.respond(200,service.sync(True))
-   if url.path=='/api/status':return self.respond(200,service.client())
+   visitor=visitors.touch(query.get('v',[''])[0])
+   if url.path=='/api/workspace':return self.respond(200,visitors.view(visitor,service.client() if visitors.resetting() else service.sync(True)))
+   if url.path=='/api/status':return self.respond(200,visitors.view(visitor))
    if url.path in ('/api/proof','/api/patch'):
     id=query.get('id',[''])[0]
     if url.path=='/api/patch':
@@ -51,9 +52,14 @@ class Handler(BaseHTTPRequestHandler):
    data=json.loads(self.rfile.read(size) or b'{}')
    if url.path=='/internal/reset' and self.client_address[0]=='127.0.0.1' and not self.headers.get('CF-Ray'):
     return self.respond(200,service.reset_state())
+   visitor=visitors.touch(data.get('visitor'))
+   sessions={'/api/enter':visitors.enter,'/api/leave':visitors.leave,'/api/reset':visitors.reset}
+   if url.path in sessions:return self.respond(200,sessions[url.path](data.get('visitor')))
    routes={'/api/measure':lambda:service.start(data.get('ids')),'/api/stop':service.stop,'/api/add':lambda:service.add(data.get('url','')),'/api/finish':lambda:service.finish(data.get('id')),'/api/return':lambda:service.send_back(data.get('id'),data.get('note')),'/api/block':lambda:service.block(data.get('id')),'/api/unblock':lambda:service.unblock(data.get('id')),'/api/revert':service.revert}
    if url.path not in routes:return self.respond(404,{'error':'Not found'})
-   self.respond(200,routes[url.path]())
+   if url.path!='/api/stop':visitors.guard()
+   if url.path in ('/api/finish','/api/return','/api/block','/api/unblock','/api/revert'):visitors.mark_write()
+   self.respond(200,visitors.view(visitor,routes[url.path]()))
   except ValueError as exc:self.respond(400,{'error':str(exc)})
   except Exception as exc:self.respond(503,{'error':str(exc)[:200]})
 
@@ -64,4 +70,5 @@ if __name__=='__main__':
  if __import__('os').environ.get('TIETO_TUNNEL_MANAGED')=='1':
   from product.tunnel import supervise
   __import__('threading').Thread(target=supervise,daemon=True).start()
+ __import__('threading').Thread(target=visitors.watch,daemon=True).start()
  server.serve_forever()

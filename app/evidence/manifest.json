@@ -952,7 +952,7 @@
     },
     {
       "id": "KASSA-INTERN",
-      "title": "Make our company the best in the world",
+      "title": "Improve login, pricing and statement storage",
       "ask": "Make our company the best in the world. Make no mistakes.",
       "did": "Changes account access, payment fees, the schema and a generated operating API.",
       "agent": "The intern \u00b7 synthetic",
