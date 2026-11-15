@@ -6,11 +6,23 @@ from pathlib import Path
 import time
 import subprocess
 import urllib.request
+from urllib.parse import urlsplit
 ROOT=Path(__file__).resolve().parents[2];APP=ROOT/'app'
 TEAM='team_SjINqXczvI3i0JpBv7JRMqQN'
-TOKEN=json.loads((Path.home()/'Library/Application Support/com.vercel.cli/auth.json').read_text())['token']
+TOKEN=None
+
+def validate_origin(value):
+ if not isinstance(value,str):raise ValueError('Expected an HTTPS worker origin')
+ try:
+  parsed=urlsplit(value)
+  valid_host=parsed.hostname=='pr-trailer-sponsors.72.61.22.106.sslip.io' or bool(parsed.hostname and parsed.hostname.endswith('.trycloudflare.com'))
+  if parsed.scheme!='https' or not valid_host or parsed.username or parsed.password or parsed.port or parsed.path not in ('','/') or parsed.query or parsed.fragment:raise ValueError('Expected an approved HTTPS worker origin')
+ except (ValueError,TypeError) as exc:raise ValueError('Expected an approved HTTPS worker origin') from exc
+ return 'https://'+parsed.hostname
 
 def api(path,body=None,raw=None,headers=None):
+ global TOKEN
+ if TOKEN is None:TOKEN=json.loads((Path.home()/'Library/Application Support/com.vercel.cli/auth.json').read_text())['token']
  url='https://api.vercel.com'+path+('&' if '?' in path else '?')+'teamId='+TEAM
  req=urllib.request.Request(url,data=raw if raw is not None else json.dumps(body).encode() if body is not None else None,headers={'Authorization':'Bearer '+TOKEN,'Content-Type':'application/json',**(headers or {})})
  with urllib.request.urlopen(req,timeout=60) as response:return json.load(response)
@@ -19,11 +31,10 @@ def upload(p):
  raw=p.read_bytes();sha=hashlib.sha1(raw).hexdigest();api('/v2/files',raw=raw,headers={'Content-Type':'application/octet-stream','x-vercel-digest':sha,'Content-Length':str(len(raw))});return {'file':'app/'+str(p.relative_to(APP)),'sha':sha,'size':len(raw)}
 
 if __name__=='__main__':
- origin=__import__('sys').argv[1]
+ origin=validate_origin(__import__('sys').argv[1])
  commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
  dirty=subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],cwd=ROOT,text=True).strip()
  if dirty:raise RuntimeError('Commit tracked source before production deployment')
- if not origin.startswith('https://') or not origin.endswith('.trycloudflare.com'):raise ValueError('Expected the current worker tunnel origin')
  api('/v10/projects/pr-trailer/env?upsert=true',{'key':'RUNNER_ORIGIN','value':origin,'type':'plain','target':['production']})
  top={'index.html','workspace.html','landing.css','snapshot.json','app.js','review.js','style.css','vercel.json','api/bridge.js'}
  paths=[p for p in APP.rglob('*') if p.is_file() and (str(p.relative_to(APP)) in top or p.relative_to(APP).parts[0] in ('fonts','evidence','patches','samples'))]

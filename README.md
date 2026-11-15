@@ -30,7 +30,7 @@ flowchart LR
 
 The [cloud integration canary](https://pr-trailer-sponsors.72.61.22.106.sslip.io) runs the broker on an existing VPS and executes tests in Modal. It does not depend on the builder's Mac. Its write actions target an isolated owned bank repository. `/build.json` identifies its exact application release.
 
-The original Vercel URL still routes to the older Mac-hosted worker until the cloud release passes the full desktop and phone acceptance test and independent review. The original repository and public route have not been replaced by this feature branch.
+The Vercel frontend forwards workspace API calls to the configured `RUNNER_ORIGIN`. Cloud releases use the VPS broker above; neither its database nor its execution depends on the builder's Mac. The deployment script accepts this exact owned HTTPS host and existing Cloudflare tunnel origins, and rejects credentials, custom ports, paths and queries. The isolated sponsor workspace protects the original bank repository during acceptance and cutover.
 
 ## Sponsor use
 
