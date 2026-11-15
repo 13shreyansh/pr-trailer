@@ -17,6 +17,7 @@ from urllib.parse import quote
 import uuid
 from .github import api,pages,parse_pr,commit_tree,set_ref,FULL,OWNER,ROOT
 from .sandbox import runner
+from .runlog import record_decision
 sys.path.insert(0,str(ROOT/'scripts/measure'))
 import engine
 from app.runtime.reporting import compact
@@ -343,6 +344,7 @@ def finish(id):
   receipt={'id':id,'number':p['number'],'github':p['github'],'sha':merged['sha'],'before':parent,'tests':proof['tests'],'passed':proof['passed'],'at':now()}
   with LOCK:
    STATE['prs'][id]['status']='merged';STATE['prs'][id].pop('_mergeCandidate',None);STATE['merged'].append(receipt);save()
+  record_decision('merge',p,receipt,OWNER)
   return client()
 
 
@@ -357,6 +359,7 @@ def send_back(id,note):
   new=existing[0] if existing else api('/repos/'+FULL+'/pulls',method='POST',data={'title':p['title']+' · trimmed','body':note.strip()+'\n\n<!-- tieto:trimmed:'+id+' -->','head':branch,'base':'main'})
   api(f'/repos/{FULL}/pulls/{p["number"]}',method='PATCH',data={'state':'closed'})
   with LOCK:STATE['prs'][id].update(status='returned',returnedPR=new['html_url']);STATE['returned'].append({'id':id,'number':new['number'],'github':new['html_url'],'original':p['number'],'sha':commit,'note':note.strip(),'at':now()});save()
+  record_decision('return',p,{'sha':commit,'number':new['number']},OWNER)
   return client()
 
 
@@ -374,6 +377,7 @@ def block(id):
    receipt={'id':id,'number':p['number'],'commentId':comment['id'],'github':comment['html_url'],'at':now()}
    with LOCK:STATE['blocked'].append(receipt)
   with LOCK:STATE['prs'][id].update(status='blocked',sentMessage='Asked the author: what should this change? Name one thing we can test.');save()
+  record_decision('block',p,existing or receipt,OWNER)
   return client()
 
 
@@ -384,6 +388,7 @@ def unblock(id):
   api(f'/repos/{FULL}/issues/comments/{receipt["commentId"]}',method='DELETE')
   api(f'/repos/{FULL}/issues/{receipt["number"]}/labels/tieto-blocked',method='DELETE')
   with LOCK:STATE['blocked']=[r for r in STATE['blocked'] if r is not receipt];STATE['prs'][id]['status']='done';save()
+  record_decision('unblock',STATE['prs'][id],receipt,OWNER)
  return client()
 
 
@@ -399,6 +404,7 @@ def revert():
   new=api('/repos/'+FULL+'/pulls',method='POST',data={'title':config['title'],'body':f'Asked: "{config["ask"]}"\n\n<!-- tieto:case:{receipt["id"]} -->','head':config['branch'],'base':'main'})
   with LOCK:
    STATE['merged'].pop();p=STATE['prs'][receipt['id']];p.update(status='unmeasured',number=new['number'],github=new['html_url'],headSha=config['sha']);save()
+  record_decision('revert',p,{'sha':sha,'number':new['number']},OWNER)
  return sync(True)
 
 

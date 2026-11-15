@@ -1,6 +1,7 @@
 """Create/reset only the owned Nordbank example workspace. Never prints credentials."""
 import argparse
 import json
+import os
 from pathlib import Path
 import sys
 import time
@@ -9,6 +10,11 @@ sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'scripts/measure'))
 from product.github import api,pages,commit_tree,set_ref,FULL,OWNER
 from bank_cases import make,CASES
 OUT=ROOT/'var/workspace.json'
+
+def worker_origin():
+ port=int(os.environ.get('PORT','4322'))
+ if not 1<=port<=65535:raise ValueError('Invalid worker port')
+ return 'http://127.0.0.1:'+str(port)
 
 
 def setup():
@@ -72,12 +78,12 @@ def reset(saved=None):
  # Stop and settle the runner before changing the repository it is measuring.
  import urllib.request
  try:
-  req=urllib.request.Request('http://127.0.0.1:4322/api/stop',data=b'{}',headers={'Content-Type':'application/json'})
+  req=urllib.request.Request(worker_origin()+'/api/stop',data=b'{}',headers={'Content-Type':'application/json'})
   with urllib.request.urlopen(req,timeout=10) as response:state=json.load(response)
   for attempt in range(90):
    if not (state.get('batch') or {}).get('running') and all(p['status'] not in ('queued','running') for p in state['prs']):break
    time.sleep(1)
-   with urllib.request.urlopen('http://127.0.0.1:4322/api/status',timeout=10) as response:state=json.load(response)
+   with urllib.request.urlopen(worker_origin()+'/api/status',timeout=10) as response:state=json.load(response)
   else:raise RuntimeError('Active tests did not stop')
  except Exception as exc:raise RuntimeError('GitHub unchanged because worker reset failed: '+str(exc)) from exc
  for pr in pages('/repos/'+FULL+'/pulls?state=open'):
@@ -107,7 +113,7 @@ def reset(saved=None):
  saved['numbers']=numbers;saved['resetAt']=time.time();OUT.write_text(json.dumps(saved,indent=2))
  try:
   import urllib.request
-  req=urllib.request.Request('http://127.0.0.1:4322/internal/reset',data=b'{}',headers={'Content-Type':'application/json'})
+  req=urllib.request.Request(worker_origin()+'/internal/reset',data=b'{}',headers={'Content-Type':'application/json'})
   with urllib.request.urlopen(req,timeout=90) as response:state=json.load(response)
   assert len(state['prs'])==len(numbers)+2, 'Reset did not restore every workspace row'
   assert not state['merged'] and not state['returned'] and not state['blocked'], 'Reset retained decisions'

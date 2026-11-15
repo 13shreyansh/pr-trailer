@@ -1,0 +1,16 @@
+{
+  "provider": "entire-graph",
+  "available": true,
+  "sourceHead": "controlled-fixture",
+  "query": "Cap instant-transfer fees",
+  "symbols": [
+    {
+      "path": "ledger/fee_cap.py",
+      "line": 3,
+      "name": "capped_fee",
+      "kind": "function",
+      "relations": []
+    }
+  ],
+  "notice": "Static code context helps review. Missing relationships do not prove a function is unused."
+}

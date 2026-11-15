@@ -1,7 +1,7 @@
 ..................Public worker routing published.
 Worker tunnel reconnecting after exit 0
-...................................
+........................................
 ----------------------------------------------------------------------
-Ran 53 tests in 9.334s
+Ran 58 tests in 9.532s
 
 OK

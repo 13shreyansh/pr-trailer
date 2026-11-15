@@ -10,6 +10,8 @@ RUN curl -fsSL https://entire.com/install.sh -o /tmp/install-entire.sh && \
 COPY product /app/product
 COPY scripts /app/scripts
 COPY app/runtime /app/app/runtime
+COPY app/evidence/manifest.json /app/app/evidence/manifest.json
+COPY LICENSE /app/LICENSE
 COPY var/workspace.json /app/var/workspace.json
 COPY release-commit /app/release-commit
 ENV TIETO_BIND=0.0.0.0 PORT=4326 TIETO_TEST_RUNNER=modal ENTIRE_BIN=/root/.local/bin/entire

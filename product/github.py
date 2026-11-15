@@ -10,7 +10,8 @@ import urllib.parse
 import urllib.request
 ROOT=Path(__file__).resolve().parents[1]
 OWNER='13shreyansh'
-REPO='tieto-nordbank-payments'
+REPO=os.environ.get('TIETO_WORKSPACE_REPO','tieto-nordbank-payments')
+if not re.fullmatch(r'tieto-nordbank-payments(?:-[a-z0-9-]{1,40})?',REPO):raise ValueError('Unsupported owned workspace')
 FULL=OWNER+'/'+REPO
 _lock=threading.Lock()
 _token=None

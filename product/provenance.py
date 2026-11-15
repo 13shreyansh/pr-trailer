@@ -11,6 +11,16 @@ def code_context(source,ask,head_sha):
     command=[binary,'graph','query','--repo',str(Path(source).resolve()),'--profile','full',
              '--format','json','--max-context-bytes','12000','--top-k','6','--query',str(ask)[:1000]]
     try:
+        source=Path(source).resolve()
+        if not (source/'.git').exists():
+            # Downloaded GitHub archives have no .git directory. Build a local
+            # analysis snapshot, without hooks, global filters, signing or egress.
+            env={k:os.environ[k] for k in ('PATH','HOME','TMPDIR') if k in os.environ}
+            env.update(GIT_CONFIG_NOSYSTEM='1',GIT_CONFIG_GLOBAL='/dev/null')
+            for args in [('init','-q'),('add','--all'),('-c','core.hooksPath=/dev/null','-c','commit.gpgsign=false',
+                         '-c','user.name=PR Trailer analysis','-c','user.email=analysis@pr-trailer.invalid',
+                         'commit','-q','--allow-empty','-m','Analysis snapshot of public source '+str(head_sha)[:40])]:
+                subprocess.run(['git','-C',str(source),*args],check=True,capture_output=True,timeout=15,env=env)
         response=subprocess.run(command,cwd=source,capture_output=True,text=True,timeout=30,
                    env={k:os.environ[k] for k in ('PATH','HOME','TMPDIR','XDG_CACHE_HOME') if k in os.environ})
         if response.returncode or len(response.stdout)>100_000:raise ValueError()

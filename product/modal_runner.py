@@ -14,7 +14,16 @@ IMAGE_REQUIREMENTS=("pytest==9.2.0", "pyserial==3.5")
 
 # This trusted wrapper is kept outside the uploaded, read-only source tree.
 REMOTE_RUNNER=r'''
-import json,os,pathlib,resource,subprocess,sys,tarfile,tempfile,time,xml.etree.ElementTree as ET
+import json,os,pathlib,resource,stat,subprocess,sys,tarfile,tempfile,time,xml.etree.ElementTree as ET
+def read_regular(path,limit):
+    fd=os.open(path,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK)
+    with os.fdopen(fd,'rb') as stream:
+        info=os.fstat(stream.fileno())
+        if not stat.S_ISREG(info.st_mode) or info.st_size>limit:
+            raise ValueError('Invalid bounded result file')
+        raw=stream.read(limit+1)
+        if len(raw)>limit:raise ValueError('Result file grew beyond its limit')
+        return raw
 root=pathlib.Path('/case/work');root.mkdir(parents=True,exist_ok=True)
 with tarfile.open('/case/source.tar.gz','r:gz') as archive:
     total=0
@@ -46,21 +55,26 @@ env={'PATH':'/usr/local/bin:/usr/bin:/bin','HOME':str(scratch),'TMPDIR':str(scra
      'PYTEST_DISABLE_PLUGIN_AUTOLOAD':'1'}
 command=['python','-B','-m','pytest','-q','-p','no:cacheprovider','--junitxml='+str(report),*tests]
 started=time.monotonic()
-with output.open('wb') as stream:
+with output.open('w+b') as stream:
     try:
         process=subprocess.run(command,cwd=root,env=env,stdout=stream,stderr=subprocess.STDOUT,timeout=45,preexec_fn=limits)
         code=process.returncode
     except subprocess.TimeoutExpired:code=124
-raw=output.read_bytes()[:131072];cases=[]
-if report.is_file():
-    for c in ET.fromstring(report.read_bytes()[:2_000_000]).iter('testcase'):
+    stream.seek(0);raw=stream.read(131073);output_size=os.fstat(stream.fileno()).st_size
+cases=[]
+try:xml=read_regular(report,2_000_000)
+except (OSError,ValueError):xml=None;code=code or 1
+if xml is not None:
+    try:tree=ET.fromstring(xml)
+    except ET.ParseError:tree=None;code=code or 1
+    for c in tree.iter('testcase') if tree is not None else []:
         bad=c.find('failure')
         if bad is None:bad=c.find('error')
         cases.append({'name':c.get('classname','')+'.'+c.get('name',''),'passed':bad is None and c.find('skipped') is None,
                       'skipped':c.find('skipped') is not None,'failure':'' if bad is None else (bad.text or '')[:4000]})
 print(json.dumps({'exitCode':code,'seconds':round(time.monotonic()-started,4),'cases':cases,
                   'tests':len(cases),'passed':sum(c['passed'] for c in cases),
-                  'output':raw.decode(errors='replace'),'outputTruncated':output.stat().st_size>len(raw)}))
+                  'output':raw[:131072].decode(errors='replace'),'outputTruncated':output_size>131072}))
 '''
 
 def source_archive(work: Path) -> bytes:
@@ -84,36 +98,41 @@ def run_check(work, tests, log_dir, label, *, run_id=None, metadata=None, modal_
     if not os.environ.get('MODAL_TOKEN_ID') or not os.environ.get('MODAL_TOKEN_SECRET'):
         raise RuntimeError('Modal execution is not configured')
     raw=source_archive(Path(work));request={'tests':tests}
-    app=modal_module.App.lookup(os.environ.get('MODAL_APP_NAME','pr-trailer-sandboxes'),create_if_missing=True)
-    image=modal_module.Image.debian_slim(python_version='3.12').pip_install(*IMAGE_REQUIREMENTS)
     sandbox=None;started=time.monotonic()
     try:
+        app=modal_module.App.lookup(os.environ.get('MODAL_APP_NAME','pr-trailer-sandboxes'),create_if_missing=True)
+        image=modal_module.Image.debian_slim(python_version='3.12').pip_install(*IMAGE_REQUIREMENTS)
         sandbox=modal_module.Sandbox.create('sleep','90',app=app,image=image,timeout=90,
                     cpu=1,memory=1024,block_network=True,include_oidc_identity_token=False)
         sandbox.filesystem.write_bytes(raw,'/case/source.tar.gz')
         sandbox.filesystem.write_text(REMOTE_RUNNER,'/case/runner.py')
         sandbox.filesystem.write_text(json.dumps(request),'/case/request.json')
-        process=sandbox.exec('python','-I','/case/runner.py',timeout=65)
-        text=process.stdout.read()
+        process=sandbox.exec('python','-I','/case/runner.py',timeout=65,text=False)
+        chunks=[];size=0
+        for chunk in process.stdout:
+            size+=len(chunk)
+            if size>2_000_000:raise RuntimeError('Modal result exceeded the transport limit')
+            chunks.append(chunk)
         status=process.wait()
-        if status!=0 or len(text)>2_000_000:raise RuntimeError('Modal sandbox could not complete this check')
-        result=json.loads(text)
+        if status!=0:raise RuntimeError('Modal sandbox could not complete this check')
+        result=json.loads(b''.join(chunks))
         if not isinstance(result.get('cases'),list) or not isinstance(result.get('exitCode'),int):
             raise RuntimeError('Invalid sandbox result')
         result.update(label=label,command=['python','-B','-m','pytest','-q',*tests],measured=True,
                       outputSha256=hashlib.sha256(result['output'].encode()).hexdigest(),
                       execution={'provider':'modal','sandboxId':sandbox.object_id,
                                  'networkBlocked':True,'sourceReadOnly':True,
-                                 'secretsInjected':False,'wallSeconds':round(time.monotonic()-started,4)})
+                                 'secretsInjected':False,'runnerSha256':hashlib.sha256(REMOTE_RUNNER.encode()).hexdigest(),'wallSeconds':round(time.monotonic()-started,4)})
         from .runlog import record_check
         result['archive']=record_check(run_id or Path(work).parent.name,label,result,metadata or {})
         log_dir=Path(log_dir);log_dir.mkdir(parents=True,exist_ok=True)
         (log_dir/(label+'.json')).write_text(json.dumps(result))
         return result
-    except (ValueError,RuntimeError):raise
-    except Exception:
+    except Exception as exc:
         # Provider errors may include credential-bearing connection strings.
-        raise RuntimeError('Modal execution unavailable; the check was not rerun locally') from None
+        raise RuntimeError('Modal execution unavailable ('+type(exc).__name__+'); the check was not rerun locally') from None
     finally:
-        if sandbox is not None:sandbox.terminate()
+        if sandbox is not None:
+            try:sandbox.terminate()
+            except Exception:raise RuntimeError('Modal sandbox cleanup could not be confirmed') from None
 
