@@ -75,6 +75,19 @@ class VerifiedMeasurementCacheTests(unittest.TestCase):
     service.sync(True)
    self.assertEqual(service.STATE['prs']['CAP']['status'],'done');self.assertEqual(service.STATE['prs']['CAP']['baseSha'],self.base);self.assertEqual(service.STATE['prs']['CAP']['targetSha'],'new-sibling-merge')
   finally:service.STATE.clear();service.STATE.update(original)
+ def test_api_omits_stale_cache_origins_only_for_genuinely_fresh_rows(self):
+  from product import service
+  original=copy.deepcopy(service.STATE)
+  try:
+   fresh={'id':'fresh','status':'done','outside':False,'createdAt':'now','number':1,'cachedMeasurement':False,'measuredAt':'2026-11-15T07:47:41Z','measurementOriginAt':'2026-11-15T07:23:00Z','measurementOriginNumber':1,'measurementOriginHead':'a'*40}
+   cached={**fresh,'id':'cached','number':2,'cachedMeasurement':True}
+   service.STATE.clear();service.STATE.update(prs={'fresh':fresh,'cached':cached},merged=[],returned=[],blocked=[])
+   with patch.object(service,'known_cases',return_value={}):rows={r['id']:r for r in service.client()['prs']}
+   for key in ['measurementOriginAt','measurementOriginNumber','measurementOriginHead']:
+    self.assertNotIn(key,rows['fresh']);self.assertEqual(rows['cached'][key],cached[key])
+   self.assertEqual(rows['fresh']['measuredAt'],fresh['measuredAt'])
+   self.assertEqual(service.STATE['prs']['fresh']['measurementOriginAt'],fresh['measurementOriginAt'],'serialization must preserve internal historical evidence')
+  finally:service.STATE.clear();service.STATE.update(original)
  def test_explicit_bulk_rerun_selects_done_rows_and_forces_fresh_provider(self):
   from product import service
   original=copy.deepcopy(service.STATE)

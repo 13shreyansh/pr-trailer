@@ -16,6 +16,7 @@ test_cap_pr_introduces_rounding_regression_against_green_baseline (test_measure.
 test_child_checks_keep_parent_vendor_import_paths (test_measure.ServerlessDependencyRegression.test_child_checks_keep_parent_vendor_import_paths) ... ok
 test_actual_invocation_default_suite_and_heldout_must_match (test_measurement_cache.VerifiedMeasurementCacheTests.test_actual_invocation_default_suite_and_heldout_must_match) ... ok
 test_any_source_test_or_image_profile_change_invalidates_reuse (test_measurement_cache.VerifiedMeasurementCacheTests.test_any_source_test_or_image_profile_change_invalidates_reuse) ... ok
+test_api_omits_stale_cache_origins_only_for_genuinely_fresh_rows (test_measurement_cache.VerifiedMeasurementCacheTests.test_api_omits_stale_cache_origins_only_for_genuinely_fresh_rows) ... ok
 test_cached_measurement_does_not_allocate_runs_or_require_execution_disk (test_measurement_cache.VerifiedMeasurementCacheTests.test_cached_measurement_does_not_allocate_runs_or_require_execution_disk) ... ok
 test_completed_result_reuse_preserves_original_time_source_and_known_failure (test_measurement_cache.VerifiedMeasurementCacheTests.test_completed_result_reuse_preserves_original_time_source_and_known_failure) ... ok
 test_explicit_bulk_rerun_selects_done_rows_and_forces_fresh_provider (test_measurement_cache.VerifiedMeasurementCacheTests.test_explicit_bulk_rerun_selects_done_rows_and_forces_fresh_provider) ... ok
@@ -72,6 +73,6 @@ test_hallucinated_quote_is_dropped (test_trailer.Grounding.test_hallucinated_quo
 test_predicates (test_trailer.SqlShape.test_predicates) ... ok
 
 ----------------------------------------------------------------------
-Ran 70 tests in 10.733s
+Ran 71 tests in 11.092s
 
 OK

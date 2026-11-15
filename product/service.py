@@ -93,7 +93,9 @@ def client():
   rows=[]
   for p in STATE['prs'].values():
    if p['status'] in ('merged','returned','closed'):continue
-   rows.append({k:v for k,v in p.items() if not k.startswith('_') and k not in ('files','paths')})
+   # Older built clients prefer origin time whenever present. Expose it only for actual reuse.
+   private=('files','paths') if p.get('cachedMeasurement') is True else ('files','paths','measurementOriginAt','measurementOriginNumber','measurementOriginHead')
+   rows.append({k:v for k,v in p.items() if not k.startswith('_') and k not in private})
   order={id:i for i,id in enumerate(known_cases())}
   rows.sort(key=lambda p:(p['outside'],order.get(p['id'],1000),p['createdAt'],p['number']))
   return {'product':'Tieto','repo':FULL,'workspace':'Nordbank · payments','account':OWNER,'syncedAt':STATE.get('syncedAt'),'trimmedAt':STATE.get('trimmedAt'),'prs':rows,'merged':STATE['merged'],'returned':STATE['returned'],'blocked':STATE['blocked'],'batch':STATE.get('batch')}
