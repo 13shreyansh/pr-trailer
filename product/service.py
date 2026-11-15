@@ -5,6 +5,7 @@ import difflib
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import re
 import shutil
@@ -21,7 +22,7 @@ from .runlog import record_decision
 sys.path.insert(0,str(ROOT/'scripts/measure'))
 import engine
 from app.runtime.reporting import compact
-VAR=ROOT/'var/product';VAR.mkdir(parents=True,exist_ok=True)
+VAR=Path(os.environ.get('TIETO_STATE_DIR',str(ROOT/'var/product')));VAR.mkdir(parents=True,exist_ok=True)
 LOCK=threading.RLock();WRITE=threading.Lock();POOL=concurrent.futures.ThreadPoolExecutor(max_workers=3)
 STOP=threading.Event();FUTURES=[]
 STATE_FILE=VAR/'state.json'
@@ -36,7 +37,7 @@ def now():return datetime.now(timezone.utc).isoformat()
 def save():
  tmp=STATE_FILE.with_suffix('.tmp');tmp.write_text(json.dumps(STATE));tmp.replace(STATE_FILE)
 
-def workspace_config():return json.loads((ROOT/'var/workspace.json').read_text())
+def workspace_config():return json.loads(Path(os.environ.get('TIETO_WORKSPACE_CONFIG',str(ROOT/'var/workspace.json'))).read_text())
 
 def known_cases():return workspace_config()['cases']
 

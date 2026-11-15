@@ -11,6 +11,20 @@ ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 from product import service,visitors
 BOOT_COMMIT=(ROOT/'release-commit').read_text().strip() if (ROOT/'release-commit').is_file() else subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
 
+def static_asset(path):
+ app=ROOT/'app'
+ if path=='/build.json':return json.dumps({'commit':BOOT_COMMIT,'measured':True}).encode(),'application/json'
+ if path=='/':name='index.html'
+ elif path=='/workspace' or path.startswith('/workspace/'):name='workspace.html'
+ elif path in ('/app.js','/review.js','/style.css','/landing.css','/snapshot.json'):name=path[1:]
+ elif path.startswith('/fonts/') and Path(path).suffix in ('.woff2','.woff','.ttf'):name=path[1:]
+ else:return None
+ target=app/name
+ if not target.resolve().is_relative_to(app.resolve()) or not target.is_file():return None
+ if target.stat().st_size>5_000_000:return None
+ content={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json','.woff2':'font/woff2','.woff':'font/woff','.ttf':'font/ttf'}[target.suffix]
+ return target.read_bytes(),content
+
 def publication_asset(id):
  match=re.fullmatch(r'asset-([a-f0-9]{40})-(style|build)',id)
  if not match:return None
@@ -28,7 +42,9 @@ class Handler(BaseHTTPRequestHandler):
  def do_GET(self):
   url=urllib.parse.urlparse(self.path);query=urllib.parse.parse_qs(url.query)
   try:
-   if url.path=='/health':return self.respond(200,{'ready':True,'repo':service.FULL,'commit':BOOT_COMMIT,'execution':os.environ.get('TIETO_TEST_RUNNER','local'),'runLogConfigured':bool(os.environ.get('MONGODB_URI')),'codeContextConfigured':bool(os.environ.get('ENTIRE_BIN'))})
+   static=static_asset(url.path)
+   if static:return self.respond(200,static[0],static[1])
+   if url.path=='/health':return self.respond(200,{'ready':True,'repo':service.FULL,'commit':BOOT_COMMIT,'execution':os.environ.get('TIETO_TEST_RUNNER','local'),'runLogConfigured':bool(os.environ.get('MONGODB_URI')),'codeContextConfigured':bool(os.environ.get('ENTIRE_BIN') or os.environ.get('ENTIRE_GRAPH_BIN'))})
    visitor=visitors.touch(query.get('v',[''])[0])
    if url.path=='/api/workspace':return self.respond(200,visitors.view(visitor,service.client() if visitors.resetting() else service.sync(True)))
    if url.path=='/api/status':return self.respond(200,visitors.view(visitor))

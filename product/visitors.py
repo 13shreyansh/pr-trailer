@@ -13,7 +13,7 @@ import threading
 import time
 from . import service
 ROOT=Path(__file__).resolve().parents[1]
-FILE=ROOT/'var/product/visitors.json'
+FILE=service.VAR/'visitors.json'
 ACTIVE_SECONDS=90      # a holder who polled this recently is still using the workspace
 IDLE_SECONDS=600       # a used workspace nobody has polled for this long is restored
 LOCK=threading.RLock()

@@ -132,5 +132,11 @@ class WorkerPortTests(unittest.TestCase):
   spec=importlib.util.spec_from_file_location('workspace_port_regression',path);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
   with patch.dict(os.environ,{'PORT':'4326'}):self.assertEqual(module.worker_origin(),'http://127.0.0.1:4326')
   with patch.dict(os.environ,{'PORT':'99999'}),self.assertRaises(ValueError):module.worker_origin()
+ def test_canary_static_server_only_serves_public_assets(self):
+  from product.server import static_asset
+  self.assertEqual(static_asset('/workspace')[1],'text/html; charset=utf-8')
+  self.assertEqual(static_asset('/app.js')[1],'text/javascript')
+  for path in ['/product/github.py','/api/index.py','/.env','/fonts/../../product/github.py','/fonts/../../../.env.ttf']:
+   self.assertIsNone(static_asset(path))
 
 if __name__=='__main__':unittest.main()

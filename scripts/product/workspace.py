@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'scripts/measure'))
 from product.github import api,pages,commit_tree,set_ref,FULL,OWNER
 from bank_cases import make,CASES
-OUT=ROOT/'var/workspace.json'
+OUT=Path(os.environ.get('TIETO_WORKSPACE_CONFIG',str(ROOT/'var/workspace.json')))
 
 def worker_origin():
  port=int(os.environ.get('PORT','4322'))
@@ -54,7 +54,7 @@ def setup():
   api('/repos/'+FULL,method='PATCH',data={'default_branch':'main'})
   set_ref('tieto/baseline',baseline)
   saved={'repo':FULL,'baseline':baseline,'cases':{}}
-  OUT.write_text(json.dumps(saved,indent=2))
+  OUT.parent.mkdir(parents=True,exist_ok=True);OUT.write_text(json.dumps(saved,indent=2))
  for meta in metadata:
   id=meta['id'];head=source/('head-cap' if id=='KASSA-CAP' else 'head-intern' if id=='KASSA-INTERN' else 'head-'+str(int(id.split('-')[1])))
   delta={p:(head/p).read_text() for p in meta['paths']}

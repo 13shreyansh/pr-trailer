@@ -6,9 +6,10 @@ import shutil
 import subprocess
 
 def code_context(source,ask,head_sha):
-    binary=os.environ.get('ENTIRE_BIN') or shutil.which('entire')
+    direct=os.environ.get('ENTIRE_GRAPH_BIN')
+    binary=direct or os.environ.get('ENTIRE_BIN') or shutil.which('entire')
     if not binary:return {'provider':'entire-graph','available':False,'reason':'Code context is not configured'}
-    command=[binary,'graph','query','--repo',str(Path(source).resolve()),'--profile','full',
+    command=[binary,*([] if direct else ['graph']),'query','--repo',str(Path(source).resolve()),'--profile','full',
              '--format','json','--max-context-bytes','12000','--top-k','6','--query',str(ask)[:1000]]
     try:
         source=Path(source).resolve()

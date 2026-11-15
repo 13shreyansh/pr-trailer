@@ -1,0 +1,90 @@
+{
+  "commit": "63defab91d5b710101e86e50fe2ccc708bebc56e",
+  "sourceRepo": "13shreyansh/tieto-nordbank-payments",
+  "sourcePR": 20,
+  "sourceHead": "4cd64168658102868b7b96bd5b5f30da664cf4fd",
+  "runId": "8e189e5b48614d4ab1a125dd60d4d435",
+  "requestTests": 9,
+  "requestPassed": 9,
+  "heldOut": {
+    "tests": 1,
+    "passed": 0,
+    "exitCode": 1
+  },
+  "execution": {
+    "provider": "modal",
+    "sandboxId": "sb-01M7EYCCYS9AP9WB9XB4BRE0NK",
+    "networkBlocked": true,
+    "sourceReadOnly": true,
+    "secretsInjected": false,
+    "runnerSha256": "174a2290570f1bb5dd73ec9b6eadfa89ea789f77a03e257e546a8486b3f0984c",
+    "wallSeconds": 4.1578
+  },
+  "graph": {
+    "provider": "entire-graph",
+    "available": true,
+    "sourceHead": "4cd64168658102868b7b96bd5b5f30da664cf4fd",
+    "query": "Cap instant-transfer fees at \u20ac5. Keep the minimum fee and the existing rounding policy.",
+    "symbols": [
+      {
+        "path": "ledger/fees.py",
+        "line": 8,
+        "name": "transfer_fee",
+        "kind": "function",
+        "relations": [
+          "graph:callers"
+        ]
+      },
+      {
+        "path": "ledger/transfers.py",
+        "line": 23,
+        "name": "create_transfer",
+        "kind": "function",
+        "relations": [
+          "graph:calls",
+          "graph:incoming",
+          "graph:callers"
+        ]
+      },
+      {
+        "path": "ledger/api.py",
+        "line": 6,
+        "name": "source",
+        "kind": "",
+        "relations": []
+      },
+      {
+        "path": "ledger/api.py",
+        "line": 25,
+        "name": "get_fee",
+        "kind": "function",
+        "relations": []
+      },
+      {
+        "path": "ledger/transfers.py",
+        "line": 2,
+        "name": "source",
+        "kind": "",
+        "relations": []
+      },
+      {
+        "path": "oracle/test_safety.py",
+        "line": 15,
+        "name": "function",
+        "kind": "function",
+        "relations": []
+      }
+    ],
+    "notice": "Static code context helps review. Missing relationships do not prove a function is unused."
+  },
+  "archiveProvider": "local-outbox",
+  "archivedEvents": 0,
+  "sandboxIds": [
+    "sb-01M7EYBXRABZMAWAXW617KDCPE",
+    "sb-01M7EYC0SP54RXFKNGVER8XJ85",
+    "sb-01M7EYC3C2JSBD9K2AS1E09KT9",
+    "sb-01M7EYC6B7D5DDQ78VJRWEC188",
+    "sb-01M7EYC9BWSGHNEM5P18KY1RRZ",
+    "sb-01M7EYCCYS9AP9WB9XB4BRE0NK"
+  ]
+}
